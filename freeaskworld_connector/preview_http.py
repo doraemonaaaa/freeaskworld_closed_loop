@@ -84,16 +84,6 @@ def _make_handler(get_frame: GetFrameFn) -> HandlerFactory:
 
 
 def start_preview_server(get_frame: GetFrameFn, host: str = "0.0.0.0", port: int = 8080):
-    # Load config
-    try:
-        from .config import config
-        host = config.PREVIEW_HOST
-        port = config.PREVIEW_PORT
-    except ImportError:
-        import os
-        host = os.environ.get("PREVIEW_HOST", host)
-        port = int(os.environ.get("PREVIEW_PORT", str(port)))
-    
     handler_cls = _make_handler(get_frame)
     class ThreadingTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
         daemon_threads = True

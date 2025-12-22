@@ -32,13 +32,13 @@ class NavigationCommand:
 
     LocalPositionOffset: np.ndarray  # shape (3,)
     LocalRotationOffset: np.ndarray  # shape (4,)
-    IsStopped: bool = False
+    IsStop: bool = False  # Match Unity's field name
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "LocalPositionOffset": self.LocalPositionOffset.tolist(),
             "LocalRotationOffset": self.LocalRotationOffset.tolist(),
-            "IsStopped": bool(self.IsStopped),
+            "IsStop": bool(self.IsStop),
         }
 
     @staticmethod
@@ -46,7 +46,7 @@ class NavigationCommand:
         return NavigationCommand(
             LocalPositionOffset=np.asarray(data["LocalPositionOffset"], dtype=float),
             LocalRotationOffset=np.asarray(data["LocalRotationOffset"], dtype=float),
-            IsStopped=bool(data.get("IsStopped", False)),
+            IsStop=bool(data.get("IsStop", data.get("IsStopped", False))),
         )
 
 

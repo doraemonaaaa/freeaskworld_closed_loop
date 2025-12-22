@@ -22,6 +22,7 @@ class SimpleStepBaseline(ClosedLoopBaseline):
 
     def __init__(self) -> None:
         self._initialized = False
+        self._inference_lock = asyncio.Lock()
 
     async def on_session_start(self, session: BaselineSession) -> None:
         session.metadata.clear()
@@ -40,24 +41,29 @@ class SimpleStepBaseline(ClosedLoopBaseline):
         if not self._ready_to_respond(session):
             return None
 
+        if self._inference_lock.locked():
+            return None
+
+        async with self._inference_lock:
+            return await self._run_inference(session)
+
+    async def _run_inference(self, session: BaselineSession) -> BaselineResponse | None:
         navigation = NavigationCommand(
             LocalPositionOffset=np.zeros(3, dtype=float),
             LocalRotationOffset=np.array([0.0, 0.0, 0.0, 1.0], dtype=float),
-            IsStopped=False,
+            IsStop=False,
         )
         step = Step()
 
         return BaselineResponse(
             messages=[
                 {
-                    "type": "json",
-                    "json_type": "NavigationCommand",
-                    "content": navigation.to_dict(),
+                    "type": "NavigationCommand",
+                    "payload": navigation.to_dict(),
                 },
                 {
-                    "type": "json",
-                    "json_type": "Step",
-                    "content": step.to_dict(),
+                    "type": "Step",
+                    "payload": step.to_dict(),
                 },
             ],
             reset_state=True,

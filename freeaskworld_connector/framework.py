@@ -1,4 +1,9 @@
-"""Utilities for building closed-loop baseline services."""
+"""Utilities for building closed-loop baseline services.
+
+This framework is transport-agnostic and works with both:
+- WebRTC DataChannel (recommended)
+- Legacy WebSocket
+"""
 
 from __future__ import annotations
 
@@ -11,7 +16,7 @@ from .messages import JsonPacket, RGBDFrame
 
 @dataclass
 class SessionState:
-    """Aggregated simulator inputs for a single websocket session."""
+    """Aggregated simulator inputs for a session (transport-agnostic)."""
 
     latest_rgbd: Optional[RGBDFrame] = None
     json_packets: Dict[str, JsonPacket] = field(default_factory=dict)
@@ -41,7 +46,7 @@ class BaselineSession:
 
 @dataclass
 class MessageEnvelope:
-    """Normalized representation of inbound websocket messages."""
+    """Normalized representation of inbound messages (WebRTC or WebSocket)."""
 
     message_type: str
     payload: Any
@@ -60,7 +65,7 @@ class ClosedLoopBaseline(Protocol):
     """Interface all baseline implementations must follow."""
 
     async def on_session_start(self, session: BaselineSession) -> None:
-        """Invoked once a websocket client is connected and ready."""
+        """Invoked once a client is connected and ready."""
 
     async def on_session_end(self, session: BaselineSession) -> None:
         """Invoked right before the websocket client disconnects."""
