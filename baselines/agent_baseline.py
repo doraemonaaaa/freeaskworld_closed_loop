@@ -180,63 +180,6 @@ class AgentBaseline(ClosedLoopBaseline):
             messages=messages,
             reset_state=True,
         )
-        
-        # Get the latest RGB image
-        rgb_frame = self._get_rgb_frame(session.state.latest_rgbd)
-        
-        # Save image in thread pool
-        timestamp = time.time()
-        timestamp_str = f"{timestamp:.3f}".replace(".", "_")
-        img_path = Path(self._temp_dir.name) / (
-            f"frame_{session.session_id}_{timestamp_str}_"
-            f"{len(session.metadata.get('frame_history', []))}.jpg"
-        )
-        
-        await asyncio.to_thread(self._save_image, rgb_frame, img_path)
-        
-        # Update history
-        history = session.metadata.setdefault("frame_history", [])
-        history.append(str(img_path))
-        if len(history) > 5:
-            # Remove old file
-            old_file = history.pop(0)
-            try:
-                Path(old_file).unlink(missing_ok=True)
-            except Exception:
-                pass
-
-        # Run solver in thread pool
-        output = await asyncio.to_thread(self._run_solver, history)
-        
-        # Parse output
-        direct_output = output.get("direct_output", "")
-        print(f"[AgentBaseline] Agent Output: {direct_output}")
-        
-        navigation, text_response = self._parse_output(direct_output)
-        
-        step = Step()
-
-        messages = [
-            {
-                "type": "NavigationCommand",
-                "payload": navigation.to_dict(),
-            },
-            {
-                "type": "Step",
-                "payload": step.to_dict(),
-            }
-        ]
-        
-        if text_response:
-            messages.append({
-                "type": "AgentText",
-                "payload": {"text": text_response}
-            })
-
-        return BaselineResponse(
-            messages=messages,
-            reset_state=True,
-        )
 
     def _run_solver(self, image_paths: List[str]) -> Dict[str, Any]:
         navigation_task_prompt = """

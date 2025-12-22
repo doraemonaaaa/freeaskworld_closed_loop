@@ -28,6 +28,8 @@ bash closed_loop/baselines/start.bash
 
 3) Unity side: point the client to `http://<server-ip>:8766` and ensure DataChannel label matches `control`. The preview page (JPEG) is at `http://<server-ip>:8080/viewer` once frames arrive.
 
+> Note: run scripts from the repo root so `closed_loop` can be imported. If using the helper script and you don't need Cloudflare, set `ENABLE_TUNNEL=0`.
+
 ## Modes
 
 - Pure WebRTC (recommended): HTTP signaling + DataChannel JSON + optional RGBD stream over DataChannel (no TURN baked in; set `ICE_SERVERS` env for TURN).
@@ -51,9 +53,28 @@ Implement your own by conforming to `ClosedLoopBaseline` and exporting `create_b
 ## DataChannel message shapes (Unity → Python)
 
 - RGBD: `{ "type": "rgbd_stream", "payload": { color, depth, width, height, timestamp } }`
-- JSON: `{ "type": "json", "json_type": "Init|TransformData|Instruction|SimulationTime|Step|NavigationCommand", "content": {...} }`
+    - Server accepts `payload` (Unity sender default) or `content` fallback.
+- JSON control: `{ "type": "json", "json_type": "Init|TransformData|Instruction|SimulationTime|Step|NavigationCommand", "content": {...} }`
+    - Use `content` (not `payload`) for JSON bodies; direct types (`{ "type": "Init", ... }`) are also accepted and normalized.
 
 Server ACKs JSON with `{ "type": "ack", "json_type": "..." }`.
+
+## Unity integration (current scripts)
+
+- `WebRTCManager` (signaling + peer + DataChannel)
+    - Default URL `http://localhost:8766`, DataChannel label `control`, ICE `stun:stun.l.google.com:19302`, auto-connect on start.
+    - Sends control via `SendControlMessage(json_type, payload)` → `{type:"json", json_type, content:payload}`.
+    - Receives UTF-8 JSON on `OnTextMessage` (wired in `BenchmarkPlayer`).
+- `RGBDStreamSender` (RGBD push over DataChannel)
+    - Hooks channel open/close; sends when open.
+    - Downscales frames to `maxWidth/maxHeight` (default 320x240) if `limitResolution` true.
+    - JPEG-encodes color/depth (default quality 70/50) to keep payload under SCTP limits.
+    - Envelope: `{type:"rgbd_stream", payload:{width,height,color,depth,timestamp}}`.
+- `BenchmarkPlayer` (VLN loop)
+    - On start: subscribes to DataChannel messages; RGBD camera `onSensorUpdated` triggers `SendOnce()`.
+    - Per step: sends `Init` (first step only), then `TransformData`, `Instruction`, `SimulationTime {time}`, `Step {IsStep:true}`.
+    - Waits for server messages: `navigationcommand` (apply offsets, `IsStop`), `step` (to advance), optional `stop`.
+    - Auto-step coroutine: wait channel open → send inputs → wait for `step` from server → sleep `stepSimTime` → `BenchmarkManager.Step()` → repeat.
 
 ## TURN / NAT traversal
 
