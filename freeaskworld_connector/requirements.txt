@@ -1,0 +1,5 @@
+websockets
+numpy
+Pillow
+python-dotenv
+aiortc
