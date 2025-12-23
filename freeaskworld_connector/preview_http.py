@@ -15,6 +15,7 @@ GetFrameFn = Callable[[], Optional[bytes]]
 def _make_handler(get_frame: GetFrameFn) -> HandlerFactory:
     class FrameHandler(http.server.BaseHTTPRequestHandler):
         def do_GET(self) -> None:  # noqa: N802 - HTTP method name
+            # Single JPEG
             if self.path in ("/", "/frame", "/frame.jpg"):
                 frame = get_frame()
                 if frame is None:
@@ -30,11 +31,12 @@ def _make_handler(get_frame: GetFrameFn) -> HandlerFactory:
                 self.wfile.write(frame)
                 return
 
+            # MJPEG stream
             if self.path in ("/mjpeg", "/stream"):
                 boundary = b"--frame"
                 self.send_response(200)
                 self.send_header(
-                    "Content-Type", f"multipart/x-mixed-replace; boundary=frame"
+                    "Content-Type", "multipart/x-mixed-replace; boundary=frame"
                 )
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
@@ -43,9 +45,8 @@ def _make_handler(get_frame: GetFrameFn) -> HandlerFactory:
                     while True:
                         frame = get_frame()
                         if frame is None:
-                            time.sleep(0.1)  # Wait longer if no frame
+                            time.sleep(0.1)
                             continue
-                        # Only send if frame changed (avoid redundant sends)
                         if frame == last_frame:
                             time.sleep(0.05)
                             continue
@@ -58,14 +59,50 @@ def _make_handler(get_frame: GetFrameFn) -> HandlerFactory:
                         self.wfile.write(frame)
                         self.wfile.write(b"\r\n")
                         self.wfile.flush()
-                        time.sleep(0.05)  # ~20fps max for preview
+                        time.sleep(0.05)
                 except (BrokenPipeError, ConnectionResetError):
                     return
 
+            # Viewer page with FPS HUD
             if self.path in ("/viewer", "/index.html"):
-                html = b"""<!doctype html><html><body style='margin:0;background:#111;display:flex;justify-content:center;align-items:center;height:100vh'>
-<img src='/mjpeg' style='max-width:100%;max-height:100%;object-fit:contain;' />
-</body></html>"""
+                html = b"""<!doctype html>
+<html>
+<body style='margin:0;background:#111;display:flex;justify-content:center;align-items:center;height:100vh;position:relative;'>
+  <img id='stream' src='/mjpeg' style='max-width:100%;max-height:100%;object-fit:contain;' />
+  <div id='hud' style='position:absolute;top:10px;left:10px;padding:6px 10px;border-radius:6px;background:rgba(0,0,0,0.5);color:#eee;font-family:Arial,Helvetica,sans-serif;font-size:14px;'>
+    FPS: <span id='fps'>--</span>
+  </div>
+  <img id='probe' style='display:none;' />
+  <script>
+    (function() {
+      const fpsEl = document.getElementById('fps');
+      const probe = document.getElementById('probe');
+      let count = 0;
+      let start = performance.now();
+
+      function scheduleNext() {
+        probe.src = '/frame?cache=' + performance.now();
+      }
+
+      probe.onload = function() {
+        count += 1;
+        const now = performance.now();
+        const elapsed = now - start;
+        if (elapsed >= 1000) {
+          const fps = (count * 1000 / elapsed).toFixed(1);
+          fpsEl.textContent = fps;
+          count = 0;
+          start = now;
+        }
+        scheduleNext();
+      };
+
+      probe.onerror = scheduleNext;
+      scheduleNext();
+    })();
+  </script>
+</body>
+</html>"""
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html")
                 self.send_header("Cache-Control", "no-store")
