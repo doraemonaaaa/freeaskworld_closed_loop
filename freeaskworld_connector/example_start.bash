@@ -4,6 +4,7 @@ set -euo pipefail
 PORT=${PORT:-8766}
 HOST=${HOST:-0.0.0.0}
 ENABLE_TUNNEL=${ENABLE_TUNNEL:-0}
+VERBOSE=${VERBOSE:-1}
 
 BASELINENAME=${BASELINENAME:-simple_baseline}
 BASELINE_SPEC=${BASELINE_SPEC:-closed_loop.freeaskworld_connector.${BASELINENAME}:create_baseline}
@@ -18,10 +19,16 @@ else
 fi
 
 echo "🚀 Starting WebRTC server..."
+if [[ "$VERBOSE" == "1" ]]; then
+    VERBOSE_FLAG="--verbose"
+else
+    VERBOSE_FLAG=""
+fi
 python -m closed_loop.freeaskworld_connector.webrtc_server \
     --host "$HOST" \
     --port "$PORT" \
-    --baseline "$BASELINE_SPEC"
+    --baseline "$BASELINE_SPEC" \
+    $VERBOSE_FLAG
 
 if [[ -n "$CLOUDFLARED_PID" ]]; then
     wait "$CLOUDFLARED_PID"

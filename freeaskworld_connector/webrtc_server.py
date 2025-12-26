@@ -57,6 +57,7 @@ class ServerConfig:
     host: str = "0.0.0.0"
     port: int = 8766
     persist_rgbd_dir: Optional[str] = None
+    verbose: bool = False
 
 
 @dataclass
@@ -353,16 +354,18 @@ class WebRTCServer:
         @channel.on("message")
         def on_message(message):
             # Note: aiortc event handlers must be synchronous; use create_task for async work
-            logger.info("📨 DataChannel message received, type=%s, len=%d", 
-                       type(message).__name__, len(message) if message else 0)
+            if self._config.verbose:
+                logger.info("📨 DataChannel message received, type=%s, len=%d", 
+                        type(message).__name__, len(message) if message else 0)
             try:
                 if isinstance(message, bytes):
                     data = json.loads(message.decode("utf-8"))
                 else:
                     data = json.loads(message)
-                logger.info("Parsed message keys: %s; type=%s; json_type=%s", 
-                            list(data.keys()) if isinstance(data, dict) else "not a dict",
-                            data.get("type"), data.get("json_type") if isinstance(data, dict) else None)
+                if self._config.verbose:
+                    logger.info("Parsed message keys: %s; type=%s; json_type=%s", 
+                                list(data.keys()) if isinstance(data, dict) else "not a dict",
+                                data.get("type"), data.get("json_type") if isinstance(data, dict) else None)
                 # Schedule async handler on the event loop
                 asyncio.create_task(self._handle_datachannel_message(peer, data))
             except json.JSONDecodeError as exc:
@@ -434,22 +437,26 @@ class WebRTCServer:
             depth_bytes = base64.b64decode(depth_b64)
 
             with Image.open(io.BytesIO(color_bytes)) as color_img:
-                color_array = np.asarray(color_img)
+                color_array_rgb = np.asarray(color_img)
             with Image.open(io.BytesIO(depth_bytes)) as depth_img:
                 depth_array = np.asarray(depth_img)
 
-            logger.info("🖼️ RGBD frame received: %sx%s", color_array.shape[1], color_array.shape[0])
+            if self._config.verbose:
+                logger.info("🖼️ RGBD frame received: %sx%s", color_array_rgb.shape[1], color_array_rgb.shape[0])
 
             # Update preview JPEG (serve real JPEG bytes instead of PNG)
             try:
                 buf = io.BytesIO()
-                Image.fromarray(color_array).save(buf, format="JPEG", quality=80)
+                Image.fromarray(color_array_rgb).save(buf, format="JPEG", quality=80)
                 peer.latest_jpeg = buf.getvalue()
             except Exception:
                 peer.latest_jpeg = color_bytes
 
+            # Convert RGB to BGR for agent (OpenCV compatibility)
+            color_array_bgr = color_array_rgb[..., ::-1]
+
             frame = RGBDFrame(
-                color=color_array,
+                color=color_array_bgr,
                 depth=depth_array,
                 metadata={
                     "width": payload.get("width"),
@@ -708,6 +715,11 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         default=None,
         help="Optional directory to persist RGBD frames for debugging",
     )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable verbose logging for high-frequency events",
+    )
     return parser.parse_args(argv)
 
 
@@ -718,6 +730,7 @@ async def async_main(argv: Optional[list[str]] = None) -> None:
         host=args.host,
         port=args.port,
         persist_rgbd_dir=args.persist_rgbd,
+        verbose=args.verbose,
     )
 
     baseline_factory = load_baseline_factory(args.baseline)

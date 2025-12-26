@@ -65,7 +65,7 @@ Server ACKs JSON with `{ "type": "ack", "json_type": "..." }`.
     - Default URL `http://localhost:8766`, DataChannel label `control`, ICE `stun:stun.l.google.com:19302`, auto-connect on start.
     - Sends control via `SendControlMessage(json_type, payload)` → `{type:"json", json_type, content:payload}`.
     - Receives UTF-8 JSON on `OnTextMessage` (wired in `BenchmarkPlayer`).
-- `RGBDStreamSender` (RGBD push over DataChannel)
+- `RGBDJPEGSender` (RGBD push over DataChannel)
     - Hooks channel open/close; sends when open.
     - Downscales frames to `maxWidth/maxHeight` (default 320x240) if `limitResolution` true.
     - JPEG-encodes color/depth (default quality 70/50) to keep payload under SCTP limits.

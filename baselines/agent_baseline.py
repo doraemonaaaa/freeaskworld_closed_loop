@@ -23,13 +23,10 @@ if str(Path(__file__).parents[2]) not in sys.path:
     sys.path.append(str(Path(__file__).parents[2]))
 
 try:
-    from agentflow.agentflow.solver import construct_solver
-    from agentflow.agentflow.solver_fast import construct_fast_solver
+    from agentflow.agentflow.solver_embodied import construct_solver_embodied
 except ImportError:
     # Fallback or error handling if agentflow is not found
     print("Warning: agentflow not found. AgentBaseline will fail.")
-    construct_solver = None
-    construct_fast_solver = None
 
 from ..freeaskworld_connector.framework import BaselineResponse, BaselineSession, ClosedLoopBaseline, MessageEnvelope
 from ..freeaskworld_connector.messages import NavigationCommand, Step, TransformData
@@ -53,38 +50,17 @@ class AgentBaseline(ClosedLoopBaseline):
         print("OPENAI_API_KEY:" + os.environ.get("OPENAI_API_KEY", "Not Set"))
 
         llm_engine_name = os.environ.get("LLM_ENGINE_NAME", "gpt-4o")
-        # fast_mode = os.environ.get("FAST_MODE", "false").lower() == "true"
-        fast_mode = True  # Always use fast mode for this baseline
 
-        if fast_mode and construct_fast_solver:
-            # Fast planner-only solver; lightweight but less capable.
-            self._solver = construct_fast_solver(
-                llm_engine_name=llm_engine_name,
-                enabled_tools=["Base_Generator_Tool", "GroundedSAM2_Tool"],
-                tool_engine=["gpt-4o"],
-                output_types="direct",
-                max_steps=1,
-                max_time=10,
-                max_tokens=1024,
-                fast_max_tokens=256,
-                enable_multimodal=True,
-                verbose=True,
-            )
-        elif construct_solver:
-            # Full solver for higher-quality navigation planning.
-            self._solver = construct_solver(
-                llm_engine_name=llm_engine_name,
-                enabled_tools=["Base_Generator_Tool", "GroundedSAM2_Tool"],
-                tool_engine=["gpt-4o"],
-                model_engine=["gpt-4o", "gpt-4o", "gpt-4o", "gpt-4o"],
-                output_types="direct",
-                max_time=300,
-                max_steps=1,
-                enable_multimodal=True,
-            )
-        else:
-            print("Warning: solver constructors unavailable; baseline will not respond.")
-            self._solver = None
+        self._solver = construct_solver_embodied(
+            llm_engine_name=llm_engine_name,
+            enabled_tools=["Base_Generator_Tool", "GroundedSAM2_Tool"],
+            tool_engine=["gpt-4o"],
+            model_engine=["gpt-4o", "gpt-4o", "gpt-4o"],
+            output_types="direct",
+            max_time=300,
+            max_steps=1,
+            enable_multimodal=True
+        )
 
     async def on_session_start(self, session: BaselineSession) -> None:
         session.metadata.clear()
@@ -182,22 +158,9 @@ class AgentBaseline(ClosedLoopBaseline):
         )
 
     def _run_solver(self, image_paths: List[str]) -> Dict[str, Any]:
-        navigation_task_prompt = """
-[Rules]
-要躲避物体不要撞上
-当你离人2m内的时候就可以触发问路
-[Policy]
-使用最快获取信息的策略，你可选择自己不断探索地点，也可以问人来快速获取信息，尽管可能不精准
-[Action Space]
-动作空间是[前进，左转，右转，后转, 后退, 停止, 问路][1m, 2m, 3m]
-每次动作只能选择一个动作和一个距离, 比如'前进2m'
-[Output Format]
-请给出后续5步的导航指令序列。
-[Tools]
-你可以使用GroundedSAM2_Tool来识别图像中的物体，自己设置prompt比如obst，获取物体的位置和类别信息，辅助你做出导航决策。你可以获取obstacle,street,building等信息
-[Image Sequence]
-这里有一系列按时间顺序排列的图像帧，展示了你当前的视野。请根据这些图像帧来理解环境。
-"""
+        # Use a generic prompt that aligns with vln.py's expectations
+        # vln.py expects a query/task description.
+        navigation_task_prompt = "Go to the <我和乔治商店>, task finish upon arrival within 2 meter."
         if self._solver:
             return self._solver.solve(
                 navigation_task_prompt,
@@ -215,59 +178,71 @@ class AgentBaseline(ClosedLoopBaseline):
     def _parse_output(self, output_text: str) -> Tuple[NavigationCommand, str]:
         # Default to stop
         pos_offset = np.zeros(3, dtype=float)
-        rot_offset = np.array([0.0, 0.0, 0.0, 1.0], dtype=float)
+        rot_offset = np.array([0.0, 0.0, 0.0, 1.0], dtype=float) # Identity quaternion (x, y, z, w)
         is_stopped = False
         
-        # Simple parsing logic
-        # Look for the first valid action in the text
-        # Regex for actions
-        action_pattern = r"(前进|后退|左转|右转|后转|停止|问路)\s*(\d+m)?"
-        
-        # We assume the output contains a list, we take the first one
-        # Example: "1. 前进2m"
-        
-        match = re.search(action_pattern, output_text)
-        if match:
-            action = match.group(1)
-            distance_str = match.group(2)
-            distance = float(distance_str.replace('m', '')) if distance_str else 0.0
+        # Extract Action from vln.py format
+        # Look for "Action:" or "Navigation Goal:" (legacy)
+        # The output might contain "**Action**:" or just "Action:"
+        # We use a flexible regex to capture the content after the label
+        action_match = re.search(
+            r"(?:\*\*Action\*\*|Action|Navigation Goal)\s*:\s*(.*)",
+            output_text,
+            re.IGNORECASE | re.DOTALL
+        )
+        if action_match:
+            action_text = action_match.group(1).strip()
+            print(f"[AgentBaseline] Extracted Action Text: {action_text}")
             
-            if action == "前进":
-                # Forward is +Z in local frame (assuming)
-                pos_offset[2] = distance
-            elif action == "后退":
-                pos_offset[2] = -distance
-            elif action == "左转":
-                # Rotate left (around Y axis)
-                # Assuming 90 degrees for turn? Or maybe distance implies angle?
-                # Usually "Turn Left" is a discrete action. Let's assume 90 degrees.
-                # Quaternion for 90 degrees around Y (0, 1, 0)
-                # q = [x, y, z, w] = [0, sin(45), 0, cos(45)] = [0, 0.707, 0, 0.707]
-                # Note: Check coordinate system. If Y is up.
-                # Left turn -> -90 degrees?
-                # Let's use -90 degrees (Right Hand Rule around Y points up -> CCW is positive. Left turn is usually CCW).
-                # Wait, if I face Z, Left is -X. Turning left means rotating towards +X? No, rotating towards -X.
-                # That is +90 degrees around Y?
-                # Let's assume +90 degrees around Y.
-                # sin(45) = 0.7071, cos(45) = 0.7071
-                rot_offset = np.array([0.0, 0.70710678, 0.0, 0.70710678]) 
-            elif action == "右转":
-                # -90 degrees around Y
-                # sin(-45) = -0.7071
-                rot_offset = np.array([0.0, -0.70710678, 0.0, 0.70710678])
-            elif action == "后转":
-                # 180 degrees around Y
-                # sin(90) = 1, cos(90) = 0
-                rot_offset = np.array([0.0, 1.0, 0.0, 0.0])
-            elif action == "停止":
-                is_stopped = True
-            elif action == "问路":
-                pass # No movement
+            # Case 1: <Move(x, y, yaw)>
+            move_match = re.search(r"<Move\(\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*\)>", action_text, re.IGNORECASE)
+            if move_match:
+                x = float(move_match.group(1))
+                y = float(move_match.group(2))
+                yaw_deg = float(move_match.group(3))
+                print(f"[AgentBaseline] Parsed Move: x={x}, y={y}, yaw={yaw_deg}")
                 
+                # Mapping vln (X=forward, Y=right) to simulator (Unity: Z=forward, Y=up, X=right).
+                # Agent X (Forward) -> Sim Z
+                # Agent Y (Right) -> Sim X
+                pos_offset[2] = x
+                pos_offset[1] = 0.0
+                pos_offset[0] = y
+                
+                # Rotation mapping
+                yaw_rad = np.radians(yaw_deg)
+                half_angle = yaw_rad / 2
+                rot_offset[1] = np.sin(half_angle)
+                rot_offset[3] = np.cos(half_angle)
+                
+            # Case 2: <Rotate(yaw)> (Legacy support, though removed from prompt)
+            rotate_match = re.search(r"<Rotate\(\s*(-?\d+\.?\d*)\s*\)>", action_text, re.IGNORECASE)
+            if rotate_match:
+                yaw_deg = float(rotate_match.group(1))
+                print(f"[AgentBaseline] Parsed Rotate: yaw={yaw_deg}")
+                yaw_rad = np.radians(yaw_deg)
+                # Positive yaw is Left. 
+                # Assuming standard quaternion rotation around Y axis.
+                half_angle = yaw_rad / 2
+                rot_offset[1] = np.sin(half_angle)
+                rot_offset[3] = np.cos(half_angle)
+                
+            # Case 3: <Stop>
+            if "<Stop>" in action_text:
+                is_stopped = True
+                
+            # Case 4: <Ask>
+            if "<Ask>" in action_text:
+                pass 
+                
+            # Case 5: <Wait(t)>
+            if "<Wait" in action_text:
+                pass
+
         return NavigationCommand(
             LocalPositionOffset=pos_offset,
             LocalRotationOffset=rot_offset,
-            IsStop=is_stopped
+            IsStop=is_stopped  # whether to stop the agent and end task
         ), output_text
 
     def _get_rgb_frame(self, rgbd) -> np.ndarray:
