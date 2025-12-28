@@ -70,12 +70,17 @@ class TransformData:
 
     position: Tuple[float, float, float]
     rotation: Tuple[float, float, float, float]
+    ObjectName: str = ""
 
     @staticmethod
     def from_dict(data: Mapping[str, Any]) -> "TransformData":
         position = tuple(float(v) for v in data["position"])
         rotation = tuple(float(v) for v in data["rotation"])
-        return TransformData(position=position, rotation=rotation)
+        return TransformData(
+            position=position, 
+            rotation=rotation,
+            ObjectName=str(data.get("ObjectName", ""))
+        )
 
 
 __all__ = [

@@ -30,6 +30,7 @@ except ImportError:
 
 from ..freeaskworld_connector.framework import BaselineResponse, BaselineSession, ClosedLoopBaseline, MessageEnvelope
 from ..freeaskworld_connector.messages import NavigationCommand, Step, TransformData
+from .mapper import Mapper
 
 class AgentBaseline(ClosedLoopBaseline):
     """Baseline that uses the AgentFlow solver to control the agent."""
@@ -40,6 +41,23 @@ class AgentBaseline(ClosedLoopBaseline):
         self._setup_solver()
         self._temp_dir = tempfile.TemporaryDirectory()
         self._inference_lock = asyncio.Lock()
+        self.mapper = Mapper()
+        # Manual Camera Extrinsics (Camera to Robot)
+        # Assuming Identity for now, user can modify this.
+        # Example: 1.5m height, looking forward
+        self.camera_extrinsics = np.eye(4)
+        # If camera is at (0, 1.5, 0) relative to robot center:
+        # self.camera_extrinsics[1, 3] = 1.5
+        
+        # Manual Camera Intrinsics (3x3 Matrix)
+        # If None, mapper will estimate from FOV
+        self.camera_intrinsics = None 
+        # Example for 256x256 image with 90 deg FOV:
+        # self.camera_intrinsics = np.array([
+        #     [128.0, 0.0, 128.0],
+        #     [0.0, 128.0, 128.0],
+        #     [0.0, 0.0, 1.0]
+        # ])
 
     def _setup_solver(self):
         # Load environment variables
@@ -87,6 +105,8 @@ class AgentBaseline(ClosedLoopBaseline):
             session.metadata["has_rgbd"] = True
             session.state.update_rgbd(envelope.payload)
 
+        self._try_update_map(session)
+
         if not self._ready_to_respond(session):
             return None
 
@@ -96,6 +116,39 @@ class AgentBaseline(ClosedLoopBaseline):
 
         async with self._inference_lock:
             return await self._run_inference(session)
+
+    def _try_update_map(self, session: BaselineSession) -> None:
+        rgbd = session.state.latest_rgbd
+        if rgbd is None:
+            return
+
+        # Use manual extrinsics
+        extrinsics_matrix = self.camera_extrinsics
+        
+        robot_pose = session.metadata.get("robot_pose")
+        
+        # If RobotPose is not explicitly sent, try to use TransformData
+        if robot_pose is None and "transform" in session.metadata:
+            t = session.metadata["transform"]
+            # TransformData has position (tuple) and rotation (tuple)
+            robot_pos_arr = np.array(t.position)
+            robot_rot_arr = np.array(t.rotation)
+        elif robot_pose:
+            # robot_pose is now a TransformData object if coming from "Baseline" check
+            # or could be the old RobotPose if we hadn't removed it, but we did.
+            # In _handle_json_packet we set session.metadata["robot_pose"] = transform (TransformData)
+            robot_pos_arr = np.array(robot_pose.position)
+            robot_rot_arr = np.array(robot_pose.rotation)
+        else:
+            return # No pose data
+
+        self.mapper.update(
+            depth=rgbd.depth,
+            extrinsics_matrix=extrinsics_matrix,
+            robot_pos=robot_pos_arr,
+            robot_rot=robot_rot_arr,
+            intrinsics_matrix=self.camera_intrinsics
+        )
 
     async def _run_inference(self, session: BaselineSession) -> BaselineResponse | None:
         """Execute one inference pass using the latest state."""
@@ -261,7 +314,10 @@ class AgentBaseline(ClosedLoopBaseline):
             self._initialized = True
         elif packet.json_type == "TransformData" and isinstance(packet.content, dict):
             try:
-                session.metadata["transform"] = TransformData.from_dict(packet.content)
+                transform = TransformData.from_dict(packet.content)
+                session.metadata["transform"] = transform
+                if transform.ObjectName == "Baseline":
+                    session.metadata["robot_pose"] = transform
             except (KeyError, TypeError, ValueError):
                 session.metadata["transform"] = packet.content
         elif packet.json_type == "SimulationTime":
