@@ -1,23 +1,34 @@
-import logging
-from pathlib import Path
-
-import numpy as np
-import quaternion
-
 from .mapping_utils.geometry import *
 from .mapping_utils.preprocess import *
 from .mapping_utils.projection import *
-from .mapping_utils.transform import *
 from .mapping_utils.path_planning import *
-# from .cv_utils.image_percevior import GLEE_Percevior
 from matplotlib import colormaps
 from .constants import *
 import open3d as o3d
 from PIL import Image
 
+# Try to import GLEE_Percevior, but make it optional
+try:
+    from .cv_utils.image_percevior import GLEE_Percevior
+    GLEE_AVAILABLE = True
+except ImportError:
+    GLEE_AVAILABLE = False
+    print("[Mapper] Warning: GLEE_Percevior not available. Object detection will be disabled.")
+
+D3_40_COLORS_RGB = np.array([
+    [31,119,180],[255,127,14],[44,160,44],[214,39,40],[148,103,189],
+    [140,86,75],[227,119,194],[127,127,127],[188,189,34],[23,190,207],
+    [174,199,232],[255,187,120],[152,223,138],[255,152,150],[197,176,213],
+    [196,156,148],[247,182,210],[199,199,199],[219,219,141],[158,218,229],
+    [66,133,244],[219,68,55],[244,180,0],[15,157,88],[171,71,188],
+    [0,172,193],[255,112,67],[153,204,0],[255,153,51],[255,51,153],
+    [102,102,255],[102,255,102],[255,102,102],[255,255,102],[102,255,255],
+    [255,102,255],[204,153,255],[204,255,153],[255,204,153],[153,204,255]
+], dtype=np.uint8)
+
 class Mapper:
     def __init__(self,
-                 camera_intrinsic=None,
+                 camera_intrinsic,
                  pcd_resolution=0.05,
                  grid_resolution=0.1,
                  grid_size=5,
@@ -26,36 +37,31 @@ class Mapper:
                  translation_func=habitat_translation,
                  rotation_func=habitat_rotation,
                  rotate_axis=[0,1,0],
-                 device='cpu:0',
-                 enable_semantics=False,
-                 debug=True,
-                 depth_debug_dir=None,
-                 depth_colormap="turbo"):
+                 device='cuda:0',
+                 enable_object_detection=True):
         self.device = device
-        self.camera_intrinsic = np.array(camera_intrinsic, dtype=float) if camera_intrinsic is not None else None
+        self.camera_intrinsic = camera_intrinsic
         self.pcd_resolution = pcd_resolution
         self.grid_resolution = grid_resolution
         self.grid_size = grid_size
         self.floor_height = floor_height
         self.ceiling_height = ceiling_height
-        self.translation_func = translation_func if translation_func is not None else self._identity_translation
-        self.rotation_func = rotation_func if rotation_func is not None else self._identity_rotation
+        self.translation_func = translation_func
+        self.rotation_func = rotation_func
         self.rotate_axis = np.array(rotate_axis)
-        self.enable_semantics = enable_semantics
-        self.object_percevior = GLEE_Percevior(device=device) if self.enable_semantics else None
+        
+        # Initialize object detector if available and enabled
+        self.enable_object_detection = enable_object_detection and GLEE_AVAILABLE
+        if self.enable_object_detection:
+            self.object_percevior = GLEE_Percevior(device=device)
+        else:
+            self.object_percevior = None
+            if enable_object_detection and not GLEE_AVAILABLE:
+                print("[Mapper] Object detection requested but GLEE not available.")
+        
         self.pcd_device = o3d.core.Device(device.upper())
-        self.debug = debug
-        self.depth_debug_dir = Path(depth_debug_dir) if depth_debug_dir else None
-        if self.depth_debug_dir is None and self.debug:
-            self.depth_debug_dir = Path("./outputs/depth_debug")
-        if self.depth_debug_dir:
-            self.depth_debug_dir.mkdir(parents=True, exist_ok=True)
-        self.depth_colormap = depth_colormap
-        self.update_iterations = 0
-        self._logger = logging.getLogger(__name__)
     
     def reset(self,position,rotation):
-        self._ensure_intrinsic()
         self.update_iterations = 0
         self.initial_position = self.translation_func(position)
         self.current_position = self.translation_func(position) - self.initial_position
@@ -67,35 +73,32 @@ class Mapper:
         self.trajectory_position = []
     
     def update(self,rgb,depth,position,rotation):
-        self._ensure_intrinsic()
         self.current_position = self.translation_func(position) - self.initial_position
         self.current_rotation = self.rotation_func(rotation)
         self.current_depth = preprocess_depth(depth)
         self.current_rgb = preprocess_image(rgb)
-        self._log_depth_stats(self.current_depth)
-        self._maybe_save_depth_image(self.current_depth)
         self.trajectory_position.append(self.current_position)
         # to avoid there is no valid depth value (especially in real-world)
         if np.sum(self.current_depth) > 0:
             camera_points,camera_colors = get_pointcloud_from_depth(self.current_rgb,self.current_depth,self.camera_intrinsic)
             world_points = translate_to_world(camera_points,self.current_position,self.current_rotation)
             self.current_pcd = gpu_pointcloud_from_array(world_points,camera_colors,self.pcd_device).voxel_down_sample(self.pcd_resolution)
-            self._log_pcd_stats("current_pcd", self.current_pcd)
         else:
             return
-        # semantic masking and project object mask to pointcloud
-        if self.enable_semantics and self.object_percevior is not None:
+        
+        # semantic masking and project object mask to pointcloud (only if object detector is available)
+        current_object_entities = []
+        if self.enable_object_detection and self.object_percevior is not None:
             classes,masks,confidences,visualization = self.object_percevior.perceive(self.current_rgb)
             self.segmentation = visualization[0]
             current_object_entities = self.get_object_entities(self.current_depth,classes,masks,confidences)
             self.object_entities = self.associate_object_entities(self.object_entities,current_object_entities)
             self.object_pcd = self.update_object_pcd()
         else:
-            self.segmentation = None
-            current_object_entities = []
+            self.segmentation = self.current_rgb  # Use raw RGB as segmentation placeholder
+            
         # pointcloud update
         self.scene_pcd = gpu_merge_pointcloud(self.current_pcd,self.scene_pcd).voxel_down_sample(self.pcd_resolution)
-        self._log_pcd_stats("scene_pcd", self.scene_pcd)
         self.scene_pcd = self.scene_pcd.select_by_index((self.scene_pcd.point.positions[:,2]>self.floor_height-0.2).nonzero()[0])
         self.useful_pcd = self.scene_pcd.select_by_index((self.scene_pcd.point.positions[:,2]<self.ceiling_height).nonzero()[0])
         
@@ -106,15 +109,9 @@ class Mapper:
         # geometry 
         current_navigable_point = self.current_pcd.select_by_index((self.current_pcd.point.positions[:,2]<self.floor_height).nonzero()[0])
         current_navigable_position = current_navigable_point.point.positions.cpu().numpy()
-        if current_navigable_position.size == 0:
-            self._logger.debug("No navigable points under floor_height; skip update.")
-            return
         standing_position = np.array([self.current_position[0],self.current_position[1],current_navigable_position[:,2].mean()])
         interpolate_points = np.linspace(np.ones_like(current_navigable_position)*standing_position,current_navigable_position,25).reshape(-1,3)
         interpolate_points = interpolate_points[(interpolate_points[:,2] > self.floor_height-0.2) & (interpolate_points[:,2] < self.floor_height+0.2)]
-        if interpolate_points.size == 0:
-            self._logger.debug("Interpolated navigable points empty; skip update.")
-            return
         interpolate_colors = np.ones_like(interpolate_points) * 100
         try:
             current_navigable_pcd = gpu_pointcloud_from_array(interpolate_points,interpolate_colors,self.pcd_device).voxel_down_sample(self.grid_resolution)
@@ -137,38 +134,6 @@ class Mapper:
         self.frontier_pcd[:,2] = self.navigable_pcd.point.positions.cpu().numpy()[:,2].mean()
         self.frontier_pcd = gpu_pointcloud_from_array(self.frontier_pcd,np.ones((self.frontier_pcd.shape[0],3))*np.array([[255,0,0]]),self.pcd_device)
         self.update_iterations += 1
-
-    def _identity_translation(self, position):
-        return np.asarray(position, dtype=float)
-
-    def _identity_rotation(self, rotation):
-        try:
-            quat = quaternion.quaternion(rotation[3], rotation[0], rotation[1], rotation[2])
-            return quaternion.as_rotation_matrix(quat)
-        except Exception:
-            return np.eye(3, dtype=float)
-
-    def _ensure_intrinsic(self):
-        if self.camera_intrinsic is None:
-            raise ValueError("camera_intrinsic is not set. Provide it when constructing Mapper.")
-
-    def _log_depth_stats(self, depth):
-        if not self.debug:
-            return
-        try:
-            depth_np = np.asarray(depth)
-            stats = {
-                "shape": depth_np.shape,
-                "dtype": str(depth_np.dtype),
-                "min": float(np.nanmin(depth_np)),
-                "max": float(np.nanmax(depth_np)),
-                "mean": float(np.nanmean(depth_np)),
-                "zeros": int(np.sum(depth_np == 0)),
-                "nan": int(np.isnan(depth_np).sum()),
-            }
-            self._logger.info("[Mapper] Depth stats: %s", stats)
-        except Exception:
-            self._logger.info("[Mapper] Depth stats: failed to compute")
     
     def update_object_pcd(self):
         object_pcd = o3d.geometry.PointCloud()
@@ -204,7 +169,7 @@ class Mapper:
                 exist_objects.append(cls)
             camera_points = get_pointcloud_from_depth_mask(depth,mask,self.camera_intrinsic)
             world_points = translate_to_world(camera_points,self.current_position,self.current_rotation)
-            point_colors = np.array([d3_40_colors_rgb[exist_objects.index(cls)%40]]*world_points.shape[0])
+            point_colors = np.array([D3_40_COLORS_RGB[exist_objects.index(cls)%40]]*world_points.shape[0])
             if world_points.shape[0] < 10:
                 continue
             object_pcd = gpu_pointcloud_from_array(world_points,point_colors,self.pcd_device).voxel_down_sample(self.pcd_resolution)
@@ -378,7 +343,160 @@ class Mapper:
     
     def get_appeared_objects(self):
         return [entity['class'] for entity in self.object_entities]
+    def get_2d_occupancy_map(self, grid_resolution=None):
+        """
+        Generate a 2D occupancy grid map from the point clouds.
+        
+        Returns:
+            occupancy_map: 2D numpy array where:
+                - 0 = unknown/unexplored
+                - 1 = navigable/free space
+                - 2 = obstacle
+            map_info: dict with 'min_bound', 'max_bound', 'resolution', 'robot_position'
+        """
+        if grid_resolution is None:
+            grid_resolution = self.grid_resolution
+            
+        try:
+            # Get all relevant points
+            navigable_points = self.navigable_pcd.point.positions.cpu().numpy()
+            obstacle_points = self.obstacle_pcd.point.positions.cpu().numpy()
+            
+            # Combine to get bounds
+            all_points = np.vstack([navigable_points, obstacle_points])
+            min_bound = np.min(all_points, axis=0)
+            max_bound = np.max(all_points, axis=0)
+            
+            # Create 2D grid (X-Y plane, ignoring Z/height)
+            grid_size = np.ceil((max_bound[:2] - min_bound[:2]) / grid_resolution).astype(int)
+            occupancy_map = np.zeros(grid_size, dtype=np.uint8)  # 0 = unknown
+            
+            # Mark navigable areas (value = 1)
+            nav_indices = np.floor((navigable_points[:, :2] - min_bound[:2]) / grid_resolution).astype(int)
+            nav_indices[:, 0] = np.clip(nav_indices[:, 0], 0, grid_size[0] - 1)
+            nav_indices[:, 1] = np.clip(nav_indices[:, 1], 0, grid_size[1] - 1)
+            occupancy_map[nav_indices[:, 0], nav_indices[:, 1]] = 1
+            
+            # Mark obstacles (value = 2)
+            obs_indices = np.floor((obstacle_points[:, :2] - min_bound[:2]) / grid_resolution).astype(int)
+            obs_indices[:, 0] = np.clip(obs_indices[:, 0], 0, grid_size[0] - 1)
+            obs_indices[:, 1] = np.clip(obs_indices[:, 1], 0, grid_size[1] - 1)
+            occupancy_map[obs_indices[:, 0], obs_indices[:, 1]] = 2
+            
+            # Robot position in grid coordinates
+            robot_grid_pos = np.floor((self.current_position[:2] - min_bound[:2]) / grid_resolution).astype(int)
+            
+            map_info = {
+                'min_bound': min_bound[:2],
+                'max_bound': max_bound[:2],
+                'resolution': grid_resolution,
+                'robot_position': robot_grid_pos,
+                'robot_world_position': self.current_position[:2]
+            }
+            
+            return occupancy_map, map_info
+        except Exception as e:
+            print(f"[Mapper] Failed to generate 2D occupancy map: {e}")
+            return None, None
 
+    def save_2d_map_image(self, path="./", prefix="map"):
+        """
+        Save 2D map visualizations as images.
+        
+        Saves:
+            - {prefix}_occupancy.png: Occupancy grid (white=free, black=obstacle, gray=unknown)
+            - {prefix}_topdown.png: Top-down color view from point cloud
+            - {prefix}_trajectory.png: Occupancy with robot trajectory overlay
+        """
+        import cv2
+        
+        try:
+            occupancy_map, map_info = self.get_2d_occupancy_map()
+            if occupancy_map is None:
+                print("[Mapper] Cannot save 2D map - no data available")
+                return
+            
+            # === 1. Occupancy Grid Image ===
+            # 0=unknown (gray), 1=free (white), 2=obstacle (black)
+            occ_image = np.zeros((*occupancy_map.shape, 3), dtype=np.uint8)
+            occ_image[occupancy_map == 0] = [128, 128, 128]  # Gray - unknown
+            occ_image[occupancy_map == 1] = [255, 255, 255]  # White - free
+            occ_image[occupancy_map == 2] = [0, 0, 0]        # Black - obstacle
+            
+            # Mark robot position (red dot)
+            robot_pos = map_info['robot_position']
+            if 0 <= robot_pos[0] < occ_image.shape[0] and 0 <= robot_pos[1] < occ_image.shape[1]:
+                cv2.circle(occ_image, (robot_pos[1], robot_pos[0]), 3, (0, 0, 255), -1)
+            
+            # Flip for proper orientation and scale up
+            occ_image = cv2.flip(occ_image, 0)
+            occ_image = cv2.resize(occ_image, (0, 0), fx=5, fy=5, interpolation=cv2.INTER_NEAREST)
+            cv2.imwrite(path + f"{prefix}_occupancy.png", occ_image)
+            
+            # === 2. Top-down Color Map ===
+            try:
+                scene_points = self.useful_pcd.point.positions.cpu().numpy()
+                scene_colors = self.useful_pcd.point.colors.cpu().numpy()
+                
+                min_bound = map_info['min_bound']
+                resolution = map_info['resolution']
+                grid_size = occupancy_map.shape
+                
+                # Create color image
+                color_map = np.zeros((*grid_size, 3), dtype=np.float32)
+                color_count = np.zeros(grid_size, dtype=np.float32)
+                
+                indices = np.floor((scene_points[:, :2] - min_bound) / resolution).astype(int)
+                indices[:, 0] = np.clip(indices[:, 0], 0, grid_size[0] - 1)
+                indices[:, 1] = np.clip(indices[:, 1], 0, grid_size[1] - 1)
+                
+                for i, (idx, color) in enumerate(zip(indices, scene_colors)):
+                    color_map[idx[0], idx[1]] += color
+                    color_count[idx[0], idx[1]] += 1
+                
+                # Average colors
+                color_count[color_count == 0] = 1
+                color_map = color_map / color_count[:, :, np.newaxis]
+                color_map = (color_map * 255).astype(np.uint8)
+                color_map = cv2.flip(color_map, 0)
+                color_map = cv2.resize(color_map, (0, 0), fx=5, fy=5, interpolation=cv2.INTER_NEAREST)
+                cv2.imwrite(path + f"{prefix}_topdown.png", cv2.cvtColor(color_map, cv2.COLOR_RGB2BGR))
+            except Exception as e:
+                print(f"[Mapper] Failed to save top-down color map: {e}")
+            
+            # === 3. Trajectory Map ===
+            try:
+                traj_image = occ_image.copy()
+                if len(self.trajectory_position) > 1:
+                    trajectory = np.array(self.trajectory_position)
+                    traj_indices = np.floor((trajectory[:, :2] - min_bound) / resolution).astype(int)
+                    
+                    # Scale up trajectory points
+                    traj_indices = traj_indices * 5  # Match the 5x scale
+                    
+                    # Draw trajectory line
+                    for i in range(len(traj_indices) - 1):
+                        pt1 = (traj_indices[i, 1], occ_image.shape[0] - 1 - traj_indices[i, 0])
+                        pt2 = (traj_indices[i + 1, 1], occ_image.shape[0] - 1 - traj_indices[i + 1, 0])
+                        cv2.line(traj_image, pt1, pt2, (0, 255, 0), 2)
+                    
+                    # Mark start (blue) and current (red)
+                    start_pt = (traj_indices[0, 1], occ_image.shape[0] - 1 - traj_indices[0, 0])
+                    end_pt = (traj_indices[-1, 1], occ_image.shape[0] - 1 - traj_indices[-1, 0])
+                    cv2.circle(traj_image, start_pt, 5, (255, 0, 0), -1)
+                    cv2.circle(traj_image, end_pt, 5, (0, 0, 255), -1)
+                
+                cv2.imwrite(path + f"{prefix}_trajectory.png", traj_image)
+            except Exception as e:
+                print(f"[Mapper] Failed to save trajectory map: {e}")
+            
+            print(f"[Mapper] 2D maps saved to {path}")
+            print(f"  - {prefix}_occupancy.png: Occupancy grid")
+            print(f"  - {prefix}_topdown.png: Top-down color view")
+            print(f"  - {prefix}_trajectory.png: Trajectory overlay")
+            
+        except Exception as e:
+            print(f"[Mapper] Failed to save 2D map images: {e}")
     def save_pointcloud_debug(self,path="./"):
         save_pcd = o3d.geometry.PointCloud()
         try:
@@ -413,42 +531,5 @@ class Mapper:
             object_pcd = object_pcd + new_pcd
         if len(object_pcd.points) > 0:
             o3d.io.write_point_cloud(path + "object.ply",object_pcd)
-
-    def _maybe_save_depth_image(self, depth):
-        if not self.debug or self.depth_debug_dir is None:
-            return
-        try:
-            depth_np = np.asarray(depth, dtype=np.float32)
-            valid_mask = depth_np > 0
-            if valid_mask.any():
-                depth_min = depth_np[valid_mask].min()
-                depth_max = depth_np[valid_mask].max()
-            else:
-                depth_min = 0.0
-                depth_max = 1.0
-            span = max(depth_max - depth_min, 1e-6)
-            normalized = np.clip((depth_np - depth_min) / span, 0.0, 1.0)
-            cmap = colormaps.get(self.depth_colormap, colormaps.get('jet'))
-            rgba = cmap(normalized)[..., :3]
-            rgba[~valid_mask] = 0
-            img = Image.fromarray((rgba * 255).astype(np.uint8))
-            filename = self.depth_debug_dir / f"depth_{self.update_iterations:06d}.png"
-            img.save(filename)
-        except Exception as exc:
-            self._logger.debug("[Mapper] Failed to save depth image: %s", exc)
-
-    def _log_pcd_stats(self,label,pcd):
-        if not self.debug:
-            return
-        try:
-            points = pcd.point.positions.cpu().numpy()
-            if points.size == 0:
-                self._logger.info("[Mapper] %s empty", label)
-                return
-            mins = points.min(axis=0)
-            maxs = points.max(axis=0)
-            self._logger.info("[Mapper] %s points=%d range(min=%s max=%s)", label, points.shape[0], np.round(mins,3), np.round(maxs,3))
-        except Exception:
-            self._logger.debug("[Mapper] Failed logging stats for %s", label)
     
    

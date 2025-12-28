@@ -42,6 +42,7 @@ class AgentBaseline(ClosedLoopBaseline):
         self._setup_solver()
         self._temp_dir = tempfile.TemporaryDirectory()
         self._inference_lock = asyncio.Lock()
+        
         # Manual Camera Extrinsics (Camera to Robot)
         # Camera at (0, 1.6, 0) in Unity coords (X right, Y up, Z forward).
         # Mapper produces points in CV coords (X right, Y down, Z forward).
@@ -54,21 +55,33 @@ class AgentBaseline(ClosedLoopBaseline):
         ])
         
         # Manual Camera Intrinsics (3x3 Matrix)
-        # If None, mapper will estimate from FOV
-        self.camera_intrinsics = np.array([[415.6922, 0, 320],
-                                    [0, 415.6922, 240],
-                                    [0, 0, 1]])
-        # Example for 256x256 image with 90 deg FOV:
-        # self.camera_intrinsics = np.array([
-        #     [128.0, 0.0, 128.0],
-        #     [0.0, 128.0, 128.0],
-        #     [0.0, 0.0, 1.0]
-        # ])
+        # 640x480 image with specific focal length
+        self.camera_intrinsics = np.array([
+            [415.6922, 0, 320],
+            [0, 415.6922, 240],
+            [0, 0, 1]
+        ])
+        
+        # Import Unity coordinate transformation functions
+        from .mapping_utils.geometry import unity_translation, unity_rotation
+        
+        # Initialize Mapper with Unity coordinate system settings
+        # Unity: X-right, Y-up, Z-forward
         self.mapper = Mapper(
             camera_intrinsic=self.camera_intrinsics,
-            translation_func=self._translation_from_agent,
-            rotation_func=self._rotation_from_agent,
+            pcd_resolution=0.05,
+            grid_resolution=0.1,
+            grid_size=5,
+            floor_height=-0.2,      # Adjusted for Unity's Y-up coordinate
+            ceiling_height=2.5,     # Typical ceiling height in meters
+            translation_func=unity_translation,
+            rotation_func=unity_rotation,
+            rotate_axis=[0, 1, 0],  # Y-axis rotation for Unity
+            device='cuda:0',
+            enable_object_detection=False  # Disable GLEE object detection for now
         )
+        
+        # Flag to track if mapper has been reset for current session
         self._mapper_initialized = False
 
     def _setup_solver(self):
@@ -95,6 +108,7 @@ class AgentBaseline(ClosedLoopBaseline):
     async def on_session_start(self, session: BaselineSession) -> None:
         session.metadata.clear()
         session.metadata["frame_history"] = []
+        # Reset mapper initialization flag for new session
         self._mapper_initialized = False
 
     async def on_session_end(self, session: BaselineSession) -> None:
@@ -106,9 +120,21 @@ class AgentBaseline(ClosedLoopBaseline):
                     Path(path_str).unlink(missing_ok=True)
                 except Exception:
                     pass
+        
+        # Save mapper point clouds for debugging before cleanup
+        if self._mapper_initialized:
+            try:
+                map_output_dir = Path(self._temp_dir.name) / f"maps_{session.session_id}"
+                map_output_dir.mkdir(exist_ok=True)
+                self.mapper.save_pointcloud_debug(str(map_output_dir) + "/")
+                print(f"[AgentBaseline] Maps saved to: {map_output_dir}")
+            except Exception as e:
+                print(f"[AgentBaseline] Failed to save maps: {e}")
+        
         session.state.clear()
-        # Cleanup temp dir if needed, but we keep it for the lifetime of the baseline instance
+        # Reset mapper state
         self._mapper_initialized = False
+        # Cleanup temp dir if needed, but we keep it for the lifetime of the baseline instance
 
     async def handle_envelope(
         self, session: BaselineSession, envelope: MessageEnvelope
@@ -118,8 +144,6 @@ class AgentBaseline(ClosedLoopBaseline):
         elif envelope.message_type == "rgbd":
             session.metadata["has_rgbd"] = True
             session.state.update_rgbd(envelope.payload)
-
-        self._try_update_map(session)
 
         if not self._ready_to_respond(session):
             return None
@@ -131,58 +155,54 @@ class AgentBaseline(ClosedLoopBaseline):
         async with self._inference_lock:
             return await self._run_inference(session)
 
-    def _try_update_map(self, session: BaselineSession) -> None:
-        rgbd = session.state.latest_rgbd
-        if rgbd is None:
-            return
-
-        rgb_frame = self._get_rgb_frame(rgbd)
-        if rgb_frame is None:
-            return
-
-        # Skip mapping until a valid depth frame arrives
-        if getattr(rgbd, "depth", None) is None:
-            return
-        try:
-            if np.sum(rgbd.depth) == 0:
-                return
-        except Exception:
-            return
-
-        robot_pose = session.metadata.get("robot_pose")
-        
-        # If RobotPose is not explicitly sent, try to use TransformData
-        if robot_pose is None and "transform" in session.metadata:
-            t = session.metadata["transform"]
-            # TransformData has position (tuple) and rotation (tuple)
-            robot_pos_arr = np.array(t.position)
-            robot_rot_arr = np.array(t.rotation)
-        elif robot_pose:
-            # robot_pose is now a TransformData object if coming from "Baseline" check
-            # or could be the old RobotPose if we hadn't removed it, but we did.
-            # In _handle_json_packet we set session.metadata["robot_pose"] = transform (TransformData)
-            robot_pos_arr = np.array(robot_pose.position)
-            robot_rot_arr = np.array(robot_pose.rotation)
-        else:
-            return # No pose data
-
-        if not self._mapper_initialized:
-            self.mapper.reset(robot_pos_arr, robot_rot_arr)
-            self._mapper_initialized = True
-
-        self.mapper.update(
-            rgb=rgb_frame,
-            depth=rgbd.depth,
-            position=robot_pos_arr,
-            rotation=robot_rot_arr,
-        )
-
     async def _run_inference(self, session: BaselineSession) -> BaselineResponse | None:
         """Execute one inference pass using the latest state."""
-        # Get the latest RGB image
+        # Get the latest RGB and depth frames
         rgb_frame = self._get_rgb_frame(session.state.latest_rgbd)
         if rgb_frame is None:
+            print("[AgentBaseline] WARNING: rgb_frame is None!")
             return None
+        
+        depth_frame = self._get_depth_frame(session.state.latest_rgbd)
+        
+        # Get robot pose from session metadata
+        robot_pose = session.metadata.get("robot_pose")
+        
+        # Debug: Print what data we have
+        print(f"[AgentBaseline] DEBUG: rgb_frame shape={rgb_frame.shape if rgb_frame is not None else None}")
+        print(f"[AgentBaseline] DEBUG: depth_frame={depth_frame is not None}, shape={depth_frame.shape if depth_frame is not None else None}")
+        print(f"[AgentBaseline] DEBUG: robot_pose={robot_pose}")
+        
+        # Update mapper with current observation
+        if robot_pose is not None and depth_frame is not None:
+            position = np.array(robot_pose.position, dtype=np.float64)
+            rotation = np.array(robot_pose.rotation, dtype=np.float64)  # (x, y, z, w)
+            
+            print(f"[AgentBaseline] DEBUG: position={position}, rotation={rotation}")
+            
+            # Initialize mapper on first valid pose
+            if not self._mapper_initialized:
+                self.mapper.reset(position, rotation)
+                self._mapper_initialized = True
+                print(f"[AgentBaseline] Mapper initialized at position: {position}")
+            
+            # Update mapper with current RGBD observation
+            try:
+                await asyncio.to_thread(
+                    self.mapper.update,
+                    rgb_frame, depth_frame, position, rotation
+                )
+                print(f"[AgentBaseline] Mapper updated (iter {self.mapper.update_iterations}) - Objects: {self.mapper.get_appeared_objects()}")
+                
+                # Save map for debugging
+                await asyncio.to_thread(self._save_map_debug, session.session_id)
+                    
+            except Exception as e:
+                import traceback
+                print(f"[AgentBaseline] Mapper update failed: {e}")
+                traceback.print_exc()
+        else:
+            print(f"[AgentBaseline] WARNING: Skipping mapper update - robot_pose={robot_pose is not None}, depth_frame={depth_frame is not None}")
 
         # Save image in thread pool
         timestamp = time.time()
@@ -255,6 +275,33 @@ class AgentBaseline(ClosedLoopBaseline):
         if img.mode != "RGB":
             img = img.convert("RGB")
         img.save(img_path, format="JPEG")
+
+    def _save_map_debug(self, session_id: str) -> None:
+        """Save mapper point clouds and 2D maps for debugging (runs in thread pool)."""
+        try:
+            # Save to a fixed output directory for easy access
+            map_output_dir = Path("./outputs/maps") / session_id
+            map_output_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Save 3D point clouds (.ply files)
+            self.mapper.save_pointcloud_debug(str(map_output_dir) + "/")
+            
+            # Save 2D map images (.png files)
+            self.mapper.save_2d_map_image(str(map_output_dir) + "/", prefix="map")
+            
+            print(f"[AgentBaseline] Maps saved to: {map_output_dir.absolute()}")
+            print(f"  3D Point Clouds:")
+            print(f"    - scene.ply: Full scene point cloud")
+            print(f"    - navigable.ply: Navigable areas")
+            print(f"    - obstacle.ply: Obstacles")
+            print(f"  2D Maps:")
+            print(f"    - map_occupancy.png: Occupancy grid (white=free, black=obstacle)")
+            print(f"    - map_topdown.png: Top-down color view")
+            print(f"    - map_trajectory.png: Robot trajectory overlay")
+        except Exception as e:
+            import traceback
+            print(f"[AgentBaseline] Failed to save maps: {e}")
+            traceback.print_exc()
 
     def _parse_output(self, output_text: str) -> Tuple[NavigationCommand, str]:
         # Default to stop
@@ -334,6 +381,22 @@ class AgentBaseline(ClosedLoopBaseline):
             return frame[..., ::-1].copy()
         return frame
 
+    def _get_depth_frame(self, rgbd) -> np.ndarray | None:
+        """Extract depth frame from RGBD data.
+        
+        Returns:
+            Depth image as numpy array (H, W) or (H, W, 1), or None if not available.
+        """
+        if rgbd is None:
+            return None
+        depth = getattr(rgbd, "depth", None)
+        if depth is None:
+            return None
+        # Ensure depth is numpy array
+        if not isinstance(depth, np.ndarray):
+            depth = np.array(depth)
+        return depth
+
     def _translation_from_agent(self, position: np.ndarray | Tuple[float, float, float]) -> np.ndarray:
         """Pass-through translation that works with TransformData inputs."""
         return np.asarray(position, dtype=float)
@@ -356,9 +419,11 @@ class AgentBaseline(ClosedLoopBaseline):
             try:
                 transform = TransformData.from_dict(packet.content)
                 session.metadata["transform"] = transform
-                if transform.ObjectName == "Baseline":
+                # Accept any TransformData as robot_pose (or check for specific ObjectName)
+                # The ObjectName might be different from "Baseline" depending on Unity setup
+                if transform.ObjectName == "Baseline" or session.metadata.get("robot_pose") is None:
                     session.metadata["robot_pose"] = transform
-            except (KeyError, TypeError, ValueError):
+            except (KeyError, TypeError, ValueError) as e:
                 session.metadata["transform"] = packet.content
         elif packet.json_type == "SimulationTime":
             # 期望 content = {"time": float}

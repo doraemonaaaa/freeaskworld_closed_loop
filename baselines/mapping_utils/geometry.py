@@ -136,5 +136,81 @@ def eculidean_distance(posA,posB):
     posB_reshaped = posB[np.newaxis, :, :]
     pairwise_distance = np.sqrt(np.sum((posA_reshaped - posB_reshaped)**2, axis=2))
     return pairwise_distance
-    
 
+
+# ============ Coordinate System Transformation Functions ============
+# Unity coordinate system: X-right, Y-up, Z-forward
+# Mapper internal coordinate: X-right, Y-forward, Z-up (typical robotics convention)
+
+def unity_translation(position):
+    """
+    Convert Unity position (X-right, Y-up, Z-forward) to mapper internal coords (X-right, Y-forward, Z-up).
+    Unity: (x, y, z) -> Mapper: (x, z, y)
+    """
+    position = np.asarray(position, dtype=np.float64)
+    # Unity Y-up, Z-forward -> Mapper Y-forward, Z-up
+    return np.array([position[0], position[2], position[1]], dtype=np.float64)
+
+
+def unity_rotation(rotation):
+    """
+    Convert Unity quaternion (x, y, z, w) to rotation matrix for mapper.
+    Unity uses left-handed coordinate system, we convert to right-handed.
+    
+    Args:
+        rotation: quaternion as (x, y, z, w) from Unity
+    
+    Returns:
+        3x3 rotation matrix
+    """
+    rotation = np.asarray(rotation, dtype=np.float64)
+    # Unity quaternion is (x, y, z, w)
+    qx, qy, qz, qw = rotation[0], rotation[1], rotation[2], rotation[3]
+    
+    # Convert Unity left-handed to right-handed by negating x and z components
+    # Also swap y and z axes to match our coordinate conversion
+    # Unity (x, y, z, w) -> Mapper quaternion with swapped axes
+    quat = quaternion.quaternion(qw, qx, qz, qy)  # w, x, z, y (swapping y and z)
+    
+    return quaternion.as_rotation_matrix(quat)
+
+
+def habitat_translation(position):
+    """
+    Placeholder for Habitat coordinate translation.
+    Habitat uses: X-right, Y-up, Z-backward (OpenGL convention)
+    """
+    position = np.asarray(position, dtype=np.float64)
+    # Habitat: (x, y, z) -> Mapper: (x, -z, y)
+    return np.array([position[0], -position[2], position[1]], dtype=np.float64)
+
+
+def habitat_rotation(rotation):
+    """
+    Placeholder for Habitat coordinate rotation.
+    
+    Args:
+        rotation: quaternion as (x, y, z, w) from Habitat
+    
+    Returns:
+        3x3 rotation matrix
+    """
+    rotation = np.asarray(rotation, dtype=np.float64)
+    qx, qy, qz, qw = rotation[0], rotation[1], rotation[2], rotation[3]
+    quat = quaternion.quaternion(qw, qx, qy, qz)
+    return quaternion.as_rotation_matrix(quat)
+
+
+def identity_translation(position):
+    """Pass-through translation (no coordinate conversion)."""
+    return np.asarray(position, dtype=np.float64)
+
+
+def identity_rotation(rotation):
+    """
+    Pass-through rotation - convert quaternion (x, y, z, w) to rotation matrix.
+    """
+    rotation = np.asarray(rotation, dtype=np.float64)
+    qx, qy, qz, qw = rotation[0], rotation[1], rotation[2], rotation[3]
+    quat = quaternion.quaternion(qw, qx, qy, qz)
+    return quaternion.as_rotation_matrix(quat)
