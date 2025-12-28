@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
+import quaternion
 from PIL import Image
 from dotenv import load_dotenv
 
@@ -41,23 +42,34 @@ class AgentBaseline(ClosedLoopBaseline):
         self._setup_solver()
         self._temp_dir = tempfile.TemporaryDirectory()
         self._inference_lock = asyncio.Lock()
-        self.mapper = Mapper()
         # Manual Camera Extrinsics (Camera to Robot)
-        # Assuming Identity for now, user can modify this.
-        # Example: 1.5m height, looking forward
-        self.camera_extrinsics = np.eye(4)
-        # If camera is at (0, 1.5, 0) relative to robot center:
-        # self.camera_extrinsics[1, 3] = 1.5
+        # Camera at (0, 1.6, 0) in Unity coords (X right, Y up, Z forward).
+        # Mapper produces points in CV coords (X right, Y down, Z forward).
+        # Transform: Flip Y, then translate by (0, 1.6, 0).
+        self.camera_extrinsics = np.array([
+            [1.0,  0.0, 0.0, 0.0],
+            [0.0, -1.0, 0.0, 1.6],
+            [0.0,  0.0, 1.0, 0.0],
+            [0.0,  0.0, 0.0, 1.0]
+        ])
         
         # Manual Camera Intrinsics (3x3 Matrix)
         # If None, mapper will estimate from FOV
-        self.camera_intrinsics = None 
+        self.camera_intrinsics = np.array([[415.6922, 0, 320],
+                                    [0, 415.6922, 240],
+                                    [0, 0, 1]])
         # Example for 256x256 image with 90 deg FOV:
         # self.camera_intrinsics = np.array([
         #     [128.0, 0.0, 128.0],
         #     [0.0, 128.0, 128.0],
         #     [0.0, 0.0, 1.0]
         # ])
+        self.mapper = Mapper(
+            camera_intrinsic=self.camera_intrinsics,
+            translation_func=self._translation_from_agent,
+            rotation_func=self._rotation_from_agent,
+        )
+        self._mapper_initialized = False
 
     def _setup_solver(self):
         # Load environment variables
@@ -83,6 +95,7 @@ class AgentBaseline(ClosedLoopBaseline):
     async def on_session_start(self, session: BaselineSession) -> None:
         session.metadata.clear()
         session.metadata["frame_history"] = []
+        self._mapper_initialized = False
 
     async def on_session_end(self, session: BaselineSession) -> None:
         
@@ -95,6 +108,7 @@ class AgentBaseline(ClosedLoopBaseline):
                     pass
         session.state.clear()
         # Cleanup temp dir if needed, but we keep it for the lifetime of the baseline instance
+        self._mapper_initialized = False
 
     async def handle_envelope(
         self, session: BaselineSession, envelope: MessageEnvelope
@@ -122,9 +136,19 @@ class AgentBaseline(ClosedLoopBaseline):
         if rgbd is None:
             return
 
-        # Use manual extrinsics
-        extrinsics_matrix = self.camera_extrinsics
-        
+        rgb_frame = self._get_rgb_frame(rgbd)
+        if rgb_frame is None:
+            return
+
+        # Skip mapping until a valid depth frame arrives
+        if getattr(rgbd, "depth", None) is None:
+            return
+        try:
+            if np.sum(rgbd.depth) == 0:
+                return
+        except Exception:
+            return
+
         robot_pose = session.metadata.get("robot_pose")
         
         # If RobotPose is not explicitly sent, try to use TransformData
@@ -142,12 +166,15 @@ class AgentBaseline(ClosedLoopBaseline):
         else:
             return # No pose data
 
+        if not self._mapper_initialized:
+            self.mapper.reset(robot_pos_arr, robot_rot_arr)
+            self._mapper_initialized = True
+
         self.mapper.update(
+            rgb=rgb_frame,
             depth=rgbd.depth,
-            extrinsics_matrix=extrinsics_matrix,
-            robot_pos=robot_pos_arr,
-            robot_rot=robot_rot_arr,
-            intrinsics_matrix=self.camera_intrinsics
+            position=robot_pos_arr,
+            rotation=robot_rot_arr,
         )
 
     async def _run_inference(self, session: BaselineSession) -> BaselineResponse | None:
@@ -178,7 +205,8 @@ class AgentBaseline(ClosedLoopBaseline):
                 pass
 
         # Run solver in thread pool
-        output = await asyncio.to_thread(self._run_solver, history)
+        # Use only the latest image
+        output = await asyncio.to_thread(self._run_solver, [str(img_path)])
 
         # Parse output
         direct_output = output.get("direct_output", "")
@@ -305,6 +333,18 @@ class AgentBaseline(ClosedLoopBaseline):
             # aiortc gives BGR; convert to RGB for downstream tools
             return frame[..., ::-1].copy()
         return frame
+
+    def _translation_from_agent(self, position: np.ndarray | Tuple[float, float, float]) -> np.ndarray:
+        """Pass-through translation that works with TransformData inputs."""
+        return np.asarray(position, dtype=float)
+
+    def _rotation_from_agent(self, rotation: np.ndarray | Tuple[float, float, float, float]) -> np.ndarray:
+        """Convert simulator quaternion (x, y, z, w) to rotation matrix."""
+        try:
+            quat = quaternion.quaternion(rotation[3], rotation[0], rotation[1], rotation[2])
+            return quaternion.as_rotation_matrix(quat)
+        except Exception:
+            return np.eye(3, dtype=float)
 
     def _handle_json_packet(self, session: BaselineSession, envelope: MessageEnvelope) -> None:
         packet = envelope.payload

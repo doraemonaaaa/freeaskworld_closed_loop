@@ -428,6 +428,8 @@ class WebRTCServer:
         try:
             color_b64 = payload.get("color")
             depth_b64 = payload.get("depth")
+            depth_format = (payload.get("depth_format") or "").lower()
+            depth_scale = float(payload.get("depth_scale") or 1.0)
 
             if not color_b64 or not depth_b64:
                 logger.warning("RGBD payload missing color or depth")
@@ -438,11 +440,33 @@ class WebRTCServer:
 
             with Image.open(io.BytesIO(color_bytes)) as color_img:
                 color_array_rgb = np.asarray(color_img)
-            with Image.open(io.BytesIO(depth_bytes)) as depth_img:
-                depth_array = np.asarray(depth_img)
+
+            if depth_format == "float32_m":
+                # Raw float32 depth in meters from Unity sender
+                depth_array = np.frombuffer(depth_bytes, dtype=np.float32)
+                expected_size = color_array_rgb.shape[0] * color_array_rgb.shape[1]
+                if depth_array.size != expected_size:
+                    raise ValueError(
+                        f"Depth size mismatch: got {depth_array.size}, expected {expected_size}"
+                    )
+                depth_array = depth_array.reshape((color_array_rgb.shape[0], color_array_rgb.shape[1]))
+                if depth_scale != 1.0:
+                    depth_array = depth_array * depth_scale
+            else:
+                # Fallback: treat as image-encoded depth
+                with Image.open(io.BytesIO(depth_bytes)) as depth_img:
+                    depth_array = np.asarray(depth_img)
 
             if self._config.verbose:
-                logger.info("🖼️ RGBD frame received: %sx%s", color_array_rgb.shape[1], color_array_rgb.shape[0])
+                logger.info(
+                    "🖼️ RGBD frame received: %sx%s, depth dtype=%s, shape=%s, min=%.4f, max=%.4f",
+                    color_array_rgb.shape[1],
+                    color_array_rgb.shape[0],
+                    str(depth_array.dtype),
+                    depth_array.shape,
+                    float(np.nanmin(depth_array)),
+                    float(np.nanmax(depth_array)),
+                )
 
             # Update preview JPEG (serve real JPEG bytes instead of PNG)
             try:
