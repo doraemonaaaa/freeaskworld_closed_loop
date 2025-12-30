@@ -1,0 +1,2 @@
+[console_scripts]
+rgbd_connector = vln_connector.rgbd_connector:main

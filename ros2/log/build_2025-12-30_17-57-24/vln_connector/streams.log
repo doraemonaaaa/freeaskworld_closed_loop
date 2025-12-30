@@ -1,0 +1,31 @@
+[0.572s] Invoking command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/vln_connector': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages:/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/vln_connector build --build-base /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build install --record /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/install.log --single-version-externally-managed
+[0.675s] running egg_info
+[0.675s] creating ../../build/vln_connector/vln_connector.egg-info
+[0.682s] writing ../../build/vln_connector/vln_connector.egg-info/PKG-INFO
+[0.682s] writing dependency_links to ../../build/vln_connector/vln_connector.egg-info/dependency_links.txt
+[0.682s] writing entry points to ../../build/vln_connector/vln_connector.egg-info/entry_points.txt
+[0.682s] writing requirements to ../../build/vln_connector/vln_connector.egg-info/requires.txt
+[0.682s] writing top-level names to ../../build/vln_connector/vln_connector.egg-info/top_level.txt
+[0.682s] writing manifest file '../../build/vln_connector/vln_connector.egg-info/SOURCES.txt'
+[0.697s] reading manifest file '../../build/vln_connector/vln_connector.egg-info/SOURCES.txt'
+[0.697s] writing manifest file '../../build/vln_connector/vln_connector.egg-info/SOURCES.txt'
+[0.697s] running build
+[0.697s] running build_py
+[0.697s] creating /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build
+[0.698s] creating /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build/lib
+[0.698s] creating /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build/lib/vln_connector
+[0.698s] copying vln_connector/__init__.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build/lib/vln_connector
+[0.698s] copying vln_connector/rgbd_connector.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build/lib/vln_connector
+[0.698s] running install
+[0.701s] running install_lib
+[0.708s] creating /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector
+[0.708s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build/lib/vln_connector/__init__.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector
+[0.708s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build/lib/vln_connector/rgbd_connector.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector
+[0.709s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector/__init__.py to __init__.cpython-312.pyc
+[0.709s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector/rgbd_connector.py to rgbd_connector.cpython-312.pyc
+[0.709s] running install_egg_info
+[0.717s] Copying ../../build/vln_connector/vln_connector.egg-info to /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector-0.0.1-py3.12.egg-info
+[0.718s] running install_scripts
+[0.771s] Installing rgbd_connector script to /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/vln_connector
+[0.771s] writing list of installed files to '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/install.log'
+[0.784s] Invoked command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/vln_connector' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages:/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/vln_connector build --build-base /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build install --record /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/install.log --single-version-externally-managed

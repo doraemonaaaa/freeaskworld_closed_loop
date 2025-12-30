@@ -33,24 +33,16 @@ source ~/.bashrc
 
 ## Install Others
 sudo apt install colcon  # ros2
-uv pip install em
+uv pip install "empy<4"
 
 ## Build the packages, get connection pack in python
 git clone -b main-ros2 https://github.com/Unity-Technologies/ROS-TCP-Endpoint.git
 colcon build --symlink-install
 source ./install/setup.bash
 
-### Build Python Env
-Sometimes in python3.12, have some build error such as empy have no interpreter, you just need construct a conda environment 3.10 to build it specially.
-```
-conda create -n ros2_jazzy python=3.10 -y
-conda activate ros2_jazzy
-conda install -c conda-forge cmake git wget curl pkg-config -y
-conda install -c conda-forge empy -
-conda install -c conda-forge empy lxml setuptools colcon-common-extensions -y
-conda install numpy
-pip install lark-parser
-```
+## If python3.12 have some build problem, just use this system python to build and used by uv python3.12
+sudo apt update
+sudo apt install -y python3-catkin-pkg python3-empy python3-colcon-common-extensions
 
 ## How to use
 ip addr show eth0  # Get wsl2 ip address, set inet to unity

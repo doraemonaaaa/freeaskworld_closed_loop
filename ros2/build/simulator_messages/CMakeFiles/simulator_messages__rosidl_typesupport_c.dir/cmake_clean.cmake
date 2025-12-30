@@ -1,5 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/simulator_messages__rosidl_typesupport_c.dir/link.d"
   "CMakeFiles/simulator_messages__rosidl_typesupport_c.dir/rosidl_typesupport_c/simulator_messages/msg/navigation_command__type_support.cpp.o"
   "CMakeFiles/simulator_messages__rosidl_typesupport_c.dir/rosidl_typesupport_c/simulator_messages/msg/navigation_command__type_support.cpp.o.d"
   "libsimulator_messages__rosidl_typesupport_c.pdb"

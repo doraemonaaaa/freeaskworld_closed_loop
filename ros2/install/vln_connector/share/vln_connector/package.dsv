@@ -1,0 +1,6 @@
+source;share/vln_connector/hook/pythonpath.ps1
+source;share/vln_connector/hook/pythonpath.dsv
+source;share/vln_connector/hook/pythonpath.sh
+source;share/vln_connector/hook/ament_prefix_path.ps1
+source;share/vln_connector/hook/ament_prefix_path.dsv
+source;share/vln_connector/hook/ament_prefix_path.sh

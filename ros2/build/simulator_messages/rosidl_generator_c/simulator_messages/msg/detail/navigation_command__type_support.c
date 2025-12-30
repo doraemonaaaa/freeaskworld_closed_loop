@@ -6,8 +6,8 @@
 
 #include "simulator_messages/msg/detail/navigation_command__functions.h"
 #include "simulator_messages/msg/detail/navigation_command__type_support.h"
-#include "rosidl_typesupport_interface/macros.h"
 #include "simulator_messages/msg/detail/navigation_command__struct.h"
+#include "rosidl_typesupport_interface/macros.h"
 
 #ifdef __cplusplus
 extern "C"

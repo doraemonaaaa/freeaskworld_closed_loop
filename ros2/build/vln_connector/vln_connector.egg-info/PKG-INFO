@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: vln-connector
+Version: 0.0.1
+Summary: VLN RGBD Connector Node
+Maintainer: PENG Yuhang
+Maintainer-email: 3478428491@qq.com
+License: Apache-2.0
