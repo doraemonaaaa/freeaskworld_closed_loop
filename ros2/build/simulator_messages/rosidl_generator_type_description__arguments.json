@@ -1,0 +1,11 @@
+{
+  "package_name": "simulator_messages",
+  "output_dir": "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_type_description/simulator_messages",
+  "idl_tuples": [
+    "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages:msg/NavigationCommand.idl"
+  ],
+  "include_paths": [
+    "std_msgs:/opt/ros/jazzy/share/std_msgs",
+    "builtin_interfaces:/opt/ros/jazzy/share/builtin_interfaces"
+  ]
+}

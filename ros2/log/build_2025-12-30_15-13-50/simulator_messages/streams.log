@@ -1,0 +1,26 @@
+[0.007s] Invoking command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy CONDA_PROMPT_MODIFIER=(ros2_jazzy) DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /home/pengyh/softwares/anaconda3/envs/ros2_jazzy/bin/cmake /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages -DCMAKE_INSTALL_PREFIX=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages
+[0.011s] [0mCMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+[0.011s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.011s]   CMake.
+[0.011s] 
+[0.011s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.011s]   to tell CMake that the project requires at least <min> but has been updated
+[0.011s]   to work with policies introduced by <max> or earlier.
+[0.011s] 
+[0.011s] [0m
+[0.018s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.113s] -- Found rosidl_default_generators: 1.6.0 (/opt/ros/jazzy/share/rosidl_default_generators/cmake)
+[0.114s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.185s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.198s] -- Found rosidl_adapter: 4.6.6 (/opt/ros/jazzy/share/rosidl_adapter/cmake)
+[0.199s] -- Found std_msgs: 5.3.6 (/opt/ros/jazzy/share/std_msgs/cmake)
+[0.347s] [31mCMake Error at /opt/ros/jazzy/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:223 (message):
+[0.347s]   Packages installing interfaces must include
+[0.347s]   '<member_of_group>rosidl_interface_packages</member_of_group>' in their
+[0.347s]   package.xml
+[0.347s] Call Stack (most recent call first):
+[0.347s]   CMakeLists.txt:8 (rosidl_generate_interfaces)
+[0.347s] 
+[0.347s] [0m
+[0.347s] -- Configuring incomplete, errors occurred!
+[0.352s] Invoked command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy CONDA_PROMPT_MODIFIER=(ros2_jazzy) DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /home/pengyh/softwares/anaconda3/envs/ros2_jazzy/bin/cmake /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages -DCMAKE_INSTALL_PREFIX=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages

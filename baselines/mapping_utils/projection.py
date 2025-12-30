@@ -77,4 +77,3 @@ def project_costmap(navigable_pcd,affordance_value,grid_resolution=0.25):
     color_navigable_costmap = cv2.applyColorMap((navigable_costmap*255).astype(np.uint8),cv2.COLORMAP_JET)
     color_navigable_costmap = cv2.resize(color_navigable_costmap,(0,0),fx=5,fy=5,interpolation=cv2.INTER_NEAREST)
     return navigable_costmap,color_navigable_costmap
-

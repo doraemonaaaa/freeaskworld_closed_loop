@@ -1,0 +1,36 @@
+[0.006s] Invoking command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy CONDA_PROMPT_MODIFIER=(ros2_jazzy) DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /home/pengyh/softwares/anaconda3/envs/ros2_jazzy/bin/cmake /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages -DCMAKE_INSTALL_PREFIX=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages
+[0.010s] [0mCMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+[0.010s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.010s]   CMake.
+[0.010s] 
+[0.010s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.010s]   to tell CMake that the project requires at least <min> but has been updated
+[0.010s]   to work with policies introduced by <max> or earlier.
+[0.010s] 
+[0.010s] [0m
+[0.018s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.105s] -- Found rosidl_default_generators: 1.6.0 (/opt/ros/jazzy/share/rosidl_default_generators/cmake)
+[0.106s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.182s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.195s] -- Found rosidl_adapter: 4.6.6 (/opt/ros/jazzy/share/rosidl_adapter/cmake)
+[0.196s] -- Found std_msgs: 5.3.6 (/opt/ros/jazzy/share/std_msgs/cmake)
+[0.455s] -- Found ament_cmake_ros: 0.12.0 (/opt/ros/jazzy/share/ament_cmake_ros/cmake)
+[0.639s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.881s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.883s] -- Found python_cmake_module: 0.11.1 (/opt/ros/jazzy/share/python_cmake_module/cmake)
+[0.933s] -- Found PythonExtra: /home/pengyh/softwares/anaconda3/envs/ros2_jazzy/bin/python3
+[1.025s] [31mCMake Error at /home/pengyh/softwares/anaconda3/envs/ros2_jazzy/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake:233 (message):
+[1.025s]   Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS NumPy) (found
+[1.025s]   version "3.10.19")
+[1.025s] Call Stack (most recent call first):
+[1.025s]   /home/pengyh/softwares/anaconda3/envs/ros2_jazzy/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake:603 (_FPHSA_FAILURE_MESSAGE)
+[1.025s]   /home/pengyh/softwares/anaconda3/envs/ros2_jazzy/share/cmake-3.31/Modules/FindPython/Support.cmake:4001 (find_package_handle_standard_args)
+[1.025s]   /home/pengyh/softwares/anaconda3/envs/ros2_jazzy/share/cmake-3.31/Modules/FindPython3.cmake:602 (include)
+[1.025s]   /opt/ros/jazzy/share/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake:22 (find_package)
+[1.025s]   /opt/ros/jazzy/share/ament_cmake_core/cmake/core/ament_execute_extensions.cmake:48 (include)
+[1.025s]   /opt/ros/jazzy/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:280 (ament_execute_extensions)
+[1.025s]   CMakeLists.txt:8 (rosidl_generate_interfaces)
+[1.025s] 
+[1.025s] [0m
+[1.025s] -- Configuring incomplete, errors occurred!
+[1.030s] Invoked command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy CONDA_PROMPT_MODIFIER=(ros2_jazzy) DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /home/pengyh/softwares/anaconda3/envs/ros2_jazzy/bin/cmake /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages -DCMAKE_INSTALL_PREFIX=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages

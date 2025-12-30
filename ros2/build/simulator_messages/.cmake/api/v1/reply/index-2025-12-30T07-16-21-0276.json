@@ -1,0 +1,54 @@
+{
+	"cmake" : 
+	{
+		"generator" : 
+		{
+			"multiConfig" : false,
+			"name" : "Unix Makefiles"
+		},
+		"paths" : 
+		{
+			"cmake" : "/home/pengyh/softwares/anaconda3/envs/ros2_jazzy/bin/cmake",
+			"cpack" : "/home/pengyh/softwares/anaconda3/envs/ros2_jazzy/bin/cpack",
+			"ctest" : "/home/pengyh/softwares/anaconda3/envs/ros2_jazzy/bin/ctest",
+			"root" : "/home/pengyh/softwares/anaconda3/envs/ros2_jazzy/share/cmake-3.31"
+		},
+		"version" : 
+		{
+			"isDirty" : false,
+			"major" : 3,
+			"minor" : 31,
+			"patch" : 1,
+			"string" : "3.31.1",
+			"suffix" : ""
+		}
+	},
+	"objects" : 
+	[
+		{
+			"jsonFile" : "codemodel-v2-288f71b2b851ea261128.json",
+			"kind" : "codemodel",
+			"version" : 
+			{
+				"major" : 2,
+				"minor" : 7
+			}
+		}
+	],
+	"reply" : 
+	{
+		"client-colcon-cmake" : 
+		{
+			"codemodel-v2" : 
+			{
+				"jsonFile" : "codemodel-v2-288f71b2b851ea261128.json",
+				"kind" : "codemodel",
+				"version" : 
+				{
+					"major" : 2,
+					"minor" : 7
+				}
+			}
+		}
+	}
+}

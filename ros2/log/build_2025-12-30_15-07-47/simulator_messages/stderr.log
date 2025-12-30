@@ -1,0 +1,41 @@
+[31mCMake Error at /opt/ros/jazzy/share/rosidl_adapter/cmake/rosidl_adapt_interfaces.cmake:57 (message):
+  execute_process(/home/pengyh/workspace/FreeAskAgent/.venv/bin/python3 -m
+  rosidl_adapter --package-name simulator_messages --arguments-file
+  /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter__arguments__simulator_messages.json
+  --output-dir
+  /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages
+  --output-file
+  /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages.idls)
+  returned error code 1:
+
+  AttributeError processing template 'msg.idl.em'
+
+  Traceback (most recent call last):
+
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/__main__.py", line 19, in <module>
+      sys.exit(main())
+               ^^^^^^
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/main.py", line 53, in main
+      abs_idl_file = convert_to_idl(
+                     ^^^^^^^^^^^^^^^
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/__init__.py", line 19, in convert_to_idl
+      return convert_msg_to_idl(
+             ^^^^^^^^^^^^^^^^^^^
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/msg/__init__.py", line 39, in convert_msg_to_idl
+      expand_template('msg.idl.em', data, output_file, encoding='iso-8859-1')
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/resource/__init__.py", line 29, in expand_template
+      content = evaluate_template(template_name, data)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/resource/__init__.py", line 65, in evaluate_template
+      _interpreter = em.Interpreter(
+                     ^^^^^^^^^^^^^^
+
+  AttributeError: module 'em' has no attribute 'Interpreter'
+
+Call Stack (most recent call first):
+  /opt/ros/jazzy/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:132 (rosidl_adapt_interfaces)
+  CMakeLists.txt:8 (rosidl_generate_interfaces)
+
+[0m

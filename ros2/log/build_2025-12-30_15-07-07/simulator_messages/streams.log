@@ -1,0 +1,63 @@
+[0.007s] Invoking command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages -DCMAKE_INSTALL_PREFIX=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages
+[0.091s] -- The C compiler identification is GNU 13.3.0
+[0.370s] -- The CXX compiler identification is GNU 13.3.0
+[0.680s] -- Detecting C compiler ABI info
+[0.811s] -- Detecting C compiler ABI info - done
+[0.815s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.816s] -- Detecting C compile features
+[0.816s] -- Detecting C compile features - done
+[0.861s] -- Detecting CXX compiler ABI info
+[0.986s] -- Detecting CXX compiler ABI info - done
+[0.990s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.990s] -- Detecting CXX compile features
+[0.991s] -- Detecting CXX compile features - done
+[0.992s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[1.111s] -- Found Python3: /home/pengyh/workspace/FreeAskAgent/.venv/bin/python3 (found version "3.12.3") found components: Interpreter 
+[1.175s] -- Found rosidl_default_generators: 1.6.0 (/opt/ros/jazzy/share/rosidl_default_generators/cmake)
+[1.177s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.273s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.291s] -- Found rosidl_adapter: 4.6.6 (/opt/ros/jazzy/share/rosidl_adapter/cmake)
+[1.293s] -- Found std_msgs: 5.3.6 (/opt/ros/jazzy/share/std_msgs/cmake)
+[1.451s] [31mCMake Error at /opt/ros/jazzy/share/rosidl_adapter/cmake/rosidl_adapt_interfaces.cmake:57 (message):
+[1.451s]   execute_process(/home/pengyh/workspace/FreeAskAgent/.venv/bin/python3 -m
+[1.451s]   rosidl_adapter --package-name simulator_messages --arguments-file
+[1.451s]   /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter__arguments__simulator_messages.json
+[1.451s]   --output-dir
+[1.451s]   /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages
+[1.451s]   --output-file
+[1.451s]   /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages.idls)
+[1.451s]   returned error code 1:
+[1.451s] 
+[1.451s]   AttributeError processing template 'msg.idl.em'
+[1.451s] 
+[1.451s]   Traceback (most recent call last):
+[1.451s] 
+[1.451s]     File "<frozen runpy>", line 198, in _run_module_as_main
+[1.451s]     File "<frozen runpy>", line 88, in _run_code
+[1.451s]     File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/__main__.py", line 19, in <module>
+[1.451s]       sys.exit(main())
+[1.451s]                ^^^^^^
+[1.451s]     File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/main.py", line 53, in main
+[1.451s]       abs_idl_file = convert_to_idl(
+[1.451s]                      ^^^^^^^^^^^^^^^
+[1.451s]     File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/__init__.py", line 19, in convert_to_idl
+[1.451s]       return convert_msg_to_idl(
+[1.451s]              ^^^^^^^^^^^^^^^^^^^
+[1.451s]     File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/msg/__init__.py", line 39, in convert_msg_to_idl
+[1.451s]       expand_template('msg.idl.em', data, output_file, encoding='iso-8859-1')
+[1.451s]     File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/resource/__init__.py", line 29, in expand_template
+[1.451s]       content = evaluate_template(template_name, data)
+[1.451s]                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[1.451s]     File "/opt/ros/jazzy/lib/python3.12/site-packages/rosidl_adapter/resource/__init__.py", line 65, in evaluate_template
+[1.451s]       _interpreter = em.Interpreter(
+[1.451s]                      ^^^^^^^^^^^^^^
+[1.451s] 
+[1.451s]   AttributeError: module 'em' has no attribute 'Interpreter'
+[1.451s] 
+[1.451s] Call Stack (most recent call first):
+[1.451s]   /opt/ros/jazzy/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:132 (rosidl_adapt_interfaces)
+[1.452s]   CMakeLists.txt:8 (rosidl_generate_interfaces)
+[1.452s] 
+[1.452s] [0m
+[1.452s] -- Configuring incomplete, errors occurred!
+[1.457s] Invoked command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages -DCMAKE_INSTALL_PREFIX=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages

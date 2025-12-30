@@ -2,6 +2,7 @@ from .mapping_utils.geometry import *
 from .mapping_utils.preprocess import *
 from .mapping_utils.projection import *
 from .mapping_utils.path_planning import *
+from .mapping_utils.transform import unity_rotation, unity_translation
 from matplotlib import colormaps
 from .constants import *
 import open3d as o3d
@@ -34,8 +35,8 @@ class Mapper:
                  grid_size=5,
                  floor_height=-0.8,
                  ceiling_height=0.8,
-                 translation_func=habitat_translation,
-                 rotation_func=habitat_rotation,
+                 translation_func=unity_translation,
+                 rotation_func=unity_rotation,
                  rotate_axis=[0,1,0],
                  device='cuda:0',
                  enable_object_detection=True):
@@ -73,11 +74,14 @@ class Mapper:
         self.trajectory_position = []
     
     def update(self,rgb,depth,position,rotation):
+        # 1. 更新当前位姿
         self.current_position = self.translation_func(position) - self.initial_position
         self.current_rotation = self.rotation_func(rotation)
         self.current_depth = preprocess_depth(depth)
         self.current_rgb = preprocess_image(rgb)
         self.trajectory_position.append(self.current_position)
+
+        # 2. 生成当前帧的点云并投影到世界坐标系
         # to avoid there is no valid depth value (especially in real-world)
         if np.sum(self.current_depth) > 0:
             camera_points,camera_colors = get_pointcloud_from_depth(self.current_rgb,self.current_depth,self.camera_intrinsic)
@@ -86,6 +90,7 @@ class Mapper:
         else:
             return
         
+        # 3. 语义分割与物体识别
         # semantic masking and project object mask to pointcloud (only if object detector is available)
         current_object_entities = []
         if self.enable_object_detection and self.object_percevior is not None:
@@ -96,16 +101,19 @@ class Mapper:
             self.object_pcd = self.update_object_pcd()
         else:
             self.segmentation = self.current_rgb  # Use raw RGB as segmentation placeholder
-            
+
+        # 4. 融合全局场景点云并按高度过滤（去除地板和天花板之外的杂讯）    
         # pointcloud update
         self.scene_pcd = gpu_merge_pointcloud(self.current_pcd,self.scene_pcd).voxel_down_sample(self.pcd_resolution)
         self.scene_pcd = self.scene_pcd.select_by_index((self.scene_pcd.point.positions[:,2]>self.floor_height-0.2).nonzero()[0])
         self.useful_pcd = self.scene_pcd.select_by_index((self.scene_pcd.point.positions[:,2]<self.ceiling_height).nonzero()[0])
         
+        # 5. 可通行性处理：将楼梯标记为可通行，并通过插值生成足迹区域
         # all the stairs will be regarded as navigable
         for entity in current_object_entities:
             if entity['class'] == 'stairs':
                 self.navigable_pcd = gpu_merge_pointcloud(self.navigable_pcd,entity['pcd'])
+                
         # geometry 
         current_navigable_point = self.current_pcd.select_by_index((self.current_pcd.point.positions[:,2]<self.floor_height).nonzero()[0])
         current_navigable_position = current_navigable_point.point.positions.cpu().numpy()
@@ -127,6 +135,7 @@ class Mapper:
         #print("Warning: hello world")
         # self.navigable_pcd = self.useful_pcd.select_by_index((self.useful_pcd.point.positions[:,2]<self.floor_height).nonzero()[0])
             
+        # 6. 计算障碍物与边界（Frontier）用于探索
         # filter the obstacle pointcloud
         self.obstacle_pcd = self.useful_pcd.select_by_index((self.useful_pcd.point.positions[:,2]>self.floor_height+0.1).nonzero()[0])
         self.trajectory_pcd = gpu_pointcloud_from_array(np.array(self.trajectory_position),np.zeros((len(self.trajectory_position),3)),self.pcd_device)
@@ -343,193 +352,30 @@ class Mapper:
     
     def get_appeared_objects(self):
         return [entity['class'] for entity in self.object_entities]
-    def get_2d_occupancy_map(self, grid_resolution=None):
-        """
-        Generate a 2D occupancy grid map from the point clouds.
-        
-        Returns:
-            occupancy_map: 2D numpy array where:
-                - 0 = unknown/unexplored
-                - 1 = navigable/free space
-                - 2 = obstacle
-            map_info: dict with 'min_bound', 'max_bound', 'resolution', 'robot_position'
-        """
-        if grid_resolution is None:
-            grid_resolution = self.grid_resolution
-            
-        try:
-            # Get all relevant points
-            navigable_points = self.navigable_pcd.point.positions.cpu().numpy()
-            obstacle_points = self.obstacle_pcd.point.positions.cpu().numpy()
-            
-            # Combine to get bounds
-            all_points = np.vstack([navigable_points, obstacle_points])
-            min_bound = np.min(all_points, axis=0)
-            max_bound = np.max(all_points, axis=0)
-            
-            # Create 2D grid (X-Y plane, ignoring Z/height)
-            grid_size = np.ceil((max_bound[:2] - min_bound[:2]) / grid_resolution).astype(int)
-            occupancy_map = np.zeros(grid_size, dtype=np.uint8)  # 0 = unknown
-            
-            # Mark navigable areas (value = 1)
-            nav_indices = np.floor((navigable_points[:, :2] - min_bound[:2]) / grid_resolution).astype(int)
-            nav_indices[:, 0] = np.clip(nav_indices[:, 0], 0, grid_size[0] - 1)
-            nav_indices[:, 1] = np.clip(nav_indices[:, 1], 0, grid_size[1] - 1)
-            occupancy_map[nav_indices[:, 0], nav_indices[:, 1]] = 1
-            
-            # Mark obstacles (value = 2)
-            obs_indices = np.floor((obstacle_points[:, :2] - min_bound[:2]) / grid_resolution).astype(int)
-            obs_indices[:, 0] = np.clip(obs_indices[:, 0], 0, grid_size[0] - 1)
-            obs_indices[:, 1] = np.clip(obs_indices[:, 1], 0, grid_size[1] - 1)
-            occupancy_map[obs_indices[:, 0], obs_indices[:, 1]] = 2
-            
-            # Robot position in grid coordinates
-            robot_grid_pos = np.floor((self.current_position[:2] - min_bound[:2]) / grid_resolution).astype(int)
-            
-            map_info = {
-                'min_bound': min_bound[:2],
-                'max_bound': max_bound[:2],
-                'resolution': grid_resolution,
-                'robot_position': robot_grid_pos,
-                'robot_world_position': self.current_position[:2]
-            }
-            
-            return occupancy_map, map_info
-        except Exception as e:
-            print(f"[Mapper] Failed to generate 2D occupancy map: {e}")
-            return None, None
-
-    def save_2d_map_image(self, path="./", prefix="map"):
-        """
-        Save 2D map visualizations as images.
-        
-        Saves:
-            - {prefix}_occupancy.png: Occupancy grid (white=free, black=obstacle, gray=unknown)
-            - {prefix}_topdown.png: Top-down color view from point cloud
-            - {prefix}_trajectory.png: Occupancy with robot trajectory overlay
-        """
-        import cv2
-        
-        try:
-            occupancy_map, map_info = self.get_2d_occupancy_map()
-            if occupancy_map is None:
-                print("[Mapper] Cannot save 2D map - no data available")
-                return
-            
-            # === 1. Occupancy Grid Image ===
-            # 0=unknown (gray), 1=free (white), 2=obstacle (black)
-            occ_image = np.zeros((*occupancy_map.shape, 3), dtype=np.uint8)
-            occ_image[occupancy_map == 0] = [128, 128, 128]  # Gray - unknown
-            occ_image[occupancy_map == 1] = [255, 255, 255]  # White - free
-            occ_image[occupancy_map == 2] = [0, 0, 0]        # Black - obstacle
-            
-            # Mark robot position (red dot)
-            robot_pos = map_info['robot_position']
-            if 0 <= robot_pos[0] < occ_image.shape[0] and 0 <= robot_pos[1] < occ_image.shape[1]:
-                cv2.circle(occ_image, (robot_pos[1], robot_pos[0]), 3, (0, 0, 255), -1)
-            
-            # Flip for proper orientation and scale up
-            occ_image = cv2.flip(occ_image, 0)
-            occ_image = cv2.resize(occ_image, (0, 0), fx=5, fy=5, interpolation=cv2.INTER_NEAREST)
-            cv2.imwrite(path + f"{prefix}_occupancy.png", occ_image)
-            
-            # === 2. Top-down Color Map ===
-            try:
-                scene_points = self.useful_pcd.point.positions.cpu().numpy()
-                scene_colors = self.useful_pcd.point.colors.cpu().numpy()
-                
-                min_bound = map_info['min_bound']
-                resolution = map_info['resolution']
-                grid_size = occupancy_map.shape
-                
-                # Create color image
-                color_map = np.zeros((*grid_size, 3), dtype=np.float32)
-                color_count = np.zeros(grid_size, dtype=np.float32)
-                
-                indices = np.floor((scene_points[:, :2] - min_bound) / resolution).astype(int)
-                indices[:, 0] = np.clip(indices[:, 0], 0, grid_size[0] - 1)
-                indices[:, 1] = np.clip(indices[:, 1], 0, grid_size[1] - 1)
-                
-                for i, (idx, color) in enumerate(zip(indices, scene_colors)):
-                    color_map[idx[0], idx[1]] += color
-                    color_count[idx[0], idx[1]] += 1
-                
-                # Average colors
-                color_count[color_count == 0] = 1
-                color_map = color_map / color_count[:, :, np.newaxis]
-                color_map = (color_map * 255).astype(np.uint8)
-                color_map = cv2.flip(color_map, 0)
-                color_map = cv2.resize(color_map, (0, 0), fx=5, fy=5, interpolation=cv2.INTER_NEAREST)
-                cv2.imwrite(path + f"{prefix}_topdown.png", cv2.cvtColor(color_map, cv2.COLOR_RGB2BGR))
-            except Exception as e:
-                print(f"[Mapper] Failed to save top-down color map: {e}")
-            
-            # === 3. Trajectory Map ===
-            try:
-                traj_image = occ_image.copy()
-                if len(self.trajectory_position) > 1:
-                    trajectory = np.array(self.trajectory_position)
-                    traj_indices = np.floor((trajectory[:, :2] - min_bound) / resolution).astype(int)
-                    
-                    # Scale up trajectory points
-                    traj_indices = traj_indices * 5  # Match the 5x scale
-                    
-                    # Draw trajectory line
-                    for i in range(len(traj_indices) - 1):
-                        pt1 = (traj_indices[i, 1], occ_image.shape[0] - 1 - traj_indices[i, 0])
-                        pt2 = (traj_indices[i + 1, 1], occ_image.shape[0] - 1 - traj_indices[i + 1, 0])
-                        cv2.line(traj_image, pt1, pt2, (0, 255, 0), 2)
-                    
-                    # Mark start (blue) and current (red)
-                    start_pt = (traj_indices[0, 1], occ_image.shape[0] - 1 - traj_indices[0, 0])
-                    end_pt = (traj_indices[-1, 1], occ_image.shape[0] - 1 - traj_indices[-1, 0])
-                    cv2.circle(traj_image, start_pt, 5, (255, 0, 0), -1)
-                    cv2.circle(traj_image, end_pt, 5, (0, 0, 255), -1)
-                
-                cv2.imwrite(path + f"{prefix}_trajectory.png", traj_image)
-            except Exception as e:
-                print(f"[Mapper] Failed to save trajectory map: {e}")
-            
-            print(f"[Mapper] 2D maps saved to {path}")
-            print(f"  - {prefix}_occupancy.png: Occupancy grid")
-            print(f"  - {prefix}_topdown.png: Top-down color view")
-            print(f"  - {prefix}_trajectory.png: Trajectory overlay")
-            
-        except Exception as e:
-            print(f"[Mapper] Failed to save 2D map images: {e}")
-    def save_pointcloud_debug(self,path="./"):
-        save_pcd = o3d.geometry.PointCloud()
-        try:
-            assert self.useful_pcd.point.positions.shape[0] > 0
-            save_pcd.points = o3d.utility.Vector3dVector(self.useful_pcd.point.positions.cpu().numpy())
-            save_pcd.colors = o3d.utility.Vector3dVector(self.useful_pcd.point.colors.cpu().numpy())
-            o3d.io.write_point_cloud(path + "scene.ply",save_pcd)
-        except:
-            pass
-        try:
-            assert self.navigable_pcd.point.positions.shape[0] > 0
-            save_pcd.points = o3d.utility.Vector3dVector(self.navigable_pcd.point.positions.cpu().numpy())
-            save_pcd.colors = o3d.utility.Vector3dVector(self.navigable_pcd.point.colors.cpu().numpy())
-            o3d.io.write_point_cloud(path + "navigable.ply",save_pcd)
-        except:
-            pass
-        try:
-            assert self.obstacle_pcd.point.positions.shape[0] > 0
-            save_pcd.points = o3d.utility.Vector3dVector(self.obstacle_pcd.point.positions.cpu().numpy())
-            save_pcd.colors = o3d.utility.Vector3dVector(self.obstacle_pcd.point.colors.cpu().numpy())
-            o3d.io.write_point_cloud(path + "obstacle.ply",save_pcd)
-        except:
-            pass
-        
-        object_pcd = o3d.geometry.PointCloud()
-        for entity in self.object_entities:
-            points = entity['pcd'].point.positions.cpu().numpy()
-            colors = entity['pcd'].point.colors.cpu().numpy()
-            new_pcd = o3d.geometry.PointCloud()
-            new_pcd.points = o3d.utility.Vector3dVector(points)
-            new_pcd.colors = o3d.utility.Vector3dVector(colors)
-            object_pcd = object_pcd + new_pcd
-        if len(object_pcd.points) > 0:
-            o3d.io.write_point_cloud(path + "object.ply",object_pcd)
-    
    
+    def save_scene_ply(self, filename="full_scene.ply"):
+        # 1. 确保 scene_pcd 不是空的
+        if self.scene_pcd.is_empty():
+            print("[Mapper] Warning: scene_pcd is empty, nothing to save.")
+            return
+
+        # 2. 以 scene_pcd 为基础
+        full_pcd = self.scene_pcd
+        
+        # 3. 安全检查 object_pcd 是否有内容
+        # 使用 is_empty() 是 Open3D Tensor 模式下最安全的做法
+        try:
+            if not self.object_pcd.is_empty():
+                # 如果有物体点云，将其合并（假设 gpu_merge_pointcloud 已定义）
+                full_pcd = gpu_merge_pointcloud(full_pcd, self.object_pcd)
+                print("[Mapper] Merged object points into scene.")
+        except Exception as e:
+            # 如果 object_pcd 根本没初始化好，就跳过合并，只存场景
+            print(f"[Mapper] Skipping object merge due to: {e}")
+
+        # 4. 执行保存
+        try:
+            o3d.t.io.write_point_cloud(filename, full_pcd)
+            print(f"[Mapper] Successfully dumped scene points to {filename}")
+        except Exception as e:
+            print(f"[Mapper] Failed to write PLY file: {e}")
