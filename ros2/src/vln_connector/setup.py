@@ -15,6 +15,7 @@ setup(
     entry_points={
         'console_scripts': [
             'rgbd_connector = vln_connector.rgbd_connector:main',
+            'agent_baseline = vln_connector.agent_baseline:main',
         ],
     },
 )

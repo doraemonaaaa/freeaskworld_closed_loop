@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
+from geometry_msgs.msg import TransformStamped, Vector3, Quaternion
 import numpy as np
 import cv2
 
@@ -25,10 +26,16 @@ class VLNConnector(Node):
             10
         )
 
-        # 自定义消息发布
+        self.transform_sub = self.create_subscription(
+            TransformStamped,
+            '/simulator_msg/robot_transform',
+            self.robot_transform_callback,
+            10
+        )
+
         self.command_pub = self.create_publisher(
             NavigationCommand,
-            '/navigation_command',
+            '/simulator_msg/navigation_command',
             10
         )
 
@@ -66,20 +73,27 @@ class VLNConnector(Node):
         cv2.imshow("Depth", depth_vis)
         cv2.waitKey(1)
 
-        # 发布示例 NavigationCommand
-        self.publish_navigation_command()
+    def robot_transform_callback(self, msg: TransformStamped):
+        t = msg.transform.translation
+        r = msg.transform.rotation
 
-    def publish_navigation_command(self):
-        msg = NavigationCommand()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = "map"
+        self.robot_position = [t.x, t.y, t.z]
+        self.robot_rotation = [r.x, r.y, r.z, r.w]
 
-        # 示例值
-        msg.local_position_offset = [0.0, 0.0, 0.0]
-        msg.local_rotation_offset = [0.0, 0.0, 0.0, 1.0]
-        msg.is_stop = False
+        # self.get_logger().info(  # ← 这里从 debug 改成 info
+        #     f"Received robot pose: pos=[{t.x:.3f}, {t.y:.3f}, {t.z:.3f}], "
+        #     f"rot=[{r.x:.3f}, {r.y:.3f}, {r.z:.3f}, {r.w:.3f}]"
+        # )
 
-        self.command_pub.publish(msg)
+    def publish_navigation_command(self, nav_cmd):
+        # msg = NavigationCommand()
+        # msg.header.stamp = self.get_clock().now().to_msg()
+        # msg.header.frame_id = "nav_cmd"
+
+        # msg.local_position_offset = [0.0, 0.0, 1.0]
+        # msg.local_rotation_offset = [0.0, 0.0, 0.0, 1.0]
+        # msg.is_stop = False
+        self.command_pub.publish(nav_cmd)
         self.get_logger().info("Published NavigationCommand")
 
 def main(args=None):

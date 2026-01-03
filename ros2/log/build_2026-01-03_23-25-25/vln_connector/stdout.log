@@ -1,0 +1,25 @@
+running egg_info
+writing ../../build/vln_connector/vln_connector.egg-info/PKG-INFO
+writing dependency_links to ../../build/vln_connector/vln_connector.egg-info/dependency_links.txt
+writing entry points to ../../build/vln_connector/vln_connector.egg-info/entry_points.txt
+writing requirements to ../../build/vln_connector/vln_connector.egg-info/requires.txt
+writing top-level names to ../../build/vln_connector/vln_connector.egg-info/top_level.txt
+reading manifest file '../../build/vln_connector/vln_connector.egg-info/SOURCES.txt'
+writing manifest file '../../build/vln_connector/vln_connector.egg-info/SOURCES.txt'
+running build
+running build_py
+copying vln_connector/agent_baseline.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build/lib/vln_connector
+copying vln_connector/rgbd_connector.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build/lib/vln_connector
+running install
+running install_lib
+copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build/lib/vln_connector/agent_baseline.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector
+copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/build/lib/vln_connector/rgbd_connector.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector
+byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector/agent_baseline.py to agent_baseline.cpython-312.pyc
+byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector/rgbd_connector.py to rgbd_connector.cpython-312.pyc
+running install_egg_info
+removing '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector-0.0.1-py3.12.egg-info' (and everything under it)
+Copying ../../build/vln_connector/vln_connector.egg-info to /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/python3.12/site-packages/vln_connector-0.0.1-py3.12.egg-info
+running install_scripts
+Installing agent_baseline script to /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/vln_connector
+Installing rgbd_connector script to /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/vln_connector/lib/vln_connector
+writing list of installed files to '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/vln_connector/install.log'
