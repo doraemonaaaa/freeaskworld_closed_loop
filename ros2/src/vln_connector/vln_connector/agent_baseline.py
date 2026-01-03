@@ -66,7 +66,7 @@ class AgentBaseline(VLNConnector):
             "Go to the <我和乔治商店>, task finish upon arrival within 2 meters."
         )
 
-        self.temp_dir = Path("temp_obs")
+        self.temp_dir = Path("tmp/agent_baseline")
         self.temp_dir.mkdir(parents=True, exist_ok=True)
 
         self.step_counter = 0
