@@ -52,3 +52,7 @@ ros2 run ros_tcp_endpoint default_server_endpoint  # Connect to Unity
 ```
 bash ros2server.bash  # this is a direct api script to execute your baseline, no need for other code
 ```
+
+
+## Create your own baseline
+Please refer to ros2/src/vln_connector/vln_connector/simple_baseline.py, using this format
