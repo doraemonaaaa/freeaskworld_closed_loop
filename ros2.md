@@ -45,7 +45,10 @@ sudo apt update
 sudo apt install -y python3-catkin-pkg python3-empy python3-colcon-common-extensions
 
 ## How to use
+```
 ip addr show eth0  # Get wsl2 ip address, set inet to unity
 ros2 run ros_tcp_endpoint default_server_endpoint  # Connect to Unity
- 
-
+```
+```
+bash ros2server.bash  # this is a direct api script to execute your baseline, no need for other code
+```
