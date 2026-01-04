@@ -10,3 +10,4 @@ setup.py
 vln_connector/__init__.py
 vln_connector/agent_baseline.py
 vln_connector/rgbd_connector.py
+vln_connector/simple_baseline.py

@@ -19,6 +19,7 @@ from agentflow.agentflow.solver_embodied import construct_solver_embodied
 from simulator_messages.msg import NavigationCommand  # 自定义消息
 from .rgbd_connector import VLNConnector
 
+
 class AgentBaseline(VLNConnector):
     """
     串行 LLM 控制 Agent（无 ROS Timer）
@@ -66,7 +67,7 @@ class AgentBaseline(VLNConnector):
             "Go to the <我和乔治商店>, task finish upon arrival within 2 meters."
         )
 
-        self.temp_dir = Path("temp_obs")
+        self.temp_dir = Path("tmp/agent_baseline")
         self.temp_dir.mkdir(parents=True, exist_ok=True)
 
         self.step_counter = 0
@@ -91,7 +92,6 @@ class AgentBaseline(VLNConnector):
         if rgb_snapshot is None:
             return
 
-        # 新线程执行推理
         # 非阻塞调用 Inference
         self._inference_thread = threading.Thread(
             target=self.Inference, kwargs={"rgb": rgb_snapshot, "depth": depth_snapshot}
@@ -123,9 +123,6 @@ class AgentBaseline(VLNConnector):
         通用 LLM 推理接口（可接收任意输入 via **args）
         线程安全，返回 NavigationCommand
         """
-
-        # --- 1. 从 args 获取输入 ---
-        # 默认获取 RGB 路径列表，如果没有提供，则尝试用 snapshot
         image_paths = args.get("image_paths", None)
         if image_paths is None:
             rgb = args.get("rgb")
@@ -135,11 +132,9 @@ class AgentBaseline(VLNConnector):
                 return None
             image_paths = self.InputData(rgb=rgb, depth=depth)
 
-        # --- 2. 开始推理 ---
         self.get_logger().info(f"[LLM] Thinking... input={image_paths[-1]}")
 
         try:
-            # 调用 AgentFlow Solver
             output = self.solver.solve(
                 self.task_prompt,
                 image_paths=image_paths
@@ -148,7 +143,6 @@ class AgentBaseline(VLNConnector):
             raw_text = output.get("direct_output", "")
             nav_cmd = self._parse_llm_to_ros(raw_text)
 
-            # 发布 ROS 指令
             if nav_cmd is not None:
                 self.publish_navigation_command(nav_cmd)
 
@@ -161,22 +155,17 @@ class AgentBaseline(VLNConnector):
         except Exception as e:
             self.get_logger().error(f"Inference Error: {e}")
             return None
-
         
     def destroy_node(self):
         super().destroy_node()
         self._temp_dir.cleanup()
         self.get_logger().info("Temporary directory cleaned up.")
 
-    # =====================================================
-    # LLM Output Parser
-    # =====================================================
     def _parse_llm_to_ros(self, output_text: str):
         cmd = NavigationCommand()
         cmd.header.stamp = self.get_clock().now().to_msg()
         cmd.header.frame_id = "agent"
         
-        # 默认初始化 (与 Unity 坐标系一致)
         # Unity: Z=Forward, X=Right, Y=Up
         pos_offset = [0.0, 0.0, 0.0] 
         rot_offset = [0.0, 0.0, 0.0, 1.0] # Identity quaternion (x, y, z, w)
