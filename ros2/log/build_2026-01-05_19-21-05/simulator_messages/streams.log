@@ -1,0 +1,233 @@
+[0.012s] Invoking command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages -DCATKIN_INSTALL_INTO_PREFIX_ROOT=0 -DCMAKE_INSTALL_PREFIX=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages
+[0.296s] -- The C compiler identification is GNU 13.3.0
+[0.756s] -- The CXX compiler identification is GNU 13.3.0
+[1.115s] -- Detecting C compiler ABI info
+[1.274s] -- Detecting C compiler ABI info - done
+[1.278s] -- Check for working C compiler: /usr/bin/cc - skipped
+[1.279s] -- Detecting C compile features
+[1.279s] -- Detecting C compile features - done
+[1.332s] -- Detecting CXX compiler ABI info
+[1.489s] -- Detecting CXX compiler ABI info - done
+[1.494s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.494s] -- Detecting CXX compile features
+[1.494s] -- Detecting CXX compile features - done
+[1.507s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[1.608s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[1.705s] -- Found rosidl_default_generators: 1.6.0 (/opt/ros/jazzy/share/rosidl_default_generators/cmake)
+[1.712s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.859s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.908s] -- Found rosidl_adapter: 4.6.6 (/opt/ros/jazzy/share/rosidl_adapter/cmake)
+[1.914s] -- Found std_msgs: 5.3.6 (/opt/ros/jazzy/share/std_msgs/cmake)
+[2.361s] -- Found ament_cmake_ros: 0.12.0 (/opt/ros/jazzy/share/ament_cmake_ros/cmake)
+[2.676s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[3.084s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[3.087s] -- Found python_cmake_module: 0.11.1 (/opt/ros/jazzy/share/python_cmake_module/cmake)
+[3.180s] -- Found PythonExtra: /usr/bin/python3  
+[3.546s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter Development NumPy Development.Module Development.Embed 
+[3.584s] -- Configuring done (3.6s)
+[3.618s] -- Generating done (0.0s)
+[3.620s] [33mCMake Warning:
+[3.620s]   Manually-specified variables were not used by the project:
+[3.620s] 
+[3.620s]     CATKIN_INSTALL_INTO_PREFIX_ROOT
+[3.620s] 
+[3.620s] [0m
+[3.625s] -- Build files have been written to: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages
+[3.633s] Invoked command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages -DCATKIN_INSTALL_INTO_PREFIX_ROOT=0 -DCMAKE_INSTALL_PREFIX=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages
+[3.633s] Invoking command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages -- -j20 -l20
+[3.667s] [  2%] [34m[1mGenerating type hashes for ROS interfaces[0m
+[3.672s] [  2%] Built target ament_cmake_python_copy_simulator_messages
+[3.809s] [  2%] Built target simulator_messages__rosidl_generator_type_description
+[3.817s] [  5%] [34m[1mGenerating C code for ROS interfaces[0m
+[3.817s] running egg_info
+[3.818s] creating simulator_messages.egg-info
+[3.823s] [  8%] [34m[1mGenerating C++ code for ROS interfaces[0m
+[3.832s] writing simulator_messages.egg-info/PKG-INFO
+[3.832s] writing dependency_links to simulator_messages.egg-info/dependency_links.txt
+[3.832s] writing top-level names to simulator_messages.egg-info/top_level.txt
+[3.832s] writing manifest file 'simulator_messages.egg-info/SOURCES.txt'
+[3.863s] reading manifest file 'simulator_messages.egg-info/SOURCES.txt'
+[3.864s] writing manifest file 'simulator_messages.egg-info/SOURCES.txt'
+[3.887s] [  8%] Built target ament_cmake_python_build_simulator_messages_egg
+[3.986s] [  8%] Built target simulator_messages__cpp
+[4.001s] [ 17%] [32mBuilding C object CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.o[0m
+[4.001s] [ 17%] [32mBuilding C object CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.o[0m
+[4.001s] [ 17%] [32mBuilding C object CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.o[0m
+[4.051s] [ 20%] [32m[1mLinking C shared library libsimulator_messages__rosidl_generator_c.so[0m
+[4.120s] [ 20%] Built target simulator_messages__rosidl_generator_c
+[4.126s] [ 32%] [34m[1mGenerating C++ introspection for ROS interfaces[0m
+[4.126s] [ 32%] [34m[1mGenerating C++ type support for eProsima Fast-RTPS[0m
+[4.126s] [ 32%] [34m[1mGenerating C type support for eProsima Fast-RTPS[0m
+[4.126s] [ 32%] [34m[1mGenerating C++ type support dispatch for ROS interfaces[0m
+[4.126s] [ 35%] [34m[1mGenerating C type support dispatch for ROS interfaces[0m
+[4.127s] [ 38%] [34m[1mGenerating C introspection for ROS interfaces[0m
+[4.297s] [ 41%] [32mBuilding CXX object CMakeFiles/simulator_messages__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/simulator_messages/msg/navigation_command__type_support.cpp.o[0m
+[4.300s] [ 44%] [32mBuilding CXX object CMakeFiles/simulator_messages__rosidl_typesupport_c.dir/rosidl_typesupport_c/simulator_messages/msg/navigation_command__type_support.cpp.o[0m
+[4.308s] [ 47%] [32mBuilding CXX object CMakeFiles/simulator_messages__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/simulator_messages/msg/detail/navigation_command__type_support.cpp.o[0m
+[4.309s] [ 50%] [32mBuilding C object CMakeFiles/simulator_messages__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/simulator_messages/msg/detail/navigation_command__type_support.c.o[0m
+[4.316s] [ 52%] [32mBuilding CXX object CMakeFiles/simulator_messages__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/simulator_messages/msg/detail/navigation_command__type_support_c.cpp.o[0m
+[4.332s] [ 55%] [32mBuilding CXX object CMakeFiles/simulator_messages__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/simulator_messages/msg/detail/dds_fastrtps/navigation_command__type_support.cpp.o[0m
+[4.333s] [ 58%] [32m[1mLinking CXX shared library libsimulator_messages__rosidl_typesupport_c.so[0m
+[4.339s] [ 61%] [32m[1mLinking C shared library libsimulator_messages__rosidl_typesupport_introspection_c.so[0m
+[4.412s] [ 61%] Built target simulator_messages__rosidl_typesupport_introspection_c
+[4.418s] [ 61%] Built target simulator_messages__rosidl_typesupport_c
+[4.542s] [ 64%] [32m[1mLinking CXX shared library libsimulator_messages__rosidl_typesupport_cpp.so[0m
+[4.567s] [ 67%] [32m[1mLinking CXX shared library libsimulator_messages__rosidl_typesupport_introspection_cpp.so[0m
+[4.620s] [ 67%] Built target simulator_messages__rosidl_typesupport_cpp
+[4.651s] [ 70%] [32m[1mLinking CXX shared library libsimulator_messages__rosidl_typesupport_fastrtps_c.so[0m
+[4.669s] [ 70%] Built target simulator_messages__rosidl_typesupport_introspection_cpp
+[4.671s] [ 73%] [32m[1mLinking CXX shared library libsimulator_messages__rosidl_typesupport_fastrtps_cpp.so[0m
+[4.729s] [ 73%] Built target simulator_messages__rosidl_typesupport_fastrtps_c
+[4.781s] [ 73%] Built target simulator_messages__rosidl_typesupport_fastrtps_cpp
+[4.794s] [ 73%] Built target simulator_messages
+[4.809s] [ 76%] [34m[1mGenerating Python code for ROS interfaces[0m
+[5.001s] [ 76%] Built target simulator_messages__py
+[5.016s] [ 79%] [32mBuilding C object CMakeFiles/simulator_messages__rosidl_generator_py.dir/rosidl_generator_py/simulator_messages/msg/_navigation_command_s.c.o[0m
+[5.134s] [ 82%] [32m[1mLinking C shared library libsimulator_messages__rosidl_generator_py.so[0m
+[5.206s] [ 82%] Built target simulator_messages__rosidl_generator_py
+[5.218s] [ 91%] [32mBuilding C object CMakeFiles/simulator_messages_s__rosidl_typesupport_c.dir/rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_c.c.o[0m
+[5.218s] [ 91%] [32mBuilding C object CMakeFiles/simulator_messages_s__rosidl_typesupport_fastrtps_c.dir/rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c.o[0m
+[5.218s] [ 91%] [32mBuilding C object CMakeFiles/simulator_messages_s__rosidl_typesupport_introspection_c.dir/rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_introspection_c.c.o[0m
+[5.275s] [ 97%] [32m[1mLinking C shared module rosidl_generator_py/simulator_messages/simulator_messages_s__rosidl_typesupport_introspection_c.so[0m
+[5.276s] [ 97%] [32m[1mLinking C shared module rosidl_generator_py/simulator_messages/simulator_messages_s__rosidl_typesupport_c.so[0m
+[5.276s] [100%] [32m[1mLinking C shared module rosidl_generator_py/simulator_messages/simulator_messages_s__rosidl_typesupport_fastrtps_c.so[0m
+[5.328s] [100%] Built target simulator_messages_s__rosidl_typesupport_fastrtps_c
+[5.328s] [100%] Built target simulator_messages_s__rosidl_typesupport_introspection_c
+[5.328s] [100%] Built target simulator_messages_s__rosidl_typesupport_c
+[5.336s] Invoked command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages -- -j20 -l20
+[5.343s] Invoking command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages
+[5.349s] -- Install configuration: ""
+[5.349s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/ament_index/resource_index/rosidl_interfaces/simulator_messages
+[5.349s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/msg/NavigationCommand.json
+[5.349s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages
+[5.350s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg
+[5.350s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail
+[5.350s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__type_support.h
+[5.350s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__functions.c
+[5.350s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__struct.h
+[5.350s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__functions.h
+[5.350s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__description.c
+[5.350s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__type_support.c
+[5.350s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/rosidl_generator_c__visibility_control.h
+[5.351s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/navigation_command.h
+[5.351s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/environment/library_path.sh
+[5.351s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/environment/library_path.dsv
+[5.351s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_generator_c.so
+[5.351s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_generator_c.so" to ""
+[5.351s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages
+[5.352s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg
+[5.352s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/rosidl_typesupport_fastrtps_c__visibility_control.h
+[5.352s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail
+[5.352s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__rosidl_typesupport_fastrtps_c.h
+[5.352s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_fastrtps_c.so
+[5.352s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_fastrtps_c.so" to ""
+[5.352s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages
+[5.352s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg
+[5.353s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/rosidl_typesupport_introspection_c__visibility_control.h
+[5.353s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail
+[5.353s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__rosidl_typesupport_introspection_c.h
+[5.353s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__type_support.c
+[5.353s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_introspection_c.so
+[5.353s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_introspection_c.so" to ""
+[5.353s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_c.so
+[5.353s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_c.so" to ""
+[5.353s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages
+[5.353s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg
+[5.353s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/rosidl_generator_cpp__visibility_control.hpp
+[5.353s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail
+[5.353s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__struct.hpp
+[5.353s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__builder.hpp
+[5.353s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__traits.hpp
+[5.353s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__type_support.hpp
+[5.353s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/navigation_command.hpp
+[5.354s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages
+[5.354s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg
+[5.354s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h
+[5.354s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail
+[5.354s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/dds_fastrtps
+[5.354s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__rosidl_typesupport_fastrtps_cpp.hpp
+[5.354s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_fastrtps_cpp.so
+[5.354s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_fastrtps_cpp.so" to ""
+[5.354s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages
+[5.354s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg
+[5.354s] -- Up-to-date: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail
+[5.354s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__type_support.cpp
+[5.354s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/include/simulator_messages/simulator_messages/msg/detail/navigation_command__rosidl_typesupport_introspection_cpp.hpp
+[5.354s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_introspection_cpp.so
+[5.354s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_introspection_cpp.so" to ""
+[5.355s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_cpp.so
+[5.355s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_typesupport_cpp.so" to ""
+[5.355s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/environment/pythonpath.sh
+[5.355s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/environment/pythonpath.dsv
+[5.355s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages-0.0.0-py3.12.egg-info
+[5.355s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages-0.0.0-py3.12.egg-info/top_level.txt
+[5.356s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages-0.0.0-py3.12.egg-info/PKG-INFO
+[5.356s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages-0.0.0-py3.12.egg-info/SOURCES.txt
+[5.356s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages-0.0.0-py3.12.egg-info/dependency_links.txt
+[5.356s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages
+[5.356s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_introspection_c.c
+[5.356s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/msg
+[5.356s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/msg/_navigation_command_s.c
+[5.356s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/msg/_navigation_command.py
+[5.357s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/msg/__init__.py
+[5.357s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_c.so
+[5.357s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_introspection_c.so
+[5.357s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/__init__.py
+[5.357s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c
+[5.357s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_c.c
+[5.357s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_fastrtps_c.so
+[5.387s] Listing '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages'...
+[5.387s] Compiling '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/__init__.py'...
+[5.387s] Listing '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/msg'...
+[5.387s] Compiling '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/msg/__init__.py'...
+[5.387s] Compiling '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/msg/_navigation_command.py'...
+[5.390s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_fastrtps_c.so
+[5.391s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_fastrtps_c.so" to ""
+[5.391s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_introspection_c.so
+[5.391s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_introspection_c.so" to ""
+[5.391s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_c.so
+[5.391s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_c.so" to ""
+[5.391s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_generator_py.so
+[5.391s] -- Set non-toolchain portion of runtime path of "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_generator_py.so" to ""
+[5.391s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/msg/NavigationCommand.idl
+[5.391s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/msg/NavigationCommand.msg
+[5.392s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/ament_index/resource_index/package_run_dependencies/simulator_messages
+[5.392s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/ament_index/resource_index/parent_prefix_path/simulator_messages
+[5.392s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/environment/ament_prefix_path.sh
+[5.392s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/environment/ament_prefix_path.dsv
+[5.392s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/environment/path.sh
+[5.392s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/environment/path.dsv
+[5.392s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/local_setup.bash
+[5.392s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/local_setup.sh
+[5.393s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/local_setup.zsh
+[5.393s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/local_setup.dsv
+[5.393s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/package.dsv
+[5.393s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/ament_index/resource_index/packages/simulator_messages
+[5.393s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/export_simulator_messages__rosidl_generator_cExport.cmake
+[5.393s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/export_simulator_messages__rosidl_generator_cExport-noconfig.cmake
+[5.394s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/export_simulator_messages__rosidl_typesupport_fastrtps_cExport.cmake
+[5.394s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/export_simulator_messages__rosidl_typesupport_fastrtps_cExport-noconfig.cmake
+[5.394s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messages__rosidl_typesupport_introspection_cExport.cmake
+[5.394s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messages__rosidl_typesupport_introspection_cExport-noconfig.cmake
+[5.394s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messages__rosidl_typesupport_cExport.cmake
+[5.394s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messages__rosidl_typesupport_cExport-noconfig.cmake
+[5.394s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/export_simulator_messages__rosidl_generator_cppExport.cmake
+[5.394s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/export_simulator_messages__rosidl_typesupport_fastrtps_cppExport.cmake
+[5.394s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/export_simulator_messages__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake
+[5.394s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messages__rosidl_typesupport_introspection_cppExport.cmake
+[5.395s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messages__rosidl_typesupport_introspection_cppExport-noconfig.cmake
+[5.395s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messages__rosidl_typesupport_cppExport.cmake
+[5.395s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messages__rosidl_typesupport_cppExport-noconfig.cmake
+[5.395s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/export_simulator_messages__rosidl_generator_pyExport.cmake
+[5.395s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/export_simulator_messages__rosidl_generator_pyExport-noconfig.cmake
+[5.395s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/rosidl_cmake-extras.cmake
+[5.396s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/ament_cmake_export_dependencies-extras.cmake
+[5.396s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/ament_cmake_export_include_directories-extras.cmake
+[5.396s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/ament_cmake_export_libraries-extras.cmake
+[5.396s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/ament_cmake_export_targets-extras.cmake
+[5.396s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
+[5.396s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+[5.396s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messagesConfig.cmake
+[5.396s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messagesConfig-version.cmake
+[5.396s] -- Installing: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/package.xml
+[5.398s] Invoked command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages

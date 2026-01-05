@@ -13,20 +13,16 @@ import tempfile
 import threading
 
 # 引入 AgentFlow 依赖
-from agentflow.agentflow.solver_embodied import construct_solver_embodied
+from agentflow.agents.solver_embodied import construct_solver_embodied
 
 # 引入 ROS 消息
 from simulator_messages.msg import NavigationCommand  # 自定义消息
-from .rgbd_connector import VLNConnector
+from .vln_connector import VLNConnector
+from nav_msgs.msg import OccupancyGrid
 
+from .events import event_manager
 
 class AgentBaseline(VLNConnector):
-    """
-    串行 LLM 控制 Agent（无 ROS Timer）
-    每一轮：
-        ROS spin -> InputData -> Inference -> Publish
-    """
-
     def __init__(self):
         super().__init__()  # 初始化 ROS Node + RGBD Subscriber
 
@@ -36,9 +32,6 @@ class AgentBaseline(VLNConnector):
         self._lock = threading.Lock()  # 推理锁
         self._inference_thread = None
 
-        # -------------------------------------------------
-        # 1. 环境 & LLM 配置
-        # -------------------------------------------------
         load_dotenv(dotenv_path="agentflow/.env")
         self.get_logger().info(
             f"OpenAI Key Loaded: {'OPENAI_API_KEY' in os.environ}"
@@ -60,12 +53,14 @@ class AgentBaseline(VLNConnector):
             enable_multimodal=True
         )
 
-        # -------------------------------------------------
-        # 2. Agent 状态
-        # -------------------------------------------------
-        self.task_prompt = (
-            "Go to the <我和乔治商店>, task finish upon arrival within 2 meters."
+        self.system_prompt = (
+            "You will receive two images: \n"
+            "1. First-person view (RGB).\n"
+            "2. Top-down 2D map (White=Free, Black=Obstacle, Gray=Unknown).\n"
+            "Use the map to plan a global path and the RGB view to avoid local obstacles.\n"
+            "Output standard navigation actions."
         )
+        self.task_prompt = None
 
         self.temp_dir = Path("tmp/agent_baseline")
         self.temp_dir.mkdir(parents=True, exist_ok=True)
@@ -77,8 +72,20 @@ class AgentBaseline(VLNConnector):
 
         self._stop_event = threading.Event()
 
+        # map 
+        self.map_sub = self.create_subscription(
+            OccupancyGrid,
+            '/map',  # RTAB-Map 发布的栅格地图话题
+            self.map_callback,
+            10
+        )
+        self.latest_map_img = None
+
+        # events
+        event_manager.register("task_received", self.handle_task_received)
+
     # =====================================================
-    # 主控制逻辑（单步）
+    # control logic（one step）
     # =====================================================
     def control_once_async(self):
         # 如果上一轮推理还在执行，不启动新推理
@@ -88,9 +95,6 @@ class AgentBaseline(VLNConnector):
         # snapshot 最新 RGB/D
         rgb_snapshot = self.rgb_image.copy() if self.rgb_image is not None else None
         depth_snapshot = self.depth_image.copy() if self.depth_image is not None else None
-
-        if rgb_snapshot is None:
-            return
 
         # 非阻塞调用 Inference
         self._inference_thread = threading.Thread(
@@ -102,18 +106,23 @@ class AgentBaseline(VLNConnector):
     # Input Adapter
     # =====================================================
     def InputData(self, **kwargs):
-        """
-        将 ROS 内存图像保存为文件，供 AgentFlow 使用
-        """
         rgb_img = kwargs.get("rgb")
+        
+        # 保存第一视角 RGB
+        rgb_path = self.temp_dir / f"rgb.jpg"
+        cv2.imwrite(str(rgb_path), rgb_img)
 
-        file_name = f"step_{self.step_counter:04d}.jpg"
-        file_path = self.temp_dir / file_name
+        # 保存上帝视角 Map (如果有)
+        img_paths = [str(rgb_path)]
+        
+        if self.latest_map_img is not None:
+            map_path = self.temp_dir / f"map.jpg"
+            cv2.imwrite(str(map_path), self.latest_map_img)
+            img_paths.append(str(map_path)) # 此时列表里有两张图
+            self.get_logger().info(f"Attached Map Image to LLM input")
 
-        cv2.imwrite(str(file_path), rgb_img)
         self.step_counter += 1
-
-        return [str(file_path)]
+        return img_paths
 
     # =====================================================
     # Inference Adapter
@@ -128,38 +137,70 @@ class AgentBaseline(VLNConnector):
             rgb = args.get("rgb")
             depth = args.get("depth")  # depth 可以留着以后用
             if rgb is None:
-                self.get_logger().warn("No RGB input for inference, skipping")
+                self.get_logger().warn("No RGB input for inference, skipping", throttle_duration_sec=2.0)
                 return None
             image_paths = self.InputData(rgb=rgb, depth=depth)
 
-        self.get_logger().info(f"[LLM] Thinking... input={image_paths[-1]}")
+        if self.task_prompt is not None:
+            try:
+                propmt = self.system_prompt + self.task_prompt
+                output = self.solver.solve(
+                    propmt,
+                    image_paths=image_paths
+                )
 
-        try:
-            output = self.solver.solve(
-                self.task_prompt,
-                image_paths=image_paths
-            )
+                raw_text = output.get("direct_output", "")
+                nav_cmd = self._parse_llm_to_ros(raw_text)
 
-            raw_text = output.get("direct_output", "")
-            nav_cmd = self._parse_llm_to_ros(raw_text)
+                if nav_cmd is not None:
+                    self.publish_navigation_command(nav_cmd)
 
-            if nav_cmd is not None:
-                self.publish_navigation_command(nav_cmd)
-
-            if nav_cmd.is_stop:
-                self.get_logger().info("🏁 Stop received, exiting baseline for restart")
-                self._stop_event.set()
-                
-            return nav_cmd
-        
-        except Exception as e:
-            self.get_logger().error(f"Inference Error: {e}")
-            return None
+                if nav_cmd.is_stop:
+                    self.get_logger().info("🏁 Stop received, exiting baseline for restart")
+                    self._stop_event.set()
+                    
+                self.get_logger().info(f"[LLM] Thinking... input={image_paths[-1]}")
+                return nav_cmd
+            
+            except Exception as e:
+                self.get_logger().error(f"Inference Error: {e}")
+                return None
+        else:
+            self.get_logger().warning(f"Waiting for task", throttle_duration_sec=2.0)
         
     def destroy_node(self):
         super().destroy_node()
         self._temp_dir.cleanup()
         self.get_logger().info("Temporary directory cleaned up.")
+
+    def handle_task_received(self, task:str):
+        if task is None:
+            self.get_logger().warning(f"Task is empty")
+            return
+        print(f"🎯 任务来了: {task}")
+        self.latest_task = task
+        if self.latest_task is None:  # <--- 这里判断 self.latest_task 是否为空
+            self.task_prompt = "[Task]:\n" + self.latest_task # <--- 报错：字符串 + None
+        else:
+            self.task_prompt = "[Updated Task]:\n" + self.latest_task
+            
+    def map_callback(self, msg: OccupancyGrid):
+        # 2. 将栅格地图转换为 OpenCV 图像
+        width = msg.info.width
+        height = msg.info.height
+        data = np.array(msg.data, dtype=np.int8).reshape(height, width)
+
+        # 栅格地图值: -1 (未知), 0 (空闲), 100 (占据)
+        # 转换为图像: 127 (灰), 255 (白), 0 (黑)
+        img = np.zeros((height, width), dtype=np.uint8)
+        img.fill(127) # 默认灰色未知
+        img[data == 0] = 255   # 白色可行区域
+        img[data == 100] = 0   # 黑色障碍物
+
+        # 因为地图通常很大且原点在中心，可能需要裁剪或缩放以适应 Token 限制
+        # 这里做一个简单的翻转以符合图片直观视角
+        img = cv2.flip(img, 0) 
+        self.latest_map_img = img
 
     def _parse_llm_to_ros(self, output_text: str):
         cmd = NavigationCommand()
@@ -242,9 +283,8 @@ class AgentBaseline(VLNConnector):
 
         return cmd
 
-
 # =====================================================
-# Main Loop（无 Timer，串行）
+# Main Loop
 # =====================================================
 def main(args=None):
     rclpy.init(args=args)
@@ -261,6 +301,10 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
+        if node._inference_thread is not None:
+            node.get_logger().info("Waiting for inference thread to finish...")
+            node._inference_thread.join(timeout=2.0)
+
         node.destroy_node()
         rclpy.shutdown()
 

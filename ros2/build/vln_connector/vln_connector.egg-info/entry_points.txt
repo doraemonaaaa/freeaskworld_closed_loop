@@ -1,3 +1,5 @@
 [console_scripts]
 agent_baseline = vln_connector.agent_baseline:main
-rgbd_connector = vln_connector.rgbd_connector:main
+events = vln_connector.events:main
+simple_baseline = vln_connector.simple_baseline:main
+vln_connector = vln_connector.vln_connector:main

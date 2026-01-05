@@ -4,13 +4,13 @@ import rclpy
 import numpy as np
 # 引入 ROS 消息
 from simulator_messages.msg import NavigationCommand  # 自定义消息
-from .rgbd_connector import VLNConnector
+from .vln_connector import VLNConnector
 
+from .events import event_manager
 
 class SimpleBaseline(VLNConnector):
     """
-    串行 LLM 控制 Agent（无 ROS Timer）
-    每一轮：
+    Each Step:
         ROS spin -> InputData -> Inference -> Publish
     """
 
@@ -19,7 +19,7 @@ class SimpleBaseline(VLNConnector):
 
     
     # =====================================================
-    # 主控制逻辑（单步）
+    # control logic（one step）
     # =====================================================
     def control_once_async(self):
         # 如果上一轮推理还在执行，不启动新推理
@@ -70,7 +70,7 @@ class SimpleBaseline(VLNConnector):
         super().destroy_node()
 
 # =====================================================
-# Main Loop（无 Timer，串行）
+# Main Loop
 # =====================================================
 def main(args=None):
     rclpy.init(args=args)

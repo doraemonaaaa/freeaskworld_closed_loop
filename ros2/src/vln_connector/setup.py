@@ -14,7 +14,9 @@ setup(
     license='Apache-2.0',
     entry_points={
         'console_scripts': [
-            'rgbd_connector = vln_connector.rgbd_connector:main',
+            'vln_connector = vln_connector.vln_connector:main',
+            'simple_baseline = vln_connector.simple_baseline:main',
+            'events = vln_connector.events:main',
             'agent_baseline = vln_connector.agent_baseline:main',
         ],
     },
