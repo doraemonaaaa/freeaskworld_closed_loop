@@ -28,7 +28,7 @@ if str(Path(__file__).parents[2]) not in sys.path:
     sys.path.append(str(Path(__file__).parents[2]))
 
 try:
-    from agentflow.agentflow.solver_embodied import construct_solver_embodied
+    from agentflow.agents.solver_embodied import construct_solver_embodied
 except ImportError:
     # Fallback or error handling if agentflow is not found
     print("Warning: agentflow not found. AgentBaseline will fail.")

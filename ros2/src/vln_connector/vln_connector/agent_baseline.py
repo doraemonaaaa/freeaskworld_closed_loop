@@ -84,6 +84,21 @@ class AgentBaseline(VLNConnector):
         # events
         event_manager.register("task_received", self.handle_task_received)
 
+        self.camera_extrinsics = np.array([
+            [1.0,  0.0, 0.0, 0.0],
+            [0.0, -1.0, 0.0, 1.6],
+            [0.0,  0.0, 1.0, 0.0],
+            [0.0,  0.0, 0.0, 1.0]
+        ])
+        
+        # Manual Camera Intrinsics (3x3 Matrix)
+        # 640x480 image with specific focal length
+        self.camera_intrinsics = np.array([
+            [415.6922, 0, 320],
+            [0, 415.6922, 240],
+            [0, 0, 1]
+        ])
+
     # =====================================================
     # control logic（one step）
     # =====================================================

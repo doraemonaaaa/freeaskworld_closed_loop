@@ -16,7 +16,8 @@ class SimpleBaseline(VLNConnector):
 
     def __init__(self):
         super().__init__()  # 初始化 ROS Node + RGBD Subscriber
-
+        self._lock = threading.Lock()  # 推理锁
+        self._inference_thread = None
     
     # =====================================================
     # control logic（one step）
@@ -87,6 +88,10 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
+        if node._inference_thread is not None:
+            node.get_logger().info("Waiting for inference thread to finish...")
+            node._inference_thread.join(timeout=2.0)
+
         node.destroy_node()
         rclpy.shutdown()
 

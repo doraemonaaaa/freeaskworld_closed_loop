@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
+from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TransformStamped, Vector3, Quaternion
 from tf2_ros import TransformBroadcaster
 import numpy as np
@@ -30,10 +31,10 @@ class VLNConnector(Node):
             10
         )
 
-        self.transform_sub = self.create_subscription(
-            TransformStamped,
-            '/simulator_msg/robot_transform',
-            self.robot_transform_callback,
+        self.odom_sub = self.create_subscription(
+            Odometry,
+            '/simulator_msg/odom2baselink',
+            self.robot_odom_callback,
             10
         )
 
@@ -56,8 +57,6 @@ class VLNConnector(Node):
         self.depth_image = None
 
         self.get_logger().info("VLN Connector Node started")
-
-        self.tf_broadcaster = TransformBroadcaster(self)  # transmit robotpose to odom
 
     def rgb_callback(self, msg: Image):
         h, w = msg.height, msg.width
@@ -88,19 +87,12 @@ class VLNConnector(Node):
         cv2.imshow("Depth", depth_vis)
         cv2.waitKey(1)
 
-    def robot_transform_callback(self, msg: TransformStamped):
-        t = msg.transform.translation
-        r = msg.transform.rotation
+    def robot_odom_callback(self, msg: TransformStamped):
+        p = msg.pose.pose.position
+        r = msg.pose.pose.orientation
 
-        self.robot_position = [t.x, t.y, t.z]
-        self.robot_rotation = [r.x, r.y, r.z, r.w]
-
-        t = TransformStamped()
-        t.header.stamp = self.get_clock().now().to_msg()
-        t.header.frame_id = "odom"       # 全局坐标系
-        t.child_frame_id = "base_link"   # 机器人基座
-        t.transform = msg.transform      # 直接透传位姿
-        self.tf_broadcaster.sendTransform(t)
+        self.odom2baselink_position = [p.x, p.y, p.z]
+        self.odom2baselink_rotation = [r.x, r.y, r.z, r.w]
 
         # self.get_logger().info( 
         #     f"Received robot pose: pos=[{t.x:.3f}, {t.y:.3f}, {t.z:.3f}], "
@@ -110,7 +102,6 @@ class VLNConnector(Node):
     def task_callback(self, msg: String):
         task_text = msg.data.strip()
         if msg is not None:
-            self.latest_task = msg.data
             self.get_logger().info(f"Received task: {msg.data}")
         # 触发自定义事件
         event_manager.emit("task_received", task_text)
