@@ -9,9 +9,16 @@ BASELINE_NAME="agent_baseline"
 EPISODES=46
 TCP_PORT=10000
 
-# ource ROS 2 系统环境
+# source ROS2 系统环境
 source /opt/ros/jazzy/setup.bash
 source /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/setup.bash
+
+# ROS2 Setting
+# Must use this, default can't run this program, not smooth
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+# Cyclone prefers multicast by default, if your router got too much spammed, 
+# disable multicast with (https://github.com/ros2/rmw_cyclonedds/issues/489):
+export CYCLONEDDS_URI="<Disc><DefaultMulticastAddress>0.0.0.0</></>"
 
 # 指定 PYTHONPATH 
 export PYTHONPATH=$VENV_PATH/lib/python3.12/site-packages:$PYTHONPATH
@@ -44,17 +51,14 @@ if [ -n "$RTABMAP_PROC" ]; then
     sleep 0.5
 fi
 ros2 launch rtabmap_launch rtabmap.launch.py \
-    rgb_topic:=/camera/color/image_raw \
-    depth_topic:=/camera/depth/image_raw \
-    camera_info_topic:=/camera/color/camera_info \
-    odom_topic:=/simulator_msg/odom2baselink\
-    frame_id:=base_link \
-    rgb_frame_id:=camera_link \
-    depth_frame_id:=camera_link \
-    camera_frame_id:=camera_link \
-    approx_sync:=true\
-    use_sim_time:=true\
-    approx_sync_max_interval:=0.3
+  rgb_topic:=/camera/color/image_raw \
+  depth_topic:=/camera/depth/image_raw \
+  camera_info_topic:=/camera/color/camera_info \
+  frame_id:=base_link \
+  approx_sync:=true \
+  use_sim_time:=true \
+  approx_sync_max_interval:=1.0\
+  queue_size:=30
 
 # 运行baseliine节点
 # for ((i=1;i<=EPISODES;i++)); do
@@ -62,3 +66,6 @@ ros2 launch rtabmap_launch rtabmap.launch.py \
 #   ros2 run vln_connector $BASELINE_NAME
 #   sleep 1
 # done
+
+# Debug Utils
+# ros2 run tf2_tools view_frames
