@@ -24,3 +24,9 @@ export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 # disable multicast with (https://github.com/ros2/rmw_cyclonedds/issues/489):
 export CYCLONEDDS_URI="<Disc><DefaultMulticastAddress>0.0.0.0</></>"
 ```
+
+### Sensor fusion
+```
+# Download robot localization
+sudo apt install ros-jazzy-robot-localization
+```

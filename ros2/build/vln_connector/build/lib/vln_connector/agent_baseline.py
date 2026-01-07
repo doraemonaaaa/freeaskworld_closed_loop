@@ -19,6 +19,8 @@ from agentflow.agents.solver_embodied import construct_solver_embodied
 from simulator_messages.msg import NavigationCommand  # 自定义消息
 from .vln_connector import VLNConnector
 from nav_msgs.msg import OccupancyGrid
+from geometry_msgs.msg import Pose
+from tf_transformations import quaternion_from_euler 
 
 from .events import event_manager
 
@@ -222,9 +224,8 @@ class AgentBaseline(VLNConnector):
         cmd.header.stamp = self.get_clock().now().to_msg()
         cmd.header.frame_id = "agent"
         
-        # Unity: Z=Forward, X=Right, Y=Up
         pos_offset = [0.0, 0.0, 0.0] 
-        rot_offset = [0.0, 0.0, 0.0, 1.0] # Identity quaternion (x, y, z, w)
+        rot_offset = [0.0, 0.0, 0.0, 1.0]
         is_stopped = False
 
         # 1. 提取 Action 后的内容
@@ -254,34 +255,11 @@ class AgentBaseline(VLNConnector):
                 
                 self.get_logger().info(f"Parsed Move: x={x}, y={y}, yaw={yaw_deg}")
 
-                # 坐标系映射逻辑:
-                # Agent X (Forward) -> Sim Z (Unity Forward)
-                # Agent Y (Right)   -> Sim X (Unity Right)
-                pos_offset[2] = x  # Z
-                pos_offset[0] = y  # X
-                pos_offset[1] = 0.0 # Y (Up)
-                
-                # 旋转映射 (绕 Y 轴)
-                yaw_rad = np.radians(yaw_deg)
-                half_angle = yaw_rad / 2.0
-                rot_offset[1] = np.sin(half_angle) # Y
-                rot_offset[3] = np.cos(half_angle) # W
+                pose = self.agent_to_ros_pose(x, y, yaw_deg)
+                pos_offset = (pose.position.x, pose.position.y, pose.position.z)
+                rot_offset = (pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w)
 
-            # --- Case 2: <Rotate(yaw)> ---
-            rotate_match = re.search(
-                r"<Rotate\(\s*(-?\d+\.?\d*)\s*\)>", 
-                action_text, 
-                re.IGNORECASE
-            )
-            if rotate_match:
-                yaw_deg = float(rotate_match.group(1))
-                self.get_logger().info(f"Parsed Rotate: yaw={yaw_deg}")
-                yaw_rad = np.radians(yaw_deg)
-                half_angle = yaw_rad / 2.0
-                rot_offset[1] = np.sin(half_angle)
-                rot_offset[3] = np.cos(half_angle)
-
-            # --- Case 3: <Stop> ---
+            # --- Case 2: <Stop> ---
             if "<Stop>" in action_text or "Stop()" in action_text:
                 is_stopped = True
                 self.get_logger().info("Action: STOP")
@@ -297,6 +275,36 @@ class AgentBaseline(VLNConnector):
         cmd.is_stop = is_stopped
 
         return cmd
+    
+    def agent_to_ros_pose(self, x_agent, y_agent, yaw_deg_agent):
+        """
+        Convert agent local move (x_forward, y_right, yaw_deg) 
+        to ROS Pose (x, y, z, quaternion).
+        """
+
+        # 坐标轴映射
+        x_ros = x_agent
+        y_ros = -y_agent
+        z_ros = 0.0
+
+        # 旋转映射
+        yaw_rad = math.radians(yaw_deg_agent)
+        roll = 0.0
+        pitch = 0.0
+
+        qx, qy, qz, qw = quaternion_from_euler(roll, pitch, yaw_rad)
+
+        # 构造 ROS Pose 消息
+        pose = Pose()
+        pose.position.x = x_ros
+        pose.position.y = y_ros
+        pose.position.z = z_ros
+        pose.orientation.x = qx
+        pose.orientation.y = qy
+        pose.orientation.z = qz
+        pose.orientation.w = qw
+
+        return pose
 
 # =====================================================
 # Main Loop

@@ -1,0 +1,37 @@
+ekf_filter_node:
+  ros__parameters:
+    use_sim_time: true
+    frequency: 50.0
+    two_d_mode: true                  # 2D 模式，强烈推荐地面机器人
+    publish_tf: true
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom
+
+    # 仿真/轮式 odom：融合位置和速度，yaw
+    odom0: /simulator_msg/odom
+    odom0_config: [true,  true,  false,   # X, Y, Z
+                   false, false, true,    # roll, pitch, yaw   <-- yaw 要 true
+                   true,  true,  false,   # VX, VY, VZ
+                   false, false, true]    # angular vel X/Y/Z  <-- yaw rate 要 true
+    odom0_differential: false
+    odom0_queue_size: 10
+
+    # IMU：只融合方向和角速度，不要融合线性加速度！（关键改动）
+    imu0: /simulator_msg/imu
+    imu0_config: [false, false, false,   # X, Y, Z      <-- 位置 false
+                  true,  true,  true,    # roll, pitch, yaw   <-- 方向 true（尤其是 yaw）
+                  false, false, false,   # VX, VY, VZ   <-- 速度 false
+                  true,  true,  true]    # angular vel X/Y/Z  <-- 角速度 true
+    imu0_differential: false         # 方向用绝对模式更好
+    imu0_queue_size: 10
+    imu0_remove_gravitational_acceleration: true   # 自动去除重力分量
+
+    # 可选：给仿真 odom 加一点过程噪声（防止太“完美”导致 RTAB-Map 不优化）
+    process_noise_covariance: [0.05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0.05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               ... # 其他默认或小值
+                               0, 0, 0, 0.05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               ...]
