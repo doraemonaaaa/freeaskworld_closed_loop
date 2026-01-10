@@ -6,6 +6,7 @@ from geometry_msgs.msg import TransformStamped, Vector3, Quaternion
 from tf2_ros import TransformBroadcaster
 import numpy as np
 import cv2
+import math
 from std_msgs.msg import String
 
 from simulator_messages.msg import NavigationCommand  # 自定义消息
@@ -19,21 +20,21 @@ class VLNConnector(Node):
         # RGB / Depth 订阅
         self.rgb_sub = self.create_subscription(
             Image,
-            '/camera/color/image_raw',
+            '/simulator_msg/camera/color/image_raw',
             self.rgb_callback,
             10
         )
 
         self.depth_sub = self.create_subscription(
             Image,
-            '/camera/depth/image_raw',
+            '/simulator_msg/camera/depth/image_raw',
             self.depth_callback,
             10
         )
 
         self.odom_sub = self.create_subscription(
             Odometry,
-            '/simulator_msg/odom2baselink',
+            '/simulator_msg/odom',
             self.robot_odom_callback,
             10
         )
@@ -53,8 +54,10 @@ class VLNConnector(Node):
         self._updated_task = None
         self.latest_task = None
 
+        # input datas
         self.rgb_image = None
         self.depth_image = None
+        self.base_pose = None
 
         self.get_logger().info("VLN Connector Node started")
 
@@ -89,10 +92,15 @@ class VLNConnector(Node):
 
     def robot_odom_callback(self, msg: TransformStamped):
         p = msg.pose.pose.position
-        r = msg.pose.pose.orientation
+        q = msg.pose.pose.orientation
 
-        self.odom2baselink_position = [p.x, p.y, p.z]
-        self.odom2baselink_rotation = [r.x, r.y, r.z, r.w]
+        # 只取平面 yaw（ROS FLU）
+        yaw = math.atan2(
+            2.0 * (q.w * q.z + q.x * q.y),
+            1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+        )
+
+        self.base_pose = (p.x, p.y, yaw)
 
         # self.get_logger().info( 
         #     f"Received robot pose: pos=[{t.x:.3f}, {t.y:.3f}, {t.z:.3f}], "
@@ -123,6 +131,18 @@ class VLNConnector(Node):
             return self._updated_task.copy()
         else:
             return None
+        
+    def get_observation(self):
+        if self.rgb_image is None and self.depth_image is None and self.base_pose is None:
+            self.get_logger().warning("Observation not ready yet, skipping inference")
+            return None
+
+        return {
+            "rgb": self.rgb_image,
+            "depth": self.depth_image,
+            "base_pose": self.base_pose
+        }
+
 
 def main(args=None):
     rclpy.init(args=args)

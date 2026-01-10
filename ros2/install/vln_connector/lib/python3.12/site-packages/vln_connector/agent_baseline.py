@@ -20,7 +20,7 @@ from simulator_messages.msg import NavigationCommand  # 自定义消息
 from .vln_connector import VLNConnector
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import Pose
-from tf_transformations import quaternion_from_euler 
+from scipy.spatial.transform import Rotation as R
 
 from .events import event_manager
 
@@ -55,14 +55,17 @@ class AgentBaseline(VLNConnector):
             enable_multimodal=True
         )
 
+        # prompts
         self.system_prompt = (
             "You will receive two images: \n"
             "1. First-person view (RGB).\n"
-            "2. Top-down 2D map (White=Free, Black=Obstacle, Gray=Unknown).\n"
-            "Use the map to plan a global path and the RGB view to avoid local obstacles.\n"
-            "Output standard navigation actions."
+            "2. A decision value map:\n"
+            "- Warm colors (red/yellow): preferred regions\n"
+            "- Cold colors (blue): avoid if possiblen\n"
+            "- Black: obstacles\n"
         )
         self.task_prompt = None
+        self.data_prompt = None
 
         self.temp_dir = Path("tmp/agent_baseline")
         self.temp_dir.mkdir(parents=True, exist_ok=True)
@@ -75,31 +78,25 @@ class AgentBaseline(VLNConnector):
         self._stop_event = threading.Event()
 
         # map 
-        self.map_sub = self.create_subscription(
+        self.raw_map_data = None
+        self.raw_map_info = None
+        self.raw_map_sub = self.create_subscription(
             OccupancyGrid,
-            '/map',  # RTAB-Map 发布的栅格地图话题
-            self.map_callback,
+            '/rtabmap/map',
+            self.raw_map_callback,
+            10
+        )
+        self.decision_map_data = None
+        self.decision_map_sub = self.create_subscription(
+            OccupancyGrid,
+            '/agent/decision_costmap',
+            self.decision_map_callback,
             10
         )
         self.latest_map_img = None
 
         # events
         event_manager.register("task_received", self.handle_task_received)
-
-        self.camera_extrinsics = np.array([
-            [1.0,  0.0, 0.0, 0.0],
-            [0.0, -1.0, 0.0, 1.6],
-            [0.0,  0.0, 1.0, 0.0],
-            [0.0,  0.0, 0.0, 1.0]
-        ])
-        
-        # Manual Camera Intrinsics (3x3 Matrix)
-        # 640x480 image with specific focal length
-        self.camera_intrinsics = np.array([
-            [415.6922, 0, 320],
-            [0, 415.6922, 240],
-            [0, 0, 1]
-        ])
 
     # =====================================================
     # control logic（one step）
@@ -109,15 +106,26 @@ class AgentBaseline(VLNConnector):
         if self._inference_thread is not None and self._inference_thread.is_alive():
             return
 
-        # snapshot 最新 RGB/D
-        rgb_snapshot = self.rgb_image.copy() if self.rgb_image is not None else None
-        depth_snapshot = self.depth_image.copy() if self.depth_image is not None else None
+        # 通过 get_observation 获取最新观测
+        obs = self.get_observation()
+        if obs is None:
+            return  # 数据不完整，直接返回
+
+        rgb_snapshot = obs["rgb"].copy() if obs["rgb"] is not None else None
+        depth_snapshot = obs["depth"].copy() if obs["depth"] is not None else None
+        base_pose_snapshot = obs["base_pose"]  # 如果需要，也可以 deepcopy
 
         # 非阻塞调用 Inference
         self._inference_thread = threading.Thread(
-            target=self.Inference, kwargs={"rgb": rgb_snapshot, "depth": depth_snapshot}
+            target=self.Inference,
+            kwargs={
+                "rgb": rgb_snapshot,
+                "depth": depth_snapshot,
+                "base_pose": base_pose_snapshot
+            }
         )
         self._inference_thread.start()
+
 
     # =====================================================
     # Input Adapter
@@ -150,6 +158,8 @@ class AgentBaseline(VLNConnector):
         线程安全，返回 NavigationCommand
         """
         image_paths = args.get("image_paths", None)
+        base_pose = args.get("base_pose", None)
+
         if image_paths is None:
             rgb = args.get("rgb")
             depth = args.get("depth")  # depth 可以留着以后用
@@ -196,28 +206,71 @@ class AgentBaseline(VLNConnector):
             return
         print(f"🎯 任务来了: {task}")
         self.latest_task = task
-        if self.latest_task is None:  # <--- 这里判断 self.latest_task 是否为空
-            self.task_prompt = "[Task]:\n" + self.latest_task # <--- 报错：字符串 + None
-        else:
-            self.task_prompt = "[Updated Task]:\n" + self.latest_task
+        self.task_prompt = "[Updated Task]: " + task + "\n"
+
             
-    def map_callback(self, msg: OccupancyGrid):
-        # 2. 将栅格地图转换为 OpenCV 图像
-        width = msg.info.width
-        height = msg.info.height
-        data = np.array(msg.data, dtype=np.int8).reshape(height, width)
+    def raw_map_callback(self, msg: OccupancyGrid):
+        """保存原始地图数据"""
+        h, w = msg.info.height, msg.info.width
+        # 原始地图数据：-1(未知), 0(空闲), 100(障碍)
+        self.raw_map_data = np.array(msg.data, dtype=np.int8).reshape(h, w)
+        self.raw_map_info = msg.info
+        
+        # 尝试融合更新
+        self._fuse_and_update_map_img()
 
-        # 栅格地图值: -1 (未知), 0 (空闲), 100 (占据)
-        # 转换为图像: 127 (灰), 255 (白), 0 (黑)
-        img = np.zeros((height, width), dtype=np.uint8)
-        img.fill(127) # 默认灰色未知
-        img[data == 0] = 255   # 白色可行区域
-        img[data == 100] = 0   # 黑色障碍物
+    def decision_map_callback(self, msg: OccupancyGrid):
+        """保存决策地图数据"""
+        h, w = msg.info.height, msg.info.width
+        # 决策地图数据：0-100 (Cost)
+        self.decision_map_data = np.array(msg.data, dtype=np.int8).reshape(h, w)
+        
+        # 尝试融合更新
+        self._fuse_and_update_map_img()
 
-        # 因为地图通常很大且原点在中心，可能需要裁剪或缩放以适应 Token 限制
-        # 这里做一个简单的翻转以符合图片直观视角
-        img = cv2.flip(img, 0) 
-        self.latest_map_img = img
+    def _fuse_and_update_map_img(self):
+        """核心融合函数：将决策热力图与原始障碍物遮罩叠加"""
+        if self.raw_map_data is None or self.decision_map_data is None:
+            return
+
+        # 检查尺寸是否匹配 (防止 RTAB-Map 动态扩图时导致的不一致)
+        if self.raw_map_data.shape != self.decision_map_data.shape:
+            # 如果尺寸不一致，通常以 raw_map 为准，等待 decision_map 更新
+            return
+
+        # --- Step 1: 制作底图 (Decision Heatmap) ---
+        # 归一化 cost (0-100) -> (0.0-1.0)
+        # Cost 越高(100) -> 越不推荐(Blue/Cold)
+        # Cost 越低(0)   -> 越推荐(Red/Warm)
+        # OpenCV Jet: 0=Blue, 255=Red. 所以我们需要反转 Cost。
+        
+        # 将 int8 转 float 防止溢出
+        cost_float = self.decision_map_data.astype(np.float32)
+        
+        # 归一化并反转: cost 0 -> val 1.0 (Red), cost 100 -> val 0.0 (Blue)
+        heatmap_val = 1.0 - (cost_float / 100.0)
+        heatmap_val = np.clip(heatmap_val, 0.0, 1.0)
+        
+        # 转为 0-255 并应用色谱
+        heatmap_gray = (heatmap_val * 255).astype(np.uint8)
+        fused_img = cv2.applyColorMap(heatmap_gray, cv2.COLORMAP_JET)
+
+        # --- Step 2: 制作遮罩 (Raw Map Overlays) ---
+        
+        # 掩码 A: 障碍物 (Raw Map == 100) -> 黑色
+        obstacle_mask = (self.raw_map_data == 100)
+        fused_img[obstacle_mask] = [0, 0, 0]  # BGR = Black
+
+        # 掩码 B: 未知区域 (Raw Map == -1) -> 灰色
+        unknown_mask = (self.raw_map_data == -1)
+        fused_img[unknown_mask] = [128, 128, 128] # BGR = Grey
+
+        # (可选) 机器人当前位置标记？
+        # 通常不需要，因为 LLM 根据第一人称视角和 odom 坐标能推断，
+        # 但如果在图上画个小箭头效果会更好。这里先保持纯地图。
+
+        self.latest_map_img = fused_img
+
 
     def _parse_llm_to_ros(self, output_text: str):
         cmd = NavigationCommand()
@@ -292,7 +345,10 @@ class AgentBaseline(VLNConnector):
         roll = 0.0
         pitch = 0.0
 
-        qx, qy, qz, qw = quaternion_from_euler(roll, pitch, yaw_rad)
+        # 使用 scipy 生成四元数
+        r = R.from_euler('xyz', [roll, pitch, yaw_rad])
+        qx, qy, qz, qw = r.as_quat()  # scipy 输出顺序 [x, y, z, w]
+
 
         # 构造 ROS Pose 消息
         pose = Pose()
