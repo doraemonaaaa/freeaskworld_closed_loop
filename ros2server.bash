@@ -44,12 +44,12 @@ sleep 0.5
 # Additional plugins
 # bash mapping.bash &
 
-运行baseliine节点
+# run baseliine
 for ((i=1;i<=EPISODES;i++)); do
   echo "===== Episode $i ====="
   ros2 run vln_connector $BASELINE_NAME
   sleep 1
 done
 
-Debug Utils
-ros2 run tf2_tools view_frames
+# Debug Utils
+# ros2 run tf2_tools view_frames

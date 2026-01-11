@@ -9,7 +9,7 @@ import cv2
 import math
 from std_msgs.msg import String
 
-from simulator_messages.msg import NavigationCommand  # 自定义消息
+from simulator_messages.msg import SimulatorCommand  # 自定义消息
 
 from .events import event_manager
 
@@ -40,8 +40,8 @@ class VLNConnector(Node):
         )
 
         self.command_pub = self.create_publisher(
-            NavigationCommand,
-            '/simulator_msg/navigation_command',
+            SimulatorCommand,
+            '/simulator_msg/simulator_command',
             10
         )
 
@@ -109,21 +109,14 @@ class VLNConnector(Node):
     
     def task_callback(self, msg: String):
         task_text = msg.data.strip()
-        if msg is not None:
-            self.get_logger().info(f"Received task: {msg.data}")
+        # if msg is not None:
+        #     self.get_logger().info(f"Received task: {msg.data}")
         # 触发自定义事件
         event_manager.emit("task_received", task_text)
 
-    def publish_navigation_command(self, nav_cmd):
-        # msg = NavigationCommand()
-        # msg.header.stamp = self.get_clock().now().to_msg()
-        # msg.header.frame_id = "nav_cmd"
-
-        # msg.local_position_offset = [0.0, 0.0, 1.0]
-        # msg.local_rotation_offset = [0.0, 0.0, 0.0, 1.0]
-        # msg.is_stop = False
-        self.command_pub.publish(nav_cmd)
-        self.get_logger().info("Published NavigationCommand")
+    def publish_simulator_command(self, sim_cmd):
+        self.command_pub.publish(sim_cmd)
+        self.get_logger().info("Published Simulator Command")
 
     def get_task(self):
         if self._updated_task is not None:
@@ -134,7 +127,7 @@ class VLNConnector(Node):
         
     def get_observation(self):
         if self.rgb_image is None and self.depth_image is None and self.base_pose is None:
-            self.get_logger().warning("Observation not ready yet, skipping inference")
+            self.get_logger().warning("Observation not ready yet, skipping inference", throttle_duration_sec=2.0)
             return None
 
         return {
@@ -142,7 +135,6 @@ class VLNConnector(Node):
             "depth": self.depth_image,
             "base_pose": self.base_pose
         }
-
 
 def main(args=None):
     rclpy.init(args=args)

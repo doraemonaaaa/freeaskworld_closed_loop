@@ -47,7 +47,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simulator_messages/msg" TYPE FILE FILES "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_type_description/simulator_messages/msg/NavigationCommand.json")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simulator_messages/msg" TYPE FILE FILES "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_type_description/simulator_messages/msg/SimulatorCommand.json")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -363,11 +363,11 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simulator_messages/msg" TYPE FILE FILES "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages/msg/NavigationCommand.idl")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simulator_messages/msg" TYPE FILE FILES "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages/msg/SimulatorCommand.idl")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simulator_messages/msg" TYPE FILE FILES "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages/msg/NavigationCommand.msg")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simulator_messages/msg" TYPE FILE FILES "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages/msg/SimulatorCommand.msg")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)

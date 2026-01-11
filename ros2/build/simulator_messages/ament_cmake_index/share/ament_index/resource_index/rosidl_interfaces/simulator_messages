@@ -1,2 +1,2 @@
-msg/NavigationCommand.idl
-msg/NavigationCommand.msg
+msg/SimulatorCommand.idl
+msg/SimulatorCommand.msg

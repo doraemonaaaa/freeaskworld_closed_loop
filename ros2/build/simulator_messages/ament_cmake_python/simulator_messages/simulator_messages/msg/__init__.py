@@ -1,1 +1,1 @@
-from simulator_messages.msg._navigation_command import NavigationCommand  # noqa: F401
+from simulator_messages.msg._simulator_command import SimulatorCommand  # noqa: F401

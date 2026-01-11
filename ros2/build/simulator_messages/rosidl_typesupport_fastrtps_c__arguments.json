@@ -3,7 +3,7 @@
   "output_dir": "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_typesupport_fastrtps_c/simulator_messages",
   "template_dir": "/opt/ros/jazzy/share/rosidl_typesupport_fastrtps_c/resource",
   "idl_tuples": [
-    "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages:msg/NavigationCommand.idl"
+    "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages:msg/SimulatorCommand.idl"
   ],
   "ros_interface_dependencies": [
     "std_msgs:/opt/ros/jazzy/share/std_msgs/msg/Bool.idl",
@@ -48,7 +48,7 @@
     "/opt/ros/jazzy/share/rosidl_typesupport_fastrtps_c/resource/msg__type_support_c.cpp.em",
     "/opt/ros/jazzy/share/rosidl_typesupport_fastrtps_c/resource/srv__rosidl_typesupport_fastrtps_c.h.em",
     "/opt/ros/jazzy/share/rosidl_typesupport_fastrtps_c/resource/srv__type_support_c.cpp.em",
-    "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages/msg/NavigationCommand.idl",
+    "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages/msg/SimulatorCommand.idl",
     "/opt/ros/jazzy/share/std_msgs/msg/Bool.idl",
     "/opt/ros/jazzy/share/std_msgs/msg/Byte.idl",
     "/opt/ros/jazzy/share/std_msgs/msg/ByteMultiArray.idl",

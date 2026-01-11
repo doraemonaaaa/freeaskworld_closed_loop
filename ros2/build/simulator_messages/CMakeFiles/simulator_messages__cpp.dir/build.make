@@ -66,90 +66,90 @@ include CMakeFiles/simulator_messages__cpp.dir/compiler_depend.make
 # Include the progress variables for this target.
 include CMakeFiles/simulator_messages__cpp.dir/progress.make
 
-CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp
-CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__builder.hpp
-CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__struct.hpp
-CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__traits.hpp
-CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__type_support.hpp
+CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp
+CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__builder.hpp
+CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__struct.hpp
+CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__traits.hpp
+CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__type_support.hpp
 CMakeFiles/simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/rosidl_generator_cpp__visibility_control.hpp
 
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/lib/rosidl_generator_cpp/rosidl_generator_cpp
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/lib/python3.12/site-packages/rosidl_generator_cpp/__init__.py
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/action__builder.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/action__struct.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/action__traits.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/action__type_support.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/idl.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/idl__builder.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/idl__struct.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/idl__traits.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/idl__type_support.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/msg__builder.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/msg__struct.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/msg__traits.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/msg__type_support.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/srv__builder.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/srv__struct.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/srv__traits.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/srv__type_support.hpp.em
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: rosidl_adapter/simulator_messages/msg/NavigationCommand.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Bool.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Byte.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/ByteMultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Char.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/ColorRGBA.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Empty.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Float32.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Float32MultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Float64.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Float64MultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Header.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int16.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int16MultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int32.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int32MultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int64.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int64MultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int8.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int8MultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/MultiArrayDimension.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/MultiArrayLayout.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/String.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt16.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt16MultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt32.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt32MultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt64.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt64MultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt8.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt8MultiArray.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/builtin_interfaces/msg/Duration.idl
-rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp: /opt/ros/jazzy/share/builtin_interfaces/msg/Time.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/lib/rosidl_generator_cpp/rosidl_generator_cpp
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/lib/python3.12/site-packages/rosidl_generator_cpp/__init__.py
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/action__builder.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/action__struct.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/action__traits.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/action__type_support.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/idl.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/idl__builder.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/idl__struct.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/idl__traits.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/idl__type_support.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/msg__builder.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/msg__struct.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/msg__traits.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/msg__type_support.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/srv__builder.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/srv__struct.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/srv__traits.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/rosidl_generator_cpp/resource/srv__type_support.hpp.em
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: rosidl_adapter/simulator_messages/msg/SimulatorCommand.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Bool.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Byte.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/ByteMultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Char.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/ColorRGBA.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Empty.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Float32.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Float32MultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Float64.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Float64MultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Header.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int16.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int16MultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int32.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int32MultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int64.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int64MultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int8.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/Int8MultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/MultiArrayDimension.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/MultiArrayLayout.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/String.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt16.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt16MultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt32.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt32MultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt64.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt64MultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt8.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/std_msgs/msg/UInt8MultiArray.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/builtin_interfaces/msg/Duration.idl
+rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp: /opt/ros/jazzy/share/builtin_interfaces/msg/Time.idl
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating C++ code for ROS interfaces"
 	/usr/bin/python3 /opt/ros/jazzy/share/rosidl_generator_cpp/cmake/../../../lib/rosidl_generator_cpp/rosidl_generator_cpp --generator-arguments-file /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_cpp__arguments.json
 
-rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__builder.hpp: rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__builder.hpp
+rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__builder.hpp: rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__builder.hpp
 
-rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__struct.hpp: rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__struct.hpp
+rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__struct.hpp: rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__struct.hpp
 
-rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__traits.hpp: rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__traits.hpp
+rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__traits.hpp: rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__traits.hpp
 
-rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__type_support.hpp: rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__type_support.hpp
+rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__type_support.hpp: rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__type_support.hpp
 
-rosidl_generator_cpp/simulator_messages/msg/rosidl_generator_cpp__visibility_control.hpp: rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp
+rosidl_generator_cpp/simulator_messages/msg/rosidl_generator_cpp__visibility_control.hpp: rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp
 	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_cpp/simulator_messages/msg/rosidl_generator_cpp__visibility_control.hpp
 
 simulator_messages__cpp: CMakeFiles/simulator_messages__cpp
-simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__builder.hpp
-simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__struct.hpp
-simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__traits.hpp
-simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__type_support.hpp
-simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp
+simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__builder.hpp
+simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__struct.hpp
+simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__traits.hpp
+simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__type_support.hpp
 simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/rosidl_generator_cpp__visibility_control.hpp
+simulator_messages__cpp: rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp
 simulator_messages__cpp: CMakeFiles/simulator_messages__cpp.dir/build.make
 .PHONY : simulator_messages__cpp
 

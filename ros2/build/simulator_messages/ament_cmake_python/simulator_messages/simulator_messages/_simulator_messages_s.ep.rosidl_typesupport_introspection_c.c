@@ -24,39 +24,39 @@ static struct PyModuleDef simulator_messages__module = {
 #include "rosidl_runtime_c/message_type_support_struct.h"
 #include "rosidl_runtime_c/service_type_support_struct.h"
 #include "rosidl_runtime_c/action_type_support_struct.h"
-#include "simulator_messages/msg/detail/navigation_command__type_support.h"
-#include "simulator_messages/msg/detail/navigation_command__struct.h"
-#include "simulator_messages/msg/detail/navigation_command__functions.h"
+#include "simulator_messages/msg/detail/simulator_command__type_support.h"
+#include "simulator_messages/msg/detail/simulator_command__struct.h"
+#include "simulator_messages/msg/detail/simulator_command__functions.h"
 
-static void * simulator_messages__msg__navigation_command__create_ros_message(void)
+static void * simulator_messages__msg__simulator_command__create_ros_message(void)
 {
-  return simulator_messages__msg__NavigationCommand__create();
+  return simulator_messages__msg__SimulatorCommand__create();
 }
 
-static void simulator_messages__msg__navigation_command__destroy_ros_message(void * raw_ros_message)
+static void simulator_messages__msg__simulator_command__destroy_ros_message(void * raw_ros_message)
 {
-  simulator_messages__msg__NavigationCommand * ros_message = (simulator_messages__msg__NavigationCommand *)raw_ros_message;
-  simulator_messages__msg__NavigationCommand__destroy(ros_message);
+  simulator_messages__msg__SimulatorCommand * ros_message = (simulator_messages__msg__SimulatorCommand *)raw_ros_message;
+  simulator_messages__msg__SimulatorCommand__destroy(ros_message);
 }
 
 ROSIDL_GENERATOR_C_IMPORT
-bool simulator_messages__msg__navigation_command__convert_from_py(PyObject * _pymsg, void * ros_message);
+bool simulator_messages__msg__simulator_command__convert_from_py(PyObject * _pymsg, void * ros_message);
 ROSIDL_GENERATOR_C_IMPORT
-PyObject * simulator_messages__msg__navigation_command__convert_to_py(void * raw_ros_message);
+PyObject * simulator_messages__msg__simulator_command__convert_to_py(void * raw_ros_message);
 
 
 ROSIDL_GENERATOR_C_IMPORT
 const rosidl_message_type_support_t *
-ROSIDL_GET_MSG_TYPE_SUPPORT(simulator_messages, msg, NavigationCommand);
+ROSIDL_GET_MSG_TYPE_SUPPORT(simulator_messages, msg, SimulatorCommand);
 
 int8_t
-_register_msg_type__msg__navigation_command(PyObject * pymodule)
+_register_msg_type__msg__simulator_command(PyObject * pymodule)
 {
   int8_t err;
 
   PyObject * pyobject_create_ros_message = NULL;
   pyobject_create_ros_message = PyCapsule_New(
-    (void *)&simulator_messages__msg__navigation_command__create_ros_message,
+    (void *)&simulator_messages__msg__simulator_command__create_ros_message,
     NULL, NULL);
   if (!pyobject_create_ros_message) {
     // previously added objects will be removed when the module is destroyed
@@ -64,7 +64,7 @@ _register_msg_type__msg__navigation_command(PyObject * pymodule)
   }
   err = PyModule_AddObject(
     pymodule,
-    "create_ros_message_msg__msg__navigation_command",
+    "create_ros_message_msg__msg__simulator_command",
     pyobject_create_ros_message);
   if (err) {
     // the created capsule needs to be decremented
@@ -75,7 +75,7 @@ _register_msg_type__msg__navigation_command(PyObject * pymodule)
 
   PyObject * pyobject_destroy_ros_message = NULL;
   pyobject_destroy_ros_message = PyCapsule_New(
-    (void *)&simulator_messages__msg__navigation_command__destroy_ros_message,
+    (void *)&simulator_messages__msg__simulator_command__destroy_ros_message,
     NULL, NULL);
   if (!pyobject_destroy_ros_message) {
     // previously added objects will be removed when the module is destroyed
@@ -83,7 +83,7 @@ _register_msg_type__msg__navigation_command(PyObject * pymodule)
   }
   err = PyModule_AddObject(
     pymodule,
-    "destroy_ros_message_msg__msg__navigation_command",
+    "destroy_ros_message_msg__msg__simulator_command",
     pyobject_destroy_ros_message);
   if (err) {
     // the created capsule needs to be decremented
@@ -94,7 +94,7 @@ _register_msg_type__msg__navigation_command(PyObject * pymodule)
 
   PyObject * pyobject_convert_from_py = NULL;
   pyobject_convert_from_py = PyCapsule_New(
-    (void *)&simulator_messages__msg__navigation_command__convert_from_py,
+    (void *)&simulator_messages__msg__simulator_command__convert_from_py,
     NULL, NULL);
   if (!pyobject_convert_from_py) {
     // previously added objects will be removed when the module is destroyed
@@ -102,7 +102,7 @@ _register_msg_type__msg__navigation_command(PyObject * pymodule)
   }
   err = PyModule_AddObject(
     pymodule,
-    "convert_from_py_msg__msg__navigation_command",
+    "convert_from_py_msg__msg__simulator_command",
     pyobject_convert_from_py);
   if (err) {
     // the created capsule needs to be decremented
@@ -113,7 +113,7 @@ _register_msg_type__msg__navigation_command(PyObject * pymodule)
 
   PyObject * pyobject_convert_to_py = NULL;
   pyobject_convert_to_py = PyCapsule_New(
-    (void *)&simulator_messages__msg__navigation_command__convert_to_py,
+    (void *)&simulator_messages__msg__simulator_command__convert_to_py,
     NULL, NULL);
   if (!pyobject_convert_to_py) {
     // previously added objects will be removed when the module is destroyed
@@ -121,7 +121,7 @@ _register_msg_type__msg__navigation_command(PyObject * pymodule)
   }
   err = PyModule_AddObject(
     pymodule,
-    "convert_to_py_msg__msg__navigation_command",
+    "convert_to_py_msg__msg__simulator_command",
     pyobject_convert_to_py);
   if (err) {
     // the created capsule needs to be decremented
@@ -132,7 +132,7 @@ _register_msg_type__msg__navigation_command(PyObject * pymodule)
 
   PyObject * pyobject_type_support = NULL;
   pyobject_type_support = PyCapsule_New(
-    (void *)ROSIDL_GET_MSG_TYPE_SUPPORT(simulator_messages, msg, NavigationCommand),
+    (void *)ROSIDL_GET_MSG_TYPE_SUPPORT(simulator_messages, msg, SimulatorCommand),
     NULL, NULL);
   if (!pyobject_type_support) {
     // previously added objects will be removed when the module is destroyed
@@ -140,7 +140,7 @@ _register_msg_type__msg__navigation_command(PyObject * pymodule)
   }
   err = PyModule_AddObject(
     pymodule,
-    "type_support_msg__msg__navigation_command",
+    "type_support_msg__msg__simulator_command",
     pyobject_type_support);
   if (err) {
     // the created capsule needs to be decremented
@@ -161,7 +161,7 @@ PyInit_simulator_messages_s__rosidl_typesupport_introspection_c(void)
   }
   int8_t err;
 
-  err = _register_msg_type__msg__navigation_command(pymodule);
+  err = _register_msg_type__msg__simulator_command(pymodule);
   if (err) {
     Py_XDECREF(pymodule);
     return NULL;

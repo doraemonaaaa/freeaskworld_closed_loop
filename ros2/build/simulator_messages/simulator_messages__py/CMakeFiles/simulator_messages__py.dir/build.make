@@ -69,9 +69,9 @@ include /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_mes
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_introspection_c.c
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_c.c
-/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py: rosidl_generator_py/simulator_messages/msg/_navigation_command.py
+/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py: rosidl_generator_py/simulator_messages/msg/_simulator_command.py
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py: rosidl_generator_py/simulator_messages/msg/__init__.py
-/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py: rosidl_generator_py/simulator_messages/msg/_navigation_command_s.c
+/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py: rosidl_generator_py/simulator_messages/msg/_simulator_command_s.c
 
 rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/jazzy/lib/rosidl_generator_py/rosidl_generator_py
 rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/jazzy/lib/python3.12/site-packages/rosidl_generator_py/__init__.py
@@ -86,7 +86,7 @@ rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesuppo
 rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/jazzy/share/rosidl_generator_py/resource/_msg.py.em
 rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/jazzy/share/rosidl_generator_py/resource/_srv_pkg_typesupport_entry_point.c.em
 rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/jazzy/share/rosidl_generator_py/resource/_srv.py.em
-rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c: rosidl_adapter/simulator_messages/msg/NavigationCommand.idl
+rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c: rosidl_adapter/simulator_messages/msg/SimulatorCommand.idl
 rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/jazzy/share/std_msgs/msg/Bool.idl
 rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/jazzy/share/std_msgs/msg/Byte.idl
 rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/jazzy/share/std_msgs/msg/ByteMultiArray.idl
@@ -128,21 +128,21 @@ rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesuppo
 rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_c.c: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c
 	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_c.c
 
-rosidl_generator_py/simulator_messages/msg/_navigation_command.py: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_py/simulator_messages/msg/_navigation_command.py
+rosidl_generator_py/simulator_messages/msg/_simulator_command.py: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_py/simulator_messages/msg/_simulator_command.py
 
 rosidl_generator_py/simulator_messages/msg/__init__.py: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c
 	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_py/simulator_messages/msg/__init__.py
 
-rosidl_generator_py/simulator_messages/msg/_navigation_command_s.c: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_py/simulator_messages/msg/_navigation_command_s.c
+rosidl_generator_py/simulator_messages/msg/_simulator_command_s.c: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_py/simulator_messages/msg/_simulator_command_s.c
 
 simulator_messages__py: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_c.c
 simulator_messages__py: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_fastrtps_c.c
 simulator_messages__py: rosidl_generator_py/simulator_messages/_simulator_messages_s.ep.rosidl_typesupport_introspection_c.c
 simulator_messages__py: rosidl_generator_py/simulator_messages/msg/__init__.py
-simulator_messages__py: rosidl_generator_py/simulator_messages/msg/_navigation_command.py
-simulator_messages__py: rosidl_generator_py/simulator_messages/msg/_navigation_command_s.c
+simulator_messages__py: rosidl_generator_py/simulator_messages/msg/_simulator_command.py
+simulator_messages__py: rosidl_generator_py/simulator_messages/msg/_simulator_command_s.c
 simulator_messages__py: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py
 simulator_messages__py: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py.dir/build.make
 .PHONY : simulator_messages__py

@@ -5,4 +5,4 @@ simulator_messages.egg-info/SOURCES.txt
 simulator_messages.egg-info/dependency_links.txt
 simulator_messages.egg-info/top_level.txt
 simulator_messages/msg/__init__.py
-simulator_messages/msg/_navigation_command.py
+simulator_messages/msg/_simulator_command.py

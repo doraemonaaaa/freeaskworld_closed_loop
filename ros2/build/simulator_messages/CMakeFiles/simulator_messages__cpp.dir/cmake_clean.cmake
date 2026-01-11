@@ -1,11 +1,11 @@
 file(REMOVE_RECURSE
   "CMakeFiles/simulator_messages__cpp"
-  "rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__builder.hpp"
-  "rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__struct.hpp"
-  "rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__traits.hpp"
-  "rosidl_generator_cpp/simulator_messages/msg/detail/navigation_command__type_support.hpp"
-  "rosidl_generator_cpp/simulator_messages/msg/navigation_command.hpp"
+  "rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__builder.hpp"
+  "rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__struct.hpp"
+  "rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__traits.hpp"
+  "rosidl_generator_cpp/simulator_messages/msg/detail/simulator_command__type_support.hpp"
   "rosidl_generator_cpp/simulator_messages/msg/rosidl_generator_cpp__visibility_control.hpp"
+  "rosidl_generator_cpp/simulator_messages/msg/simulator_command.hpp"
 )
 
 # Per-language clean rules from dependency scanning.

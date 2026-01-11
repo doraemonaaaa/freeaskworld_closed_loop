@@ -16,7 +16,7 @@ import threading
 from agentflow.agents.solver_embodied import construct_solver_embodied
 
 # 引入 ROS 消息
-from simulator_messages.msg import NavigationCommand  # 自定义消息
+from simulator_messages.msg import SimulatorCommand  # 自定义消息
 from .vln_connector import VLNConnector
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import Pose
@@ -57,9 +57,10 @@ class AgentBaseline(VLNConnector):
 
         # prompts
         self.system_prompt = (
-            "You will receive two images: \n"
-            "1. First-person view (RGB).\n"
-            "2. A decision value map:\n"
+            "# Task Complete Criterior: Reach target within 3 meters\n"
+            "# You will receive two images: \n"
+            "## 1. First-person view (RGB).\n"
+            "## 2. A decision value map:\n"
             "- Warm colors (red/yellow): preferred regions\n"
             "- Cold colors (blue): avoid if possiblen\n"
             "- Black: obstacles\n"
@@ -155,7 +156,7 @@ class AgentBaseline(VLNConnector):
     def Inference(self, **args):
         """
         通用 LLM 推理接口（可接收任意输入 via **args）
-        线程安全，返回 NavigationCommand
+        线程安全，返回 SimulatorCommand
         """
         image_paths = args.get("image_paths", None)
         base_pose = args.get("base_pose", None)
@@ -177,17 +178,13 @@ class AgentBaseline(VLNConnector):
                 )
 
                 raw_text = output.get("direct_output", "")
-                nav_cmd = self._parse_llm_to_ros(raw_text)
+                cmd = self._parse_llm_to_ros(raw_text)
 
-                if nav_cmd is not None:
-                    self.publish_navigation_command(nav_cmd)
-
-                if nav_cmd.is_stop:
-                    self.get_logger().info("🏁 Stop received, exiting baseline for restart")
-                    self._stop_event.set()
+                if cmd is not None:
+                    self.publish_simulator_command(cmd)
                     
                 self.get_logger().info(f"[LLM] Thinking... input={image_paths[-1]}")
-                return nav_cmd
+                return cmd
             
             except Exception as e:
                 self.get_logger().error(f"Inference Error: {e}")
@@ -204,11 +201,10 @@ class AgentBaseline(VLNConnector):
         if task is None:
             self.get_logger().warning(f"Task is empty")
             return
-        print(f"🎯 任务来了: {task}")
+        print(f"🎯 任务来了")
         self.latest_task = task
         self.task_prompt = "[Updated Task]: " + task + "\n"
 
-            
     def raw_map_callback(self, msg: OccupancyGrid):
         """保存原始地图数据"""
         h, w = msg.info.height, msg.info.width
@@ -273,16 +269,14 @@ class AgentBaseline(VLNConnector):
 
 
     def _parse_llm_to_ros(self, output_text: str):
-        cmd = NavigationCommand()
+        cmd = SimulatorCommand()
         cmd.header.stamp = self.get_clock().now().to_msg()
         cmd.header.frame_id = "agent"
         
-        pos_offset = [0.0, 0.0, 0.0] 
-        rot_offset = [0.0, 0.0, 0.0, 1.0]
-        is_stopped = False
+        method = ""
+        method_params = ""
 
-        # 1. 提取 Action 后的内容
-        # 匹配 **Action**: 或 Action: 或 Navigation Goal:
+        # 提取 **Action** 标签后的文本
         action_match = re.search(
             r"(?:\*\*Action\*\*|Action|Navigation Goal)\s*:\s*(.*)",
             output_text,
@@ -290,77 +284,27 @@ class AgentBaseline(VLNConnector):
         )
 
         if action_match:
-            # 获取标签后的所有文本并去除空白
             action_text = action_match.group(1).strip()
             self.get_logger().info(f"Extracted Action Text: {action_text}")
 
-            # --- Case 1: <Move(x, y, yaw)> ---
-            # 注意：这里正则匹配 float, 捕获 x, y, yaw
-            move_match = re.search(
-                r"<Move\(\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*\)>", 
-                action_text, 
-                re.IGNORECASE
-            )
-            if move_match:
-                x = float(move_match.group(1))     # Agent Forward
-                y = float(move_match.group(2))     # Agent Right
-                yaw_deg = float(move_match.group(3)) # Rotation in degrees
-                
-                self.get_logger().info(f"Parsed Move: x={x}, y={y}, yaw={yaw_deg}")
-
-                pose = self.agent_to_ros_pose(x, y, yaw_deg)
-                pos_offset = (pose.position.x, pose.position.y, pose.position.z)
-                rot_offset = (pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w)
-
-            # --- Case 2: <Stop> ---
-            if "<Stop>" in action_text or "Stop()" in action_text:
-                is_stopped = True
-                self.get_logger().info("Action: STOP")
-
+            method_match = re.search(r"<(\w+)\((.*?)\)>", action_text, re.IGNORECASE | re.DOTALL)
+            if method_match:
+                method = method_match.group(1).strip()
+                method_params = method_match.group(2).strip()
+                self.get_logger().info(f"Parsed Method: {method}, Params: {method_params}")
+            else:
+                self.get_logger().warn("No <Method(...)> found in Action text.")
         else:
-            # 如果根本没找到 Action: 标签
-            self.get_logger().warn("Label 'Action:' not found in LLM output. Stopping for safety.")
-            is_stopped = True
+            self.get_logger().warn("Label 'Action:' not found in LLM output. No method extracted.")
 
-        # 填充 ROS 消息字段
-        cmd.local_position_offset = pos_offset
-        cmd.local_rotation_offset = rot_offset
-        cmd.is_stop = is_stopped
+        if method.lower() == "stop":
+            self.get_logger().info("🏁 Stop received, exiting baseline for restart")
+            self._stop_event.set()
+
+        cmd.method = method
+        cmd.method_params = method_params
 
         return cmd
-    
-    def agent_to_ros_pose(self, x_agent, y_agent, yaw_deg_agent):
-        """
-        Convert agent local move (x_forward, y_right, yaw_deg) 
-        to ROS Pose (x, y, z, quaternion).
-        """
-
-        # 坐标轴映射
-        x_ros = x_agent
-        y_ros = -y_agent
-        z_ros = 0.0
-
-        # 旋转映射
-        yaw_rad = math.radians(yaw_deg_agent)
-        roll = 0.0
-        pitch = 0.0
-
-        # 使用 scipy 生成四元数
-        r = R.from_euler('xyz', [roll, pitch, yaw_rad])
-        qx, qy, qz, qw = r.as_quat()  # scipy 输出顺序 [x, y, z, w]
-
-
-        # 构造 ROS Pose 消息
-        pose = Pose()
-        pose.position.x = x_ros
-        pose.position.y = y_ros
-        pose.position.z = z_ros
-        pose.orientation.x = qx
-        pose.orientation.y = qy
-        pose.orientation.z = qz
-        pose.orientation.w = qw
-
-        return pose
 
 # =====================================================
 # Main Loop

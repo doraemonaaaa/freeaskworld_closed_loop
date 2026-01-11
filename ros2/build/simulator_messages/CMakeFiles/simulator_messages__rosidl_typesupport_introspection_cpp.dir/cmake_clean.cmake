@@ -1,10 +1,10 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/simulator_messages__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/simulator_messages/msg/detail/navigation_command__type_support.cpp.o"
-  "CMakeFiles/simulator_messages__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/simulator_messages/msg/detail/navigation_command__type_support.cpp.o.d"
+  "CMakeFiles/simulator_messages__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/simulator_messages/msg/detail/simulator_command__type_support.cpp.o"
+  "CMakeFiles/simulator_messages__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/simulator_messages/msg/detail/simulator_command__type_support.cpp.o.d"
   "libsimulator_messages__rosidl_typesupport_introspection_cpp.pdb"
   "libsimulator_messages__rosidl_typesupport_introspection_cpp.so"
-  "rosidl_typesupport_introspection_cpp/simulator_messages/msg/detail/navigation_command__rosidl_typesupport_introspection_cpp.hpp"
-  "rosidl_typesupport_introspection_cpp/simulator_messages/msg/detail/navigation_command__type_support.cpp"
+  "rosidl_typesupport_introspection_cpp/simulator_messages/msg/detail/simulator_command__rosidl_typesupport_introspection_cpp.hpp"
+  "rosidl_typesupport_introspection_cpp/simulator_messages/msg/detail/simulator_command__type_support.cpp"
 )
 
 # Per-language clean rules from dependency scanning.

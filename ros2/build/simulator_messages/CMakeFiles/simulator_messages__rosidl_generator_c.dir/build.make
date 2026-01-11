@@ -69,133 +69,133 @@ include CMakeFiles/simulator_messages__rosidl_generator_c.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/simulator_messages__rosidl_generator_c.dir/flags.make
 
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/lib/rosidl_generator_c/rosidl_generator_c
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/lib/python3.12/site-packages/rosidl_generator_c/__init__.py
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/action__type_support.h.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/action__type_support.c.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/empty__description.c.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/full__description.c.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl.h.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__description.c.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__functions.c.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__functions.h.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__struct.h.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__type_support.c.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__type_support.h.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/msg__functions.c.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/msg__functions.h.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/msg__struct.h.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/msg__type_support.h.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/srv__type_support.c.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/srv__type_support.h.em
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: rosidl_adapter/simulator_messages/msg/NavigationCommand.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Bool.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Byte.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/ByteMultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Char.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/ColorRGBA.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Empty.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Float32.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Float32MultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Float64.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Float64MultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Header.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int16.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int16MultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int32.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int32MultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int64.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int64MultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int8.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int8MultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/MultiArrayDimension.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/MultiArrayLayout.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/String.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt16.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt16MultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt32.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt32MultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt64.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt64MultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt8.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt8MultiArray.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/builtin_interfaces/msg/Duration.idl
-rosidl_generator_c/simulator_messages/msg/navigation_command.h: /opt/ros/jazzy/share/builtin_interfaces/msg/Time.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/lib/rosidl_generator_c/rosidl_generator_c
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/lib/python3.12/site-packages/rosidl_generator_c/__init__.py
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/action__type_support.h.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/action__type_support.c.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/empty__description.c.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/full__description.c.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl.h.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__description.c.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__functions.c.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__functions.h.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__struct.h.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__type_support.c.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/idl__type_support.h.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/msg__functions.c.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/msg__functions.h.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/msg__struct.h.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/msg__type_support.h.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/srv__type_support.c.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/rosidl_generator_c/resource/srv__type_support.h.em
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: rosidl_adapter/simulator_messages/msg/SimulatorCommand.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Bool.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Byte.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/ByteMultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Char.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/ColorRGBA.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Empty.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Float32.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Float32MultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Float64.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Float64MultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Header.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int16.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int16MultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int32.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int32MultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int64.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int64MultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int8.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/Int8MultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/MultiArrayDimension.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/MultiArrayLayout.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/String.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt16.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt16MultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt32.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt32MultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt64.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt64MultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt8.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/std_msgs/msg/UInt8MultiArray.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/builtin_interfaces/msg/Duration.idl
+rosidl_generator_c/simulator_messages/msg/simulator_command.h: /opt/ros/jazzy/share/builtin_interfaces/msg/Time.idl
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating C code for ROS interfaces"
 	/usr/bin/python3 /opt/ros/jazzy/share/rosidl_generator_c/cmake/../../../lib/rosidl_generator_c/rosidl_generator_c --generator-arguments-file /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c__arguments.json
 
-rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.h: rosidl_generator_c/simulator_messages/msg/navigation_command.h
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.h
+rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.h: rosidl_generator_c/simulator_messages/msg/simulator_command.h
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.h
 
-rosidl_generator_c/simulator_messages/msg/detail/navigation_command__struct.h: rosidl_generator_c/simulator_messages/msg/navigation_command.h
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/navigation_command__struct.h
+rosidl_generator_c/simulator_messages/msg/detail/simulator_command__struct.h: rosidl_generator_c/simulator_messages/msg/simulator_command.h
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/simulator_command__struct.h
 
-rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.h: rosidl_generator_c/simulator_messages/msg/navigation_command.h
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.h
+rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.h: rosidl_generator_c/simulator_messages/msg/simulator_command.h
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.h
 
-rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c: rosidl_generator_c/simulator_messages/msg/navigation_command.h
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c
+rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c: rosidl_generator_c/simulator_messages/msg/simulator_command.h
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c
 
-rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c: rosidl_generator_c/simulator_messages/msg/navigation_command.h
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c
+rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c: rosidl_generator_c/simulator_messages/msg/simulator_command.h
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c
 
-rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c: rosidl_generator_c/simulator_messages/msg/navigation_command.h
-	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c
+rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c: rosidl_generator_c/simulator_messages/msg/simulator_command.h
+	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c
 
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/flags.make
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.o: rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.o -MF CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.o.d -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.o -c /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/flags.make
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.o: rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.o -MF CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.o.d -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.o -c /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c
 
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c > CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.i
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c > CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.i
 
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.s
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.s
 
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/flags.make
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.o: rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.o -MF CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.o.d -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.o -c /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/flags.make
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.o: rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.o -MF CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.o.d -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.o -c /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c
 
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c > CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.i
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c > CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.i
 
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.s
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.s
 
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/flags.make
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.o: rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.o -MF CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.o.d -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.o -c /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/flags.make
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.o: rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.o: CMakeFiles/simulator_messages__rosidl_generator_c.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.o -MF CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.o.d -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.o -c /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c
 
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c > CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.i
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c > CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.i
 
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.s
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c -o CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.s
 
 # Object files for target simulator_messages__rosidl_generator_c
 simulator_messages__rosidl_generator_c_OBJECTS = \
-"CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.o" \
-"CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.o" \
-"CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.o"
+"CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.o" \
+"CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.o" \
+"CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.o"
 
 # External object files for target simulator_messages__rosidl_generator_c
 simulator_messages__rosidl_generator_c_EXTERNAL_OBJECTS =
 
-libsimulator_messages__rosidl_generator_c.so: CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c.o
-libsimulator_messages__rosidl_generator_c.so: CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c.o
-libsimulator_messages__rosidl_generator_c.so: CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c.o
+libsimulator_messages__rosidl_generator_c.so: CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.o
+libsimulator_messages__rosidl_generator_c.so: CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c.o
+libsimulator_messages__rosidl_generator_c.so: CMakeFiles/simulator_messages__rosidl_generator_c.dir/rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c.o
 libsimulator_messages__rosidl_generator_c.so: CMakeFiles/simulator_messages__rosidl_generator_c.dir/build.make
 libsimulator_messages__rosidl_generator_c.so: /opt/ros/jazzy/lib/libstd_msgs__rosidl_generator_c.so
 libsimulator_messages__rosidl_generator_c.so: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_generator_c.so
@@ -213,13 +213,13 @@ CMakeFiles/simulator_messages__rosidl_generator_c.dir/clean:
 	$(CMAKE_COMMAND) -P CMakeFiles/simulator_messages__rosidl_generator_c.dir/cmake_clean.cmake
 .PHONY : CMakeFiles/simulator_messages__rosidl_generator_c.dir/clean
 
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/navigation_command__description.c
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.c
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/navigation_command__functions.h
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/navigation_command__struct.h
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.c
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/navigation_command__type_support.h
-CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/navigation_command.h
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.c
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/simulator_command__functions.h
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/simulator_command__struct.h
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.c
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/detail/simulator_command__type_support.h
+CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend: rosidl_generator_c/simulator_messages/msg/simulator_command.h
 	cd /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/CMakeFiles/simulator_messages__rosidl_generator_c.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/simulator_messages__rosidl_generator_c.dir/depend
 

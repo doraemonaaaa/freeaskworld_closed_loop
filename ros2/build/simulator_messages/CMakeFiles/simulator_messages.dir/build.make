@@ -66,7 +66,7 @@ include CMakeFiles/simulator_messages.dir/compiler_depend.make
 # Include the progress variables for this target.
 include CMakeFiles/simulator_messages.dir/progress.make
 
-CMakeFiles/simulator_messages: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages/msg/NavigationCommand.msg
+CMakeFiles/simulator_messages: /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/simulator_messages/msg/SimulatorCommand.msg
 CMakeFiles/simulator_messages: /opt/ros/jazzy/share/std_msgs/msg/Bool.idl
 CMakeFiles/simulator_messages: /opt/ros/jazzy/share/std_msgs/msg/Byte.idl
 CMakeFiles/simulator_messages: /opt/ros/jazzy/share/std_msgs/msg/ByteMultiArray.idl

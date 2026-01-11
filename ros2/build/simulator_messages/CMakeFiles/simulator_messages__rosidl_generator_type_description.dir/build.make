@@ -66,16 +66,16 @@ include CMakeFiles/simulator_messages__rosidl_generator_type_description.dir/com
 # Include the progress variables for this target.
 include CMakeFiles/simulator_messages__rosidl_generator_type_description.dir/progress.make
 
-CMakeFiles/simulator_messages__rosidl_generator_type_description: rosidl_generator_type_description/simulator_messages/msg/NavigationCommand.json
+CMakeFiles/simulator_messages__rosidl_generator_type_description: rosidl_generator_type_description/simulator_messages/msg/SimulatorCommand.json
 
-rosidl_generator_type_description/simulator_messages/msg/NavigationCommand.json: /opt/ros/jazzy/lib/rosidl_generator_type_description/rosidl_generator_type_description
-rosidl_generator_type_description/simulator_messages/msg/NavigationCommand.json: /opt/ros/jazzy/lib/python3.12/site-packages/rosidl_generator_type_description/__init__.py
-rosidl_generator_type_description/simulator_messages/msg/NavigationCommand.json: rosidl_adapter/simulator_messages/msg/NavigationCommand.idl
+rosidl_generator_type_description/simulator_messages/msg/SimulatorCommand.json: /opt/ros/jazzy/lib/rosidl_generator_type_description/rosidl_generator_type_description
+rosidl_generator_type_description/simulator_messages/msg/SimulatorCommand.json: /opt/ros/jazzy/lib/python3.12/site-packages/rosidl_generator_type_description/__init__.py
+rosidl_generator_type_description/simulator_messages/msg/SimulatorCommand.json: rosidl_adapter/simulator_messages/msg/SimulatorCommand.idl
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating type hashes for ROS interfaces"
 	/usr/bin/python3 /opt/ros/jazzy/lib/rosidl_generator_type_description/rosidl_generator_type_description --generator-arguments-file /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_type_description__arguments.json
 
 simulator_messages__rosidl_generator_type_description: CMakeFiles/simulator_messages__rosidl_generator_type_description
-simulator_messages__rosidl_generator_type_description: rosidl_generator_type_description/simulator_messages/msg/NavigationCommand.json
+simulator_messages__rosidl_generator_type_description: rosidl_generator_type_description/simulator_messages/msg/SimulatorCommand.json
 simulator_messages__rosidl_generator_type_description: CMakeFiles/simulator_messages__rosidl_generator_type_description.dir/build.make
 .PHONY : simulator_messages__rosidl_generator_type_description
 
