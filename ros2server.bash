@@ -42,11 +42,25 @@ echo "Start ros2 server"
 sleep 0.5
 
 # Additional plugins
-# bash mapping.bash &
+PKILL_PROC=$(pgrep -f "mapping.bash")
+if [ -n "$PKILL_PROC" ]; then
+    echo "Old mapping.bash process found (PID: $PKILL_PROC), killing..."
+    kill -9 $PKILL_PROC
+    sleep 1
+fi
+# mapping
+nohup bash /home/pengyh/workspace/FreeAskAgent/closed_loop/mapping.bash > /tmp/mapping.log 2>&1 &
+sleep 3
+
 
 # run baseliine
 for ((i=1;i<=EPISODES;i++)); do
   echo "===== Episode $i ====="
+  pkill -f "ros2 run vln_connector agent_costmap" 2>/dev/null
+  pkill -f "ros2 run vln_connector ${BASELINE_NAME}" 2>/dev/null
+  sleep 0.5
+  ros2 run vln_connector agent_costmap &
+  sleep 0.5
   ros2 run vln_connector $BASELINE_NAME
   sleep 1
 done

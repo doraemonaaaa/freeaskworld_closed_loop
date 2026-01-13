@@ -12,4 +12,5 @@ vln_connector/agent_baseline.py
 vln_connector/agent_costmap.py
 vln_connector/events.py
 vln_connector/simple_baseline.py
+vln_connector/utils.py
 vln_connector/vln_connector.py

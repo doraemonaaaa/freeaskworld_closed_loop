@@ -18,7 +18,10 @@ class SimpleBaseline(VLNConnector):
         super().__init__()  # 初始化 ROS Node + RGBD Subscriber
         self._lock = threading.Lock()  # 推理锁
         self._inference_thread = None
-    
+
+        # events
+        event_manager.register("task_received", self.handle_task_received)
+
     # =====================================================
     # control logic（one step）
     # =====================================================
@@ -70,6 +73,13 @@ class SimpleBaseline(VLNConnector):
     def destroy_node(self):
         super().destroy_node()
 
+    # =====================================================
+    # How to Handle task information
+    # =====================================================
+    def handle_task_received(self, task:str):
+        if task is None:
+            self.get_logger().warning(f"Task is empty")
+            return
 # =====================================================
 # Main Loop
 # =====================================================

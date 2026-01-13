@@ -57,7 +57,7 @@ class VLNConnector(Node):
         # input datas
         self.rgb_image = None
         self.depth_image = None
-        self.base_pose = None
+        self.latest_pose = None
 
         self.get_logger().info("VLN Connector Node started")
 
@@ -93,14 +93,9 @@ class VLNConnector(Node):
     def robot_odom_callback(self, msg: TransformStamped):
         p = msg.pose.pose.position
         q = msg.pose.pose.orientation
-
-        # 只取平面 yaw（ROS FLU）
-        yaw = math.atan2(
-            2.0 * (q.w * q.z + q.x * q.y),
-            1.0 - 2.0 * (q.y * q.y + q.z * q.z)
-        )
-
-        self.base_pose = (p.x, p.y, yaw)
+        yaw_rad = math.atan2(2.0 * (q.w * q.z + q.x * q.y), 1.0 - 2.0 * (q.y * q.y + q.z * q.z))
+        yaw_deg = math.degrees(yaw_rad)
+        self.latest_pose = (p.x, p.y, yaw_deg)
 
         # self.get_logger().info( 
         #     f"Received robot pose: pos=[{t.x:.3f}, {t.y:.3f}, {t.z:.3f}], "
@@ -126,14 +121,14 @@ class VLNConnector(Node):
             return None
         
     def get_observation(self):
-        if self.rgb_image is None and self.depth_image is None and self.base_pose is None:
+        if self.rgb_image is None and self.depth_image is None and self.latest_pose is None:
             self.get_logger().warning("Observation not ready yet, skipping inference", throttle_duration_sec=2.0)
             return None
 
         return {
             "rgb": self.rgb_image,
             "depth": self.depth_image,
-            "base_pose": self.base_pose
+            "latest_pose": self.latest_pose
         }
 
 def main(args=None):

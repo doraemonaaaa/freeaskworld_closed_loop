@@ -84,5 +84,5 @@ ros2 launch rtabmap_launch rtabmap.launch.py \
                 --Grid/FlatObstacleDetected true \
                 --Grid/NormalForFlatObstacles true \
                 --Rtabmap/MaxRepublished 0" \
-    log_level:=WARN \
+    log_level:=ERROR \
     &

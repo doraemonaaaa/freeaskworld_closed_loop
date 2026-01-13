@@ -17,6 +17,7 @@ setup(
             'vln_connector = vln_connector.vln_connector:main',
             'simple_baseline = vln_connector.simple_baseline:main',
             'events = vln_connector.events:main',
+            'utils = vln_connector.utils:main',
             'agent_baseline = vln_connector.agent_baseline:main',
             'agent_costmap = vln_connector.agent_costmap:main'
         ],

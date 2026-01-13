@@ -11,6 +11,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import tempfile
 import threading
+from scipy.spatial.transform import Rotation as R
 
 # 引入 AgentFlow 依赖
 from agentflow.agents.solver_embodied import construct_solver_embodied
@@ -20,9 +21,11 @@ from simulator_messages.msg import SimulatorCommand  # 自定义消息
 from .vln_connector import VLNConnector
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import Pose
-from scipy.spatial.transform import Rotation as R
+from std_msgs.msg import Float32
+from std_msgs.msg import String
 
 from .events import event_manager
+from .agent_costmap import AgentCostMapNode
 
 class AgentBaseline(VLNConnector):
     def __init__(self):
@@ -33,6 +36,13 @@ class AgentBaseline(VLNConnector):
         self.get_logger().info(f"Temporary directory created: {self._temp_dir.name}")
         self._lock = threading.Lock()  # 推理锁
         self._inference_thread = None
+
+        # --- 清理上次日志 ---
+        self.log_path = Path("tmp/llm_raw_text.log")
+        if self.log_path.exists():
+            self.log_path.unlink()  # 删除文件
+        self.log_path.parent.mkdir(parents=True, exist_ok=True)
+        self.get_logger().info(f"LLM log file cleared: {self.log_path}")
 
         load_dotenv(dotenv_path="agentflow/.env")
         self.get_logger().info(
@@ -57,14 +67,33 @@ class AgentBaseline(VLNConnector):
 
         # prompts
         self.system_prompt = (
-            "# Task Complete Criterior: Reach target within 3 meters\n"
-            "# You will receive two images: \n"
-            "## 1. First-person view (RGB).\n"
-            "## 2. A decision value map:\n"
-            "- Warm colors (red/yellow): preferred regions\n"
-            "- Cold colors (blue): avoid if possiblen\n"
-            "- Black: obstacles\n"
+'''
+# Specific Task
+## Task Completion Criterion
+- Navigate in the physical environment to reach the target within 3 meters then stop.
+## Observations You Will Receive
+1. Ego-centric RGB image.
+2. Decision Value Map:
+The Decision Value Map is a cost-based navigation field that encodes obstacles, history, and goal intention into a single spatial representation.
+    - Ego Icon: Circle with Arrow showing current position & heading.
+    - Cold Colors (Blue/Dark): Low cost path. 
+        -- Goal direction attractor: Regions aligned with the current goal yaw have lower cost.
+        -- Unvisited free space: Open areas that have not been explored yet are preferred.
+    - Warm Colors (Red/Yellow): High cost.
+        -- History trajectory field: Areas close to where the robot has already been are assigned high cost.
+        -- Directional memory: A fan-shaped penalty extends forward from past motion, discouraging the robot from moving in the same direction again (anti-loop behavior).
+        -- Uncertain space: Unknown map regions have moderate cost.
+    - Black Color: Obstacles. Occupied cells from the SLAM map are treated as maximum cost and are strictly forbidden.
+    - Dots: Small dots mark the robot’s previous positions, providing an explicit trace of where it has been.
+> Use this information to continuously adjust your navigation strategy.
+by these information, adjust your strategy to navigate. 
+## Task Instruction Principle
+- Give step-by-step directions using landmarks and relative movements (forward, left, right).
+- Be concise, clear, and follow safe paths (prefer warm, avoid cold/black regions).
+# End of Specific Task
+'''
         )
+
         self.task_prompt = None
         self.data_prompt = None
 
@@ -87,14 +116,19 @@ class AgentBaseline(VLNConnector):
             self.raw_map_callback,
             10
         )
-        self.decision_map_data = None
+
         self.decision_map_sub = self.create_subscription(
             OccupancyGrid,
-            '/agent/decision_costmap',
+            "/agent/decision_costmap",  # 对应你之前写的那个节点的发布话题
             self.decision_map_callback,
             10
         )
+        
         self.latest_map_img = None
+        self.decision_map_data = None
+
+        self.llm_pub = self.create_publisher(String, "/agent/llm_output", 10)
+        self.goal_yaw_pub = self.create_publisher(Float32, "/agent/goal_yaw", 10)
 
         # events
         event_manager.register("task_received", self.handle_task_received)
@@ -114,7 +148,7 @@ class AgentBaseline(VLNConnector):
 
         rgb_snapshot = obs["rgb"].copy() if obs["rgb"] is not None else None
         depth_snapshot = obs["depth"].copy() if obs["depth"] is not None else None
-        base_pose_snapshot = obs["base_pose"]  # 如果需要，也可以 deepcopy
+        latest_pose_snapshot = obs["latest_pose"]  # 如果需要，也可以 deepcopy
 
         # 非阻塞调用 Inference
         self._inference_thread = threading.Thread(
@@ -122,7 +156,7 @@ class AgentBaseline(VLNConnector):
             kwargs={
                 "rgb": rgb_snapshot,
                 "depth": depth_snapshot,
-                "base_pose": base_pose_snapshot
+                "latest_pose": latest_pose_snapshot
             }
         )
         self._inference_thread.start()
@@ -159,7 +193,7 @@ class AgentBaseline(VLNConnector):
         线程安全，返回 SimulatorCommand
         """
         image_paths = args.get("image_paths", None)
-        base_pose = args.get("base_pose", None)
+        latest_pose = args.get("latest_pose", None)
 
         if image_paths is None:
             rgb = args.get("rgb")
@@ -225,50 +259,36 @@ class AgentBaseline(VLNConnector):
         self._fuse_and_update_map_img()
 
     def _fuse_and_update_map_img(self):
-        """核心融合函数：将决策热力图与原始障碍物遮罩叠加"""
         if self.raw_map_data is None or self.decision_map_data is None:
             return
-
-        # 检查尺寸是否匹配 (防止 RTAB-Map 动态扩图时导致的不一致)
         if self.raw_map_data.shape != self.decision_map_data.shape:
-            # 如果尺寸不一致，通常以 raw_map 为准，等待 decision_map 更新
             return
 
-        # --- Step 1: 制作底图 (Decision Heatmap) ---
-        # 归一化 cost (0-100) -> (0.0-1.0)
-        # Cost 越高(100) -> 越不推荐(Blue/Cold)
-        # Cost 越低(0)   -> 越推荐(Red/Warm)
-        # OpenCV Jet: 0=Blue, 255=Red. 所以我们需要反转 Cost。
-        
-        # 将 int8 转 float 防止溢出
-        cost_float = self.decision_map_data.astype(np.float32)
-        
-        # 归一化并反转: cost 0 -> val 1.0 (Red), cost 100 -> val 0.0 (Blue)
-        heatmap_val = 1.0 - (cost_float / 100.0)
-        heatmap_val = np.clip(heatmap_val, 0.0, 1.0)
-        
-        # 转为 0-255 并应用色谱
-        heatmap_gray = (heatmap_val * 255).astype(np.uint8)
+        # cost → heatmap (low cost = blue, high cost = red)
+        cost_float = self.decision_map_data.astype(np.float32) / 100.0
+        cost_float = np.clip(cost_float, 0.0, 1.0)
+
+        heatmap_gray = (cost_float * 255).astype(np.uint8)
         fused_img = cv2.applyColorMap(heatmap_gray, cv2.COLORMAP_JET)
 
-        # --- Step 2: 制作遮罩 (Raw Map Overlays) ---
-        
-        # 掩码 A: 障碍物 (Raw Map == 100) -> 黑色
+        # obstacles & unknowns
         obstacle_mask = (self.raw_map_data == 100)
-        fused_img[obstacle_mask] = [0, 0, 0]  # BGR = Black
+        fused_img[obstacle_mask] = [0, 0, 0]
 
-        # 掩码 B: 未知区域 (Raw Map == -1) -> 灰色
         unknown_mask = (self.raw_map_data == -1)
-        fused_img[unknown_mask] = [128, 128, 128] # BGR = Grey
-
-        # (可选) 机器人当前位置标记？
-        # 通常不需要，因为 LLM 根据第一人称视角和 odom 坐标能推断，
-        # 但如果在图上画个小箭头效果会更好。这里先保持纯地图。
+        fused_img[unknown_mask] = [128, 128, 128]
 
         self.latest_map_img = fused_img
 
-
     def _parse_llm_to_ros(self, output_text: str):
+        log_path = Path("tmp/llm_raw_text.log")
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(output_text + "\n" + "-"*80 + "\n")
+            
+        msg = String()
+        msg.data = output_text
+        self.llm_pub.publish(msg)
+
         cmd = SimulatorCommand()
         cmd.header.stamp = self.get_clock().now().to_msg()
         cmd.header.frame_id = "agent"
@@ -303,6 +323,25 @@ class AgentBaseline(VLNConnector):
 
         cmd.method = method
         cmd.method_params = method_params
+
+        if method.lower() == "stop":
+            self.get_logger().info("🏁 Stop received")
+            self._stop_event.set()
+        elif method.lower() == "move":
+                try:
+                    # 假设参数格式是 x, y, yaw
+                    params = [p.strip() for p in method_params.split(',')]
+                    if len(params) >= 3:
+                        yaw_deg = float(params[2])
+                        
+                        # 发布到 /agent/goal_yaw
+                        goal_msg = Float32()
+                        goal_msg.data = yaw_deg
+                        self.goal_yaw_pub.publish(goal_msg)
+                        
+                        self.get_logger().info(f"Published goal_yaw: {yaw_deg:.2f}")
+                except Exception as e:
+                    self.get_logger().error(f"Error parsing Move params for goal_yaw: {e}")
 
         return cmd
 
