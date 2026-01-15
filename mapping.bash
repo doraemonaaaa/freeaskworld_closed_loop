@@ -1,16 +1,23 @@
-
-
+# 先杀所有明显相关的
 pkill -9 -f ekf_filter_node
 pkill -9 -f robot_localization
-pkill -9 -f rtabmap
-pkill -9 -f rtabmapviz
 pkill -9 -f rgbd_odometry
 pkill -9 -f icp_odometry
-pkill -9 -f rtabmap.launch.py
 
+# 重点：宽泛杀掉所有包含 rtabmap 的进程（最有效）
+pkill -9 -f rtabmap
+pkill -9 -f rtabmapviz
+pkill -9 -f rtabmap_launch
+pkill -9 -f point_cloud_xyzrgb
+pkill -9 -f map_assembler
+
+pkill -9 -f rviz2
+
+pkill -9 -f "agent_costmap"
+echo "Starting agent_costmap..."
+ros2 run vln_connector agent_costmap &
 
 ## Additional plugins
-# 1. 杀掉旧的 rtabmap_launch 进程（如果存在）
 RTABMAP_PROC=$(pgrep -f "ros2 launch rtabmap_launch rtabmap.launch.py")
 if [ -n "$RTABMAP_PROC" ]; then
     echo "rtabmap_launch is already running (PID: $RTABMAP_PROC). Killing it..."
@@ -58,7 +65,6 @@ ros2 launch rtabmap_launch rtabmap.launch.py \
                 --RGBD/ProximityPathMaxNeighbors 0 \
                 --Mem/UseScanMatching true \
                 --Mem/STMSize 10 \
-                --Optimizer/Slam2D true \
                 --Reg/Strategy 1 \
                 --Reg/Force3DoF true \
                 --Icp/VoxelSize 0.1 \
@@ -85,4 +91,3 @@ ros2 launch rtabmap_launch rtabmap.launch.py \
                 --Grid/NormalForFlatObstacles true \
                 --Rtabmap/MaxRepublished 0" \
     log_level:=ERROR \
-    &

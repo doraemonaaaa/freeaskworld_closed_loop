@@ -41,28 +41,40 @@ ros2 run ros_tcp_endpoint default_server_endpoint &
 echo "Start ros2 server"
 sleep 0.5
 
-# Additional plugins
-PKILL_PROC=$(pgrep -f "mapping.bash")
-if [ -n "$PKILL_PROC" ]; then
-    echo "Old mapping.bash process found (PID: $PKILL_PROC), killing..."
-    kill -9 $PKILL_PROC
-    sleep 1
-fi
-# mapping
-nohup bash /home/pengyh/workspace/FreeAskAgent/closed_loop/mapping.bash > /tmp/mapping.log 2>&1 &
-sleep 3
+wait_ros2_ready() {
+    local retries=0
+    local max_retries=10
+    while ! ros2 topic list >/dev/null 2>&1; do
+        retries=$((retries+1))
+        echo "[WARN] ROS2 not ready yet, retry $retries/$max_retries..."
+        sleep 1
+        if [ "$retries" -ge "$max_retries" ]; then
+            echo "[ERROR] ROS2 not available after $max_retries seconds, exiting."
+            exit 1
+        fi
+    done
+    echo "[INFO] ROS2 ready!"
+}
 
+cleanup_nodes() {
+    echo "Cleaning up ROS2 nodes..."
+    pkill -9 -f "agent_baseline"
+    pkill -9 -f "mapping.bash"
+    sleep 2
+}
 
 # run baseliine
 for ((i=1;i<=EPISODES;i++)); do
-  echo "===== Episode $i ====="
-  pkill -f "ros2 run vln_connector agent_costmap" 2>/dev/null
-  pkill -f "ros2 run vln_connector ${BASELINE_NAME}" 2>/dev/null
-  sleep 0.5
-  ros2 run vln_connector agent_costmap &
-  sleep 0.5
-  ros2 run vln_connector $BASELINE_NAME
-  sleep 1
+    echo "===== Episode $i ====="
+    cleanup_nodes
+    wait_ros2_ready
+    bash /home/pengyh/workspace/FreeAskAgent/closed_loop/mapping.bash > /tmp/mapping.log &
+    sleep 0.5
+    echo "Starting $BASELINE_NAME..."
+    ros2 run vln_connector $BASELINE_NAME &
+    AGENT_PID=$!
+    wait $AGENT_PID
+    echo "Episode $i finished."
 done
 
 # Debug Utils
