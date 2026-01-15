@@ -165,8 +165,8 @@ class AgentCostMapNode(Node):
         if not self.pose_received:
             missing_data.append("Odom (/simulator_msg/odom)")
         
-        if not self.goal_received:
-             missing_data.append("Goal (/agent/goal_yaw)")
+        # if not self.goal_received:
+        #      missing_data.append("Goal (/agent/goal_yaw)")
 
         if missing_data:
             self.get_logger().warn(

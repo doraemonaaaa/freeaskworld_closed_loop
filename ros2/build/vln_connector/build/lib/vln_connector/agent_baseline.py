@@ -75,6 +75,7 @@ class AgentBaseline(VLNConnector):
 - There are many same store in the scene, only choose the right store described by the instruction, if you want more information, just ask way from people.
 - Navigate in the physical environment to reach the target within 3 meters then stop.
 - Avoid obstacles unless you would get trapped.
+- Finish your task as quick as possible.
 ## Observations You Will Receive
 1. Ego-centric RGB image.
 2. Ego-centric Depth image (Color-coded). 
@@ -136,6 +137,10 @@ by these information, adjust your strategy to navigate.
 
         self.llm_pub = self.create_publisher(String, "/agent/llm_output", 10)
         self.goal_yaw_pub = self.create_publisher(Float32, "/agent/goal_yaw", 10)
+
+        # Interaction
+        self.is_interaction_triggered = False
+        self.prev_task = None
 
         # events
         event_manager.register("task_received", self.handle_task_received)
@@ -220,9 +225,13 @@ by these information, adjust your strategy to navigate.
         if self.task_prompt is not None:
             try:
                 propmt = self.system_prompt + self.task_prompt
+                interaction_data = ""
+                if self.is_interaction_triggered == True:
+                    interaction_data = f"[Received New Interaction Data]:{self.prev_task}"
                 output = self.solver.solve(
                     propmt,
-                    image_paths=image_paths
+                    image_paths=image_paths,
+                    interaction_memory=interaction_data
                 )
 
                 raw_text = output.get("direct_output", "")
@@ -249,6 +258,8 @@ by these information, adjust your strategy to navigate.
         if task is None:
             self.get_logger().warning(f"Task is empty")
             return
+        if self.prev_task != task:
+            self.is_interaction_triggered = True
         print(f"🎯 任务来了")
         self.latest_task = task
         self.task_prompt = f'''
@@ -256,6 +267,7 @@ by these information, adjust your strategy to navigate.
 {task}
 # End of Specific task instruction
 '''
+        self.prev_task = task
 
     def raw_map_callback(self, msg: OccupancyGrid):
         """保存原始地图数据"""
@@ -325,21 +337,21 @@ by these information, adjust your strategy to navigate.
         if method.lower() == "stop":
             self.get_logger().info("🏁 Stop received")
             self._stop_event.set()
-        elif method.lower() == "move":
-                try:
-                    # 假设参数格式是 x, y, yaw
-                    params = [p.strip() for p in method_params.split(',')]
-                    if len(params) >= 3:
-                        yaw_deg = float(params[2])
+        # elif method.lower() == "move":
+        #         try:
+        #             # 假设参数格式是 x, y, yaw
+        #             params = [p.strip() for p in method_params.split(',')]
+        #             if len(params) >= 3:
+        #                 yaw_deg = float(params[2])
                         
-                        # 发布到 /agent/goal_yaw
-                        goal_msg = Float32()
-                        goal_msg.data = yaw_deg
-                        self.goal_yaw_pub.publish(goal_msg)
+        #                 # 发布到 /agent/goal_yaw
+        #                 goal_msg = Float32()
+        #                 goal_msg.data = yaw_deg
+        #                 self.goal_yaw_pub.publish(goal_msg)
                         
-                        self.get_logger().info(f"Published goal_yaw: {yaw_deg:.2f}")
-                except Exception as e:
-                    self.get_logger().error(f"Error parsing Move params for goal_yaw: {e}")
+        #                 self.get_logger().info(f"Published goal_yaw: {yaw_deg:.2f}")
+        #         except Exception as e:
+        #             self.get_logger().error(f"Error parsing Move params for goal_yaw: {e}")
 
         return cmd
 
