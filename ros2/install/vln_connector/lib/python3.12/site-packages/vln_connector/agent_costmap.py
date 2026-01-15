@@ -28,7 +28,7 @@ class AgentCostMapNode(Node):
         self.roi_radius = 15.0  # region of interest for cost of history traj calculate, meter
 
         self.traj_cost_radius = 0.2  # meter
-        self.traj_cost_fan_angle = 80  # degree
+        self.traj_cost_fan_angle = 60  # degree
         self.traj_cost_fan_radius = 3  # meter
 
         self.ego_size = 0.8  # meter

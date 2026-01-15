@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 import tempfile
 import threading
 from scipy.spatial.transform import Rotation as R
+import shutil
 
 # 引入 AgentFlow 依赖
 from agentflow.agents.solver_embodied import construct_solver_embodied
@@ -68,12 +69,18 @@ class AgentBaseline(VLNConnector):
         # prompts
         self.system_prompt = (
 '''
-# Specific Task
-## Task Completion Criterion
+# Task Context
+## Task Skills
+- Understand specific task instruction, and by that information to find the target.
+- There are many same store in the scene, only choose the right store described by the instruction, if you want more information, just ask way from people.
 - Navigate in the physical environment to reach the target within 3 meters then stop.
+- Avoid obstacles unless you would get trapped.
 ## Observations You Will Receive
 1. Ego-centric RGB image.
-2. Decision Value Map:
+2. Ego-centric Depth image (Color-coded). 
+- Warm colors (yellow/red) are far.
+- Cool colors (blue/purple) are close.
+3. Decision Value Map:
 The Decision Value Map is a cost-based navigation field that encodes obstacles, history, and goal intention into a single spatial representation.
     - Ego Icon: Circle with Arrow showing current position & heading.
     - Cold Colors (Blue/Dark): Low cost path. 
@@ -90,7 +97,7 @@ by these information, adjust your strategy to navigate.
 ## Task Instruction Principle
 - Give step-by-step directions using landmarks and relative movements (forward, left, right).
 - Be concise, clear, and follow safe paths (prefer warm, avoid cold/black regions).
-# End of Specific Task
+# End of Task Context
 '''
         )
 
@@ -98,14 +105,14 @@ by these information, adjust your strategy to navigate.
         self.data_prompt = None
 
         self.temp_dir = Path("tmp/agent_baseline")
+        if self.temp_dir.exists():
+            shutil.rmtree(self.temp_dir)
         self.temp_dir.mkdir(parents=True, exist_ok=True)
 
         self.step_counter = 0
         self.last_infer_step = -1  # 防止同一帧重复推理
 
         self.get_logger().info("AgentBaseline Initialized")
-
-        self._stop_event = threading.Event()
 
         # map 
         self.raw_map_data = None
@@ -147,7 +154,7 @@ by these information, adjust your strategy to navigate.
             return  # 数据不完整，直接返回
 
         rgb_snapshot = obs["rgb"].copy() if obs["rgb"] is not None else None
-        depth_snapshot = obs["depth"].copy() if obs["depth"] is not None else None
+        depth_snapshot = obs["depth_vis"].copy() if obs["depth_vis"] is not None else None
         latest_pose_snapshot = obs["latest_pose"]  # 如果需要，也可以 deepcopy
 
         # 非阻塞调用 Inference
@@ -155,33 +162,40 @@ by these information, adjust your strategy to navigate.
             target=self.Inference,
             kwargs={
                 "rgb": rgb_snapshot,
-                "depth": depth_snapshot,
+                "depth_vis": depth_snapshot,
                 "latest_pose": latest_pose_snapshot
             }
         )
         self._inference_thread.start()
 
-
-    # =====================================================
-    # Input Adapter
-    # =====================================================
     def InputData(self, **kwargs):
-        rgb_img = kwargs.get("rgb")
-        
-        # 保存第一视角 RGB
-        rgb_path = self.temp_dir / f"rgb.jpg"
-        cv2.imwrite(str(rgb_path), rgb_img)
+        rgb = kwargs.get("rgb")
+        depth_vis = kwargs.get("depth_vis")
 
-        # 保存上帝视角 Map (如果有)
-        img_paths = [str(rgb_path)]
-        
+        img_paths = []
+
+        # RGB
+        rgb_path = self.temp_dir / "rgb.jpg"
+        cv2.imwrite(str(rgb_path), rgb)
+        img_paths.append(str(rgb_path))
+
+        # Depth → 8bit 可视化
+        if depth_vis is not None:
+            depth_colored = cv2.applyColorMap(depth_vis, cv2.COLORMAP_TURBO)
+            depth_path = self.temp_dir / "depth.jpg"
+            cv2.imwrite(str(depth_path), depth_colored)
+            img_paths.append(str(depth_path))
+        else:
+            self.get_logger().warn("No Depth input for inference, skipping", throttle_duration_sec=2.0)
+
+        # Map
         if self.latest_map_img is not None:
-            map_path = self.temp_dir / f"map.jpg"
+            map_path = self.temp_dir / "map.jpg"
             cv2.imwrite(str(map_path), self.latest_map_img)
-            img_paths.append(str(map_path)) # 此时列表里有两张图
-            self.get_logger().info(f"Attached Map Image to LLM input")
+            img_paths.append(str(map_path))
+        else:
+            self.get_logger().warn("No Map input for inference, skipping", throttle_duration_sec=2.0)
 
-        self.step_counter += 1
         return img_paths
 
     # =====================================================
@@ -197,11 +211,11 @@ by these information, adjust your strategy to navigate.
 
         if image_paths is None:
             rgb = args.get("rgb")
-            depth = args.get("depth")  # depth 可以留着以后用
+            depth_vis = args.get("depth_vis")  # depth 可以留着以后用
             if rgb is None:
                 self.get_logger().warn("No RGB input for inference, skipping", throttle_duration_sec=2.0)
                 return None
-            image_paths = self.InputData(rgb=rgb, depth=depth)
+            image_paths = self.InputData(rgb=rgb, depth_vis=depth_vis)
 
         if self.task_prompt is not None:
             try:
@@ -237,7 +251,11 @@ by these information, adjust your strategy to navigate.
             return
         print(f"🎯 任务来了")
         self.latest_task = task
-        self.task_prompt = "[Updated Task]: " + task + "\n"
+        self.task_prompt = f'''
+# Specific task instruction
+{task}
+# End of Specific task instruction
+'''
 
     def raw_map_callback(self, msg: OccupancyGrid):
         """保存原始地图数据"""
@@ -278,6 +296,9 @@ by these information, adjust your strategy to navigate.
         unknown_mask = (self.raw_map_data == -1)
         fused_img[unknown_mask] = [128, 128, 128]
 
+        # === 新增：垂直翻转，使地图顶部显示在图像顶部 ===
+        fused_img = cv2.flip(fused_img, 0)  # 0 表示垂直翻转（上下翻转）
+
         self.latest_map_img = fused_img
 
     def _parse_llm_to_ros(self, output_text: str):
@@ -296,30 +317,7 @@ by these information, adjust your strategy to navigate.
         method = ""
         method_params = ""
 
-        # 提取 **Action** 标签后的文本
-        action_match = re.search(
-            r"(?:\*\*Action\*\*|Action|Navigation Goal)\s*:\s*(.*)",
-            output_text,
-            re.IGNORECASE | re.DOTALL
-        )
-
-        if action_match:
-            action_text = action_match.group(1).strip()
-            self.get_logger().info(f"Extracted Action Text: {action_text}")
-
-            method_match = re.search(r"<(\w+)\((.*?)\)>", action_text, re.IGNORECASE | re.DOTALL)
-            if method_match:
-                method = method_match.group(1).strip()
-                method_params = method_match.group(2).strip()
-                self.get_logger().info(f"Parsed Method: {method}, Params: {method_params}")
-            else:
-                self.get_logger().warn("No <Method(...)> found in Action text.")
-        else:
-            self.get_logger().warn("Label 'Action:' not found in LLM output. No method extracted.")
-
-        if method.lower() == "stop":
-            self.get_logger().info("🏁 Stop received, exiting baseline for restart")
-            self._stop_event.set()
+        method, method_params = self.solver.parse_command(output_text)
 
         cmd.method = method
         cmd.method_params = method_params

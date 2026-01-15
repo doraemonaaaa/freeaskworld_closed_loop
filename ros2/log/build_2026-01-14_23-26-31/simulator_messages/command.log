@@ -1,0 +1,1 @@
+Invoking command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages -- -j20 -l20

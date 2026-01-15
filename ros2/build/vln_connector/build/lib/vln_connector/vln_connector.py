@@ -8,6 +8,8 @@ import numpy as np
 import cv2
 import math
 from std_msgs.msg import String
+import threading
+import json
 
 from simulator_messages.msg import SimulatorCommand  # 自定义消息
 
@@ -16,6 +18,7 @@ from .events import event_manager
 class VLNConnector(Node):
     def __init__(self):
         super().__init__('vln_connector')
+        self._stop_event = threading.Event()
 
         # RGB / Depth 订阅
         self.rgb_sub = self.create_subscription(
@@ -45,6 +48,13 @@ class VLNConnector(Node):
             10
         )
 
+        self.command_sub = self.create_subscription(
+            String,
+            '/simulator_msg/simulator_command/untiy',
+            self.simulator_command_callback,
+            10
+        )
+
         self.task_sub = self.create_subscription(
             String,
             '/simulator_msg/task',  # 主题名，可自定义，确保与发布端匹配
@@ -57,6 +67,7 @@ class VLNConnector(Node):
         # input datas
         self.rgb_image = None
         self.depth_image = None
+        self.depth_vis = None
         self.latest_pose = None
 
         self.get_logger().info("VLN Connector Node started")
@@ -87,6 +98,7 @@ class VLNConnector(Node):
         depth_vis = np.nan_to_num(depth)
         depth_vis = np.clip(depth_vis, 0.0, 10.0)
         depth_vis = (depth_vis / 10.0 * 255).astype(np.uint8)
+        self.depth_vis = depth_vis
         cv2.imshow("Depth", depth_vis)
         cv2.waitKey(1)
 
@@ -109,6 +121,27 @@ class VLNConnector(Node):
         # 触发自定义事件
         event_manager.emit("task_received", task_text)
 
+    def simulator_command_callback(self, msg: String):
+        raw = msg.data.strip()
+
+        method = None
+
+        # 尝试 JSON
+        try:
+            data = json.loads(raw)
+            if isinstance(data, dict):
+                method = data.get("method")
+            elif isinstance(data, str):
+                method = data
+        except Exception:
+            method = raw
+
+        if method.lower() == "stop":
+            self._stop_event.set()
+
+        self.get_logger().info(f"[SIM CMD RX] {method}")
+
+
     def publish_simulator_command(self, sim_cmd):
         self.command_pub.publish(sim_cmd)
         self.get_logger().info("Published Simulator Command")
@@ -128,6 +161,7 @@ class VLNConnector(Node):
         return {
             "rgb": self.rgb_image,
             "depth": self.depth_image,
+            'depth_vis': self.depth_vis,
             "latest_pose": self.latest_pose
         }
 
