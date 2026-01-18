@@ -340,13 +340,13 @@ class AgentCostMapNode(Node):
         mx, my = world_to_map(self.map_info, bx, by)
 
         mt, mt_mask = self.trajectory_value_map(h, w, mx, my)
-        mi = self.instruction_value_map(h, w, mx, my, target_yaw)
-        ms = self.semantic_value_map()
+        # mi = self.instruction_value_map(h, w, mx, my, target_yaw)
+        # ms = self.semantic_value_map()
 
         m = np.maximum(self.cost_map_arr, 0.0)
         m += 1.2 * mt * mt_mask         # 历史轨迹：强惩罚（红）
-        m += 0.8 * mi                   # 目标方向：低 cost，不增加
-        m += 0.4 * ms                   # 未知区域轻惩罚
+        # m += 0.8 * mi                   # 目标方向：低 cost，不增加
+        # m += 0.4 * ms                   # 未知区域轻惩罚
 
         m = np.clip(m, 0.0, 1.0)
 
@@ -357,7 +357,6 @@ class AgentCostMapNode(Node):
         m = self.draw_ego_on_map(m, mx, my, byaw)
 
         self.decision_map = m
-
 
     def publish_decision_costmap(self):
         if self.decision_map is None or self.map_info is None:

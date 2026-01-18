@@ -1,0 +1,6 @@
+{
+    "SceneName": "HongKongCity",
+    "MetricsFullPath": "Datas/TestDataSet/20250717_234804/Metrics\\EpisodeMetrics.json",
+    "VlnDataFullPath": "Datas/TestDataSet/20250717_234804/VLNData\\VLNData.json",
+    "PerceptionDataFullFolderPath": "Datas/TestDataSet/20250717_234804/PerceptionData"
+}

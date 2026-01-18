@@ -1,0 +1,9 @@
+{
+    "IsSuccess": true,
+    "PathLength": 85.63343048095703,
+    "TrajectoryLength": 85.63343048095703,
+    "NavigationError": 0.0,
+    "OracleNavigationError": 0.0,
+    "OracleSuccess": true,
+    "AskwayNum": 2
+}

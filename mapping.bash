@@ -12,10 +12,12 @@ pkill -9 -f point_cloud_xyzrgb
 pkill -9 -f map_assembler
 
 pkill -9 -f rviz2
-
 pkill -9 -f "agent_costmap"
+sleep 1
+
 echo "Starting agent_costmap..."
 ros2 run vln_connector agent_costmap &
+
 
 ## Additional plugins
 RTABMAP_PROC=$(pgrep -f "ros2 launch rtabmap_launch rtabmap.launch.py")

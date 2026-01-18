@@ -1,0 +1,37 @@
+[0.924s] Invoking command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/ROS-TCP-Endpoint': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/ros_tcp_endpoint build --build-base /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build install --record /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/install.log --install-scripts $base/lib/ros_tcp_endpoint --single-version-externally-managed install_data
+[1.015s] /usr/lib/python3/dist-packages/setuptools/dist.py:744: SetuptoolsDeprecationWarning: Invalid dash-separated options
+[1.015s] !!
+[1.015s] 
+[1.015s]         ********************************************************************************
+[1.015s]         Usage of dash-separated 'script-dir' will not be supported in future
+[1.015s]         versions. Please use the underscore name 'script_dir' instead.
+[1.015s] 
+[1.015s]         This deprecation is overdue, please update your project and remove deprecated
+[1.015s]         calls to avoid build errors in the future.
+[1.015s] 
+[1.015s]         See https://setuptools.pypa.io/en/latest/userguide/declarative_config.html for details.
+[1.015s]         ********************************************************************************
+[1.015s] 
+[1.015s] !!
+[1.015s]   opt = self.warn_dash_deprecation(opt, section)
+[1.103s] running egg_info
+[1.114s] writing ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/PKG-INFO
+[1.114s] writing dependency_links to ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/dependency_links.txt
+[1.114s] writing entry points to ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/entry_points.txt
+[1.114s] writing requirements to ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/requires.txt
+[1.114s] writing top-level names to ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/top_level.txt
+[1.135s] reading manifest file '../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/SOURCES.txt'
+[1.135s] adding license file 'LICENSE'
+[1.136s] writing manifest file '../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/SOURCES.txt'
+[1.136s] running build
+[1.136s] running build_py
+[1.136s] running install
+[1.139s] running install_lib
+[1.152s] running install_data
+[1.152s] running install_egg_info
+[1.164s] removing '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint-0.0.1-py3.12.egg-info' (and everything under it)
+[1.166s] Copying ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info to /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint-0.0.1-py3.12.egg-info
+[1.168s] running install_scripts
+[1.240s] Installing default_server_endpoint script to /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/ros_tcp_endpoint
+[1.240s] writing list of installed files to '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/install.log'
+[1.270s] Invoked command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/ROS-TCP-Endpoint' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/ros_tcp_endpoint build --build-base /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build install --record /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/install.log --install-scripts $base/lib/ros_tcp_endpoint --single-version-externally-managed install_data

@@ -59,7 +59,7 @@ class AgentBaseline(VLNConnector):
                 "GroundedSAM2_Tool"
             ],
             tool_engine=["gpt-4o"],
-            model_engine=["gpt-4o", "gpt-4o", "gpt-4o"],
+            model_engine=["gpt-4o", "gpt-4o", "gpt-4o", "gpt-4o"],
             output_types="direct",
             max_time=300,
             max_steps=1,
@@ -76,6 +76,7 @@ class AgentBaseline(VLNConnector):
 - Navigate in the physical environment to reach the target within 3 meters then stop.
 - Avoid obstacles unless you would get trapped.
 - Finish your task as quick as possible.
+by these information, adjust your strategy to navigate. 
 ## Observations You Will Receive
 1. Ego-centric RGB image.
 2. Ego-centric Depth image (Color-coded). 
@@ -83,18 +84,12 @@ class AgentBaseline(VLNConnector):
 - Cool colors (blue/purple) are close.
 3. Decision Value Map:
 The Decision Value Map is a cost-based navigation field that encodes obstacles, history, and goal intention into a single spatial representation.
-    - Ego Icon: Circle with Arrow showing current position & heading.
-    - Cold Colors (Blue/Dark): Low cost path. 
-        -- Goal direction attractor: Regions aligned with the current goal yaw have lower cost.
-        -- Unvisited free space: Open areas that have not been explored yet are preferred.
-    - Warm Colors (Red/Yellow): High cost.
-        -- History trajectory field: Areas close to where the robot has already been are assigned high cost.
-        -- Directional memory: A fan-shaped penalty extends forward from past motion, discouraging the robot from moving in the same direction again (anti-loop behavior).
-        -- Uncertain space: Unknown map regions have moderate cost.
-    - Black Color: Obstacles. Occupied cells from the SLAM map are treated as maximum cost and are strictly forbidden.
-    - Dots: Small dots mark the robot’s previous positions, providing an explicit trace of where it has been.
-> Use this information to continuously adjust your navigation strategy.
-by these information, adjust your strategy to navigate. 
+- Ego Icon: Circle with Arrow showing current position & heading.
+- Cold Colors (Blue/Dark): Low cost path. 
+- Warm Colors (Red/Yellow): High cost.
+- Black Color: Obstacles. Occupied cells from the SLAM map are treated as maximum cost and are strictly forbidden.
+- Dots: Small dots mark the robot’s previous positions, providing an explicit trace of where it has been.
+This mainly shows history trajectory information to you, history trajectory have higher cost, but it is not assert that you can't move to history traj, it all depending on your own situation.
 ## Task Instruction Principle
 - Give step-by-step directions using landmarks and relative movements (forward, left, right).
 - Be concise, clear, and follow safe paths (prefer warm, avoid cold/black regions).
@@ -142,6 +137,11 @@ by these information, adjust your strategy to navigate.
         self.is_interaction_triggered = False
         self.prev_task = None
 
+        # Action Controller
+        self.action_queue = []  # 存储多步动作 [(method, params), ...]
+        self.action_interval = 0.5  # 秒
+        self.action_timer = self.create_timer(self.action_interval, self.execute_action_queue)
+
         # events
         event_manager.register("task_received", self.handle_task_received)
 
@@ -177,31 +177,44 @@ by these information, adjust your strategy to navigate.
         rgb = kwargs.get("rgb")
         depth_vis = kwargs.get("depth_vis")
 
-        img_paths = []
+        img_items = []  # 改用 list of dict
 
-        # RGB
-        rgb_path = self.temp_dir / "rgb.jpg"
+        if rgb is None:
+            self.get_logger().warn("No RGB input", throttle_duration_sec=2.0)
+            return []
+
+        # RGB - 当前视角
+        rgb_path = self.temp_dir / "rgb_current.jpg"
         cv2.imwrite(str(rgb_path), rgb)
-        img_paths.append(str(rgb_path))
+        img_items.append({
+            "path": str(rgb_path),
+            "description": "Current ego-centric RGB view of the environment"
+        })
 
-        # Depth → 8bit 可视化
+        # Depth visualization（如果有）
         if depth_vis is not None:
             depth_colored = cv2.applyColorMap(depth_vis, cv2.COLORMAP_TURBO)
-            depth_path = self.temp_dir / "depth.jpg"
+            depth_path = self.temp_dir / "depth_current.jpg"
             cv2.imwrite(str(depth_path), depth_colored)
-            img_paths.append(str(depth_path))
+            img_items.append({
+                "path": str(depth_path),
+                "description": "Current depth visualization (blue=close, red/yellow=far)"
+            })
         else:
-            self.get_logger().warn("No Depth input for inference, skipping", throttle_duration_sec=2.0)
+            self.get_logger().warn("No Depth visualization", throttle_duration_sec=2.0)
 
-        # Map
+        # Decision / fused map（如果有）
         if self.latest_map_img is not None:
-            map_path = self.temp_dir / "map.jpg"
+            map_path = self.temp_dir / "decision_map.jpg"
             cv2.imwrite(str(map_path), self.latest_map_img)
-            img_paths.append(str(map_path))
+            img_items.append({
+                "path": str(map_path),
+                "description": "Top-down decision costmap: blue=low cost (good path), red=high cost, black=obstacle, gray=unknown"
+            })
         else:
-            self.get_logger().warn("No Map input for inference, skipping", throttle_duration_sec=2.0)
+            self.get_logger().warn("No decision map available", throttle_duration_sec=2.0)
 
-        return img_paths
+        return img_items   # 返回 List[Dict] 而不是 List[str]
 
     # =====================================================
     # Inference Adapter
@@ -211,37 +224,67 @@ by these information, adjust your strategy to navigate.
         通用 LLM 推理接口（可接收任意输入 via **args）
         线程安全，返回 SimulatorCommand
         """
-        image_paths = args.get("image_paths", None)
         latest_pose = args.get("latest_pose", None)
-
-        if image_paths is None:
-            rgb = args.get("rgb")
-            depth_vis = args.get("depth_vis")  # depth 可以留着以后用
-            if rgb is None:
-                self.get_logger().warn("No RGB input for inference, skipping", throttle_duration_sec=2.0)
-                return None
-            image_paths = self.InputData(rgb=rgb, depth_vis=depth_vis)
+        rgb = args.get("rgb")
+        depth_vis = args.get("depth_vis")  # depth 可以留着以后用
+        if rgb is None:
+            self.get_logger().warn("No RGB input for inference, skipping", throttle_duration_sec=2.0)
+            return None
+        image_paths = self.InputData(rgb=rgb, depth_vis=depth_vis)
 
         if self.task_prompt is not None:
             try:
-                propmt = self.system_prompt + self.task_prompt
+                prompt = self.system_prompt + self.task_prompt
                 interaction_data = ""
-                if self.is_interaction_triggered == True:
-                    interaction_data = f"[Received New Interaction Data]:{self.prev_task}"
+                pose_data = {
+                    "position": {"x_forward": latest_pose[0], "y_left": latest_pose[1]},
+                    "orientation": {"yaw_left_positive": latest_pose[2]}
+                }
+                if self.is_interaction_triggered:
+                    interaction_data = f"[Received New Interaction Data]: {self.prev_task}\n[Current Pose]: {json.dumps(pose_data)}"
+                else:
+                    interaction_data = f"[Current Pose]: {json.dumps(pose_data)}"
                 output = self.solver.solve(
-                    propmt,
-                    image_paths=image_paths,
+                    prompt,                          
+                    image_paths=image_paths,       
                     interaction_memory=interaction_data
                 )
 
                 raw_text = output.get("direct_output", "")
-                cmd = self._parse_llm_to_ros(raw_text)
-
-                if cmd is not None:
-                    self.publish_simulator_command(cmd)
-                    
+                self._parse_llm_to_command(raw_text)
                 self.get_logger().info(f"[LLM] Thinking... input={image_paths[-1]}")
-                return cmd
+
+                # verify the results with snapshots
+                verifier_image_paths = []
+                if self.latest_map_img is not None:
+                    verifier_cost_path = self.temp_dir / f"verifier_beforecommand_cost_map.jpg"
+                    cv2.imwrite(str(verifier_cost_path), self.latest_map_img)
+                    verifier_image_paths.append({
+                        "path": str(verifier_cost_path),
+                        "description": f"Verifier snapshot top-down decision costmap before command"
+                    })
+                for i in range(1, 3):
+                    time.sleep(1)  # 模拟等待过程
+                    # 保存当前 RGB snapshot
+                    verifier_path = self.temp_dir / f"verifier_{i}.jpg"
+                    cv2.imwrite(str(verifier_path), rgb)
+                    verifier_image_paths.append({
+                        "path": str(verifier_path),
+                        "description": f"Verifier snapshot #{i} of {i} seconds RGB view after command"
+                })
+                    
+                if self.latest_map_img is not None:
+                    verifier_cost_path = self.temp_dir / f"verifier_aftercommand_cost_map.jpg"
+                    cv2.imwrite(str(verifier_cost_path), self.latest_map_img)
+                    verifier_image_paths.append({
+                        "path": str(verifier_cost_path),
+                        "description": f"Verifier snapshot top-down decision costmap after command"
+                    })
+                self.solver.write_verify_data(                 
+                    image_paths=verifier_image_paths,       
+                    interaction_memory=interaction_data
+                )
+                return None
             
             except Exception as e:
                 self.get_logger().error(f"Inference Error: {e}")
@@ -313,7 +356,7 @@ by these information, adjust your strategy to navigate.
 
         self.latest_map_img = fused_img
 
-    def _parse_llm_to_ros(self, output_text: str):
+    def _parse_llm_to_command(self, output_text: str):
         log_path = Path("tmp/llm_raw_text.log")
         with open(log_path, "a", encoding="utf-8") as f:
             f.write(output_text + "\n" + "-"*80 + "\n")
@@ -322,37 +365,33 @@ by these information, adjust your strategy to navigate.
         msg.data = output_text
         self.llm_pub.publish(msg)
 
+        self.action_queue = None
+        self.action_queue = self.solver.parse_commands(output_text)
+        self.get_logger().info(f"Queued {len(self.action_queue)} actions for execution")
+    
+    def execute_action_queue(self):
+        if not self.action_queue:
+            return None
+
+        # pop 队列第一个动作
+        method, params = self.action_queue.pop(0)
+
+        # 构建 SimulatorCommand
         cmd = SimulatorCommand()
         cmd.header.stamp = self.get_clock().now().to_msg()
         cmd.header.frame_id = "agent"
-        
-        method = ""
-        method_params = ""
-
-        method, method_params = self.solver.parse_command(output_text)
-
         cmd.method = method
-        cmd.method_params = method_params
+        cmd.method_params = params
 
+        self.get_logger().info(f"Executing queued action: {method}({params})")
+
+        # stop 特殊处理
         if method.lower() == "stop":
             self.get_logger().info("🏁 Stop received")
             self._stop_event.set()
-        # elif method.lower() == "move":
-        #         try:
-        #             # 假设参数格式是 x, y, yaw
-        #             params = [p.strip() for p in method_params.split(',')]
-        #             if len(params) >= 3:
-        #                 yaw_deg = float(params[2])
-                        
-        #                 # 发布到 /agent/goal_yaw
-        #                 goal_msg = Float32()
-        #                 goal_msg.data = yaw_deg
-        #                 self.goal_yaw_pub.publish(goal_msg)
-                        
-        #                 self.get_logger().info(f"Published goal_yaw: {yaw_deg:.2f}")
-        #         except Exception as e:
-        #             self.get_logger().error(f"Error parsing Move params for goal_yaw: {e}")
 
+        # 发布 ROS
+        self.publish_simulator_command(cmd)
         return cmd
 
 # =====================================================
