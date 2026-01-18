@@ -68,7 +68,8 @@ class AgentBaseline(VLNConnector):
             output_types="direct",
             max_time=300,
             max_steps=1,
-            enable_multimodal=True
+            enable_multimodal=True,
+            is_enable_memory=False
         )
 
         # prompts

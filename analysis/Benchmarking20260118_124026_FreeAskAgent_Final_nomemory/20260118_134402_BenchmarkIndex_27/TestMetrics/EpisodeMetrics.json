@@ -1,0 +1,9 @@
+{
+    "IsSuccess": false,
+    "PathLength": 61.541194915771487,
+    "TrajectoryLength": 20.829635620117189,
+    "NavigationError": 25.817983627319337,
+    "OracleNavigationError": 19.358274459838868,
+    "OracleSuccess": false,
+    "NumberOfDirectionInquiries": 0
+}

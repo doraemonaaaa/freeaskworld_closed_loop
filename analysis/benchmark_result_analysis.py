@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import math
 from typing import Any, List, Tuple
+import re
 
 # spl_mode = 0, use success rate, =1, use oracle success rate
 def calculate_benchmark_results(result_dir, minimum_path_length_list, path_lengths_list, spl_mode=1):
@@ -16,11 +17,14 @@ def calculate_benchmark_results(result_dir, minimum_path_length_list, path_lengt
     spl_sum = 0 
     tl_zero_files = [] 
     
+    all_sub_dirs = [d for d in os.listdir(result_dir) if os.path.isdir(os.path.join(result_dir, d))]
+    # 按目录名末尾的数字排序
+    def extract_number(dir_name):
+        match = re.search(r'(\d+)$', dir_name)
+        return int(match.group(1)) if match else -1  # 没有数字的目录排在前面
+    all_sub_dirs.sort(key=extract_number)
 
-    sub_dirs = [d for d in os.listdir(result_dir) if os.path.isdir(os.path.join(result_dir, d))]
-    sub_dirs.sort()  # 确保顺序为index
-
-    for sub_dir in sub_dirs:
+    for sub_dir in all_sub_dirs:
         sub_dir_path = os.path.join(result_dir, sub_dir)
         
         test_metrics_dir = os.path.join(sub_dir_path, "TestMetrics")
@@ -191,7 +195,7 @@ def get_minimum_path_lengths(test_dir):
 
 if __name__ == "__main__":
     test_dataset_dir = "/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/HKCity_Test_ClosedLoop"
-    result_dir = r"/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/Benchmarking20260118_043522_CANav_2"
+    result_dir = r"/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/Benchmarking_vint/Benchmarking20260118_124220"
 
     (minimum_path_length_list, path_lengths_list) = get_minimum_path_lengths(test_dataset_dir)
     
