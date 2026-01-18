@@ -51,6 +51,11 @@ class AgentBaseline(VLNConnector):
         )
 
         self.llm_engine_name = "gpt-4o"
+        # gpt-4o-mini
+        # gpt-4o
+        # gemini-2.5-flash
+        # qwen2.5-vl-72b-instruct
+        # doubao-seed-1-6-vision-250815
 
         self.solver = construct_solver_embodied(
             llm_engine_name=self.llm_engine_name,
@@ -58,8 +63,8 @@ class AgentBaseline(VLNConnector):
                 "Base_Generator_Tool",
                 "GroundedSAM2_Tool"
             ],
-            tool_engine=["gpt-4o"],
-            model_engine=["gpt-4o", "gpt-4o", "gpt-4o", "gpt-4o"],
+            tool_engine=[self.llm_engine_name],
+            model_engine=[self.llm_engine_name, self.llm_engine_name, self.llm_engine_name, self.llm_engine_name],
             output_types="direct",
             max_time=300,
             max_steps=1,

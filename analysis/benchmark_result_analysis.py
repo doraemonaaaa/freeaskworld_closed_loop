@@ -101,8 +101,9 @@ def calculate_benchmark_results(result_dir, minimum_path_length_list, path_lengt
     avg_oracle_nav_error = total_oracle_nav_error / total_count if total_count > 0 else 0
     oracle_success_rate = (oracle_success_count / total_count) * 100 if total_count > 0 else 0   
     avg_askway_num = total_askway_num / total_count if total_count > 0 else 0
+    avg_gtpl = sum(minimum_path_length_list) / total_count if total_count > 0 else 0
     
-    return success_rate, avg_traj_length, spl, avg_nav_error, avg_oracle_nav_error, oracle_success_rate, avg_askway_num, tl_zero_files
+    return success_rate, avg_traj_length, spl, avg_nav_error, avg_oracle_nav_error, oracle_success_rate, avg_askway_num, tl_zero_files, avg_gtpl
 
 def get_minimum_path_lengths(test_dir):
     total_count = 0
@@ -114,7 +115,7 @@ def get_minimum_path_lengths(test_dir):
     all_sub_dirs.sort()
     expected_count = len(all_sub_dirs)
     
-    print(f"开始处理，预期子目录总数: {expected_count}")
+    print(f"开始处理Test Dataset，预期子目录总数: {expected_count}")
 
     # 遍历子目录
     for sub_dir in all_sub_dirs:
@@ -152,31 +153,35 @@ def get_minimum_path_lengths(test_dir):
 
                     # 2. 在 GPSDatas 中寻找最接近的时间戳
                     gps_datas = data["GPSDatas"]
-                    closest_gps = min(gps_datas, key=lambda x: abs(x["TimeStamp"] - start_timestamp))
-                    closest_gps_pos = closest_gps["Position"]
-                    
-                    # 3. 验证位置是否“差不多”
+                    start_index = -1
+                    for i, gps in enumerate(gps_datas):
+                        if gps["TimeStamp"] >= start_timestamp:
+                            start_index = i
+                            break
                     threshold = 1.0
-                    diff = math.sqrt(sum((a - b) ** 2 for a, b in zip(start_position, closest_gps_pos)))
-                    
-                    if diff <= threshold:
-                        # 4. 计算到终点的直线距离
-                        min_path_length = math.sqrt(sum((a - b) ** 2 for a, b in zip(start_position, end_position)))
-                        minimum_path_length_list.append(min_path_length)
-                        
-                        success_in_this_dir = True
-                        print(f"成功处理: {sub_dir}/{file_name}")
-                    else:
-                        print(f"验证失败: {sub_dir} 偏差过大 ({diff:.4f})")
-                        
+                    if start_index != -1:
+                        first_gps_pos = gps_datas[start_index]["Position"]
+                        diff = math.sqrt(sum((a - b) ** 2 for a, b in zip(start_position, first_gps_pos)))
+                        if diff <= threshold:
+                            # 计算路径积分：累加后续所有相邻点之间的距离
+                            gt_path_dist = 0.0
+                            for i in range(start_index, len(gps_datas) - 1):
+                                pos_cur = gps_datas[i]["Position"]
+                                pos_next = gps_datas[i+1]["Position"]
+                                # 计算相邻两点间的距离
+                                step_dist = math.sqrt(sum((a - b) ** 2 for a, b in zip(pos_cur, pos_next)))
+                                gt_path_dist += step_dist
+                            
+                            minimum_path_length_list.append(gt_path_dist)
+                            success_in_this_dir = True
+                        else:
+                            print(f"验证失败: {sub_dir} 起点偏差过大 ({diff:.4f})")
                 except Exception as e:
                     print(f"处理文件 {file_path} 时出错: {e}")
 
-        # 如果该子目录成功处理了至少一个合规文件，计入 total_count
         if success_in_this_dir:
             total_count += 1
 
-    # --- 最终校验 ---
     if total_count != expected_count:
         raise ValueError(f"数据处理不完整! 预期子目录数: {expected_count}, 实际成功处理数: {total_count}")
     
@@ -186,15 +191,16 @@ def get_minimum_path_lengths(test_dir):
 
 if __name__ == "__main__":
     test_dataset_dir = "/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/HKCity_Test_ClosedLoop"
-    result_dir = r"/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/Benchmarking20260117_173719-NavDP"
+    result_dir = r"/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/Benchmarking20260118_043522_CANav_2"
 
     (minimum_path_length_list, path_lengths_list) = get_minimum_path_lengths(test_dataset_dir)
     
     if not os.path.exists(result_dir) or not os.path.isdir(result_dir):
         print(f"错误: 指定的目录 '{result_dir}' 不存在或不是一个目录。")
     else:
-        sr, tl, spl, ne, one, osr, awn, tl_zero_files = calculate_benchmark_results(result_dir, minimum_path_length_list, path_lengths_list, spl_mode=1)
+        sr, tl, spl, ne, one, osr, awn, tl_zero_files, gtpl = calculate_benchmark_results(result_dir, minimum_path_length_list, path_lengths_list, spl_mode=1)
         print(f"SR={sr:.2f}%")
+        print(f"GTPL={gtpl:.2f}")
         print(f"TL={tl:.2f}")
         print(f"SPL={spl:.4f}")
         print(f"NE={ne:.2f}")
