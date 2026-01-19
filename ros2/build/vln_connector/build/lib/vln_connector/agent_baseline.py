@@ -55,7 +55,6 @@ class AgentBaseline(VLNConnector):
         # gpt-4o
         # gemini-2.5-flash
         # qwen2.5-vl-72b-instruct
-        # doubao-seed-1-6-vision-250815
 
         self.solver = construct_solver_embodied(
             llm_engine_name=self.llm_engine_name,
@@ -69,7 +68,8 @@ class AgentBaseline(VLNConnector):
             max_time=300,
             max_steps=1,
             enable_multimodal=True,
-            is_enable_memory=False
+            is_enable_memory=True,
+            is_use_verifier=True
         )
 
         # prompts
@@ -252,8 +252,7 @@ This mainly shows history trajectory information to you, history trajectory have
                     interaction_data = f"[Current Pose]: {json.dumps(pose_data)}"
                 output = self.solver.solve(
                     prompt,                          
-                    image_paths=image_paths,       
-                    interaction_memory=interaction_data
+                    image_paths=image_paths
                 )
 
                 raw_text = output.get("direct_output", "")

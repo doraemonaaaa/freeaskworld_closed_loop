@@ -6,7 +6,7 @@ from typing import Any, List, Tuple
 import re
 
 # spl_mode = 0, use success rate, =1, use oracle success rate
-def calculate_benchmark_results(result_dir, minimum_path_length_list, path_lengths_list, spl_mode=1):
+def calculate_benchmark_results(result_dir, minimum_path_length_list, path_lengths_list):
     success_count = 0
     oracle_success_count = 0
     total_count = 0
@@ -81,16 +81,10 @@ def calculate_benchmark_results(result_dir, minimum_path_length_list, path_lengt
                     if "NumberOfDirectionInquiries" in data:
                         total_askway_num += int(data["NumberOfDirectionInquiries"])
 
-                    if spl_mode == 0:
-                        l = minimum_path_length_list[total_count]
-                        max_lp = max(l, p)
-                        if max_lp > 0:  
-                            spl_sum += s * (l / max_lp)
-                    elif spl_mode == 1:
-                        l = minimum_path_length_list[total_count]
-                        max_lp = max(l, p)
-                        if max_lp > 0:  
-                            spl_sum += o_s * (l / max_lp)
+                    l = minimum_path_length_list[total_count]
+                    max_lp = max(l, p)
+                    if max_lp > 0:  
+                        spl_sum += s * (l / max_lp)
 
                 total_count += 1
                     
@@ -195,14 +189,14 @@ def get_minimum_path_lengths(test_dir):
 
 if __name__ == "__main__":
     test_dataset_dir = "/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/HKCity_Test_ClosedLoop"
-    result_dir = r"/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/Benchmarking_vint/Benchmarking20260118_124220"
+    result_dir = r"/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/Benchmarking20260119_100843_FreeAskAgent_Final_3"
 
     (minimum_path_length_list, path_lengths_list) = get_minimum_path_lengths(test_dataset_dir)
     
     if not os.path.exists(result_dir) or not os.path.isdir(result_dir):
         print(f"错误: 指定的目录 '{result_dir}' 不存在或不是一个目录。")
     else:
-        sr, tl, spl, ne, one, osr, awn, tl_zero_files, gtpl = calculate_benchmark_results(result_dir, minimum_path_length_list, path_lengths_list, spl_mode=1)
+        sr, tl, spl, ne, one, osr, awn, tl_zero_files, gtpl = calculate_benchmark_results(result_dir, minimum_path_length_list, path_lengths_list)
         print(f"SR={sr:.2f}%")
         print(f"GTPL={gtpl:.2f}")
         print(f"TL={tl:.2f}")
