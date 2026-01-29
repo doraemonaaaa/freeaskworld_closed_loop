@@ -189,7 +189,7 @@ def get_minimum_path_lengths(test_dir):
 
 if __name__ == "__main__":
     test_dataset_dir = "/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/HKCity_Test_ClosedLoop"
-    result_dir = r"/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/Benchmarking20260119_100843_FreeAskAgent_Final_3"
+    result_dir = r"/home/pengyh/workspace/FreeAskAgent/closed_loop/analysis/FreeAskAgent/Benchmarking20260129_031411_FreeAskAgent_Final_no_ask_way_no_memory_no_verifier_way_4"
 
     (minimum_path_length_list, path_lengths_list) = get_minimum_path_lengths(test_dataset_dir)
     
