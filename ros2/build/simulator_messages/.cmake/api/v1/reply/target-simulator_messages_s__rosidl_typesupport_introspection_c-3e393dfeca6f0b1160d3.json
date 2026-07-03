@@ -512,16 +512,16 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 9,
-			"id" : "simulator_messages__rosidl_generator_c::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 53,
 			"id" : "simulator_messages__rosidl_typesupport_introspection_c::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 54,
 			"id" : "simulator_messages__rosidl_typesupport_c::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 9,
+			"id" : "simulator_messages__rosidl_generator_c::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 9,

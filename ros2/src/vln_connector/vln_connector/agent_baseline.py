@@ -69,7 +69,8 @@ class AgentBaseline(VLNConnector):
             max_steps=1,
             enable_multimodal=True,
             is_enable_memory=True,
-            is_use_verifier=True
+            is_use_verifier=True,
+            auto_write_memory=False
         )
 
         # prompts
@@ -250,6 +251,18 @@ This mainly shows history trajectory information to you, history trajectory have
                     interaction_data = f"[Received New Interaction Data]: {self.prev_task}\n[Current Pose]: {json.dumps(pose_data)}"
                 else:
                     interaction_data = f"[Current Pose]: {json.dumps(pose_data)}"
+                if self.solver is not None and self.solver.is_enable_memory:
+                    subgoal = self._extract_current_subgoal(self.solver.latest_verification_result)
+                    costmap_summary = self._summarize_costmap()
+                    retrieval_query = (
+                        f"[Task]: {self.latest_task}\n"
+                        f"[Current Subgoal]: {subgoal}\n"
+                        f"[Planner Output]: {self.solver.planner_latest_output}\n"
+                        f"[Costmap]: {costmap_summary}\n"
+                        f"{interaction_data}\n"
+                        f"[Last Verifier]: {self.solver.latest_verification_result}"
+                    )
+                    self.solver.memory.refresh_retrieval_context(retrieval_query)
                 output = self.solver.solve(
                     prompt,                          
                     image_paths=image_paths
@@ -287,7 +300,9 @@ This mainly shows history trajectory information to you, history trajectory have
                     })
                 self.solver.write_verify_data(                 
                     image_paths=verifier_image_paths,       
-                    interaction_memory=interaction_data
+                    interaction_memory=interaction_data,
+                    task_context=self.latest_task,
+                    raw_planner_output=self.solver.planner_latest_output
                 )
                 return None
             
@@ -308,6 +323,8 @@ This mainly shows history trajectory information to you, history trajectory have
             return
         if self.prev_task != task:
             self.is_interaction_triggered = True
+            if self.solver is not None and self.solver.is_enable_memory:
+                self.solver.memory.reset()
         print(f"🎯 任务来了")
         self.latest_task = task
         self.task_prompt = f'''
@@ -398,6 +415,34 @@ This mainly shows history trajectory information to you, history trajectory have
         # 发布 ROS
         self.publish_simulator_command(cmd)
         return cmd
+
+    def _extract_current_subgoal(self, verifier_text: str) -> str:
+        if not verifier_text:
+            return "Unknown"
+        # Try to find the line marked as Current
+        for line in verifier_text.splitlines():
+            if "<Current>" in line or "Current" in line:
+                cleaned = re.sub(r"\s*<.*?>\s*", " ", line).strip()
+                return cleaned
+        return "Unknown"
+
+    def _summarize_costmap(self) -> str:
+        if self.decision_map_data is None or self.raw_map_data is None:
+            return "No costmap data"
+        try:
+            cost = self.decision_map_data.astype(np.float32)
+            obstacle_ratio = float(np.mean(self.raw_map_data == 100))
+            unknown_ratio = float(np.mean(self.raw_map_data == -1))
+            summary = {
+                "min": float(np.min(cost)),
+                "mean": float(np.mean(cost)),
+                "max": float(np.max(cost)),
+                "obstacle_ratio": round(obstacle_ratio, 3),
+                "unknown_ratio": round(unknown_ratio, 3)
+            }
+            return json.dumps(summary, ensure_ascii=False)
+        except Exception as e:
+            return f"Costmap summary error: {e}"
 
 # =====================================================
 # Main Loop
