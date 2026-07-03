@@ -150,6 +150,9 @@ simulator_messages__msg__SimulatorCommand__Sequence__init(simulator_messages__ms
   simulator_messages__msg__SimulatorCommand * data = NULL;
 
   if (size) {
+    if (size > SIZE_MAX / sizeof(simulator_messages__msg__SimulatorCommand)) {
+      return false;
+    }
     data = (simulator_messages__msg__SimulatorCommand *)allocator.zero_allocate(size, sizeof(simulator_messages__msg__SimulatorCommand), allocator.state);
     if (!data) {
       return false;
@@ -255,6 +258,9 @@ simulator_messages__msg__SimulatorCommand__Sequence__copy(
     return false;
   }
   if (output->capacity < input->size) {
+    if (input->size > SIZE_MAX / sizeof(simulator_messages__msg__SimulatorCommand)) {
+      return false;
+    }
     const size_t allocation_size =
       input->size * sizeof(simulator_messages__msg__SimulatorCommand);
     rcutils_allocator_t allocator = rcutils_get_default_allocator();

@@ -363,6 +363,9 @@ rosidl_generator_cpp_DIR:PATH=/opt/ros/jazzy/share/rosidl_generator_cpp/cmake
 //The directory containing a CMake configuration file for rosidl_generator_py.
 rosidl_generator_py_DIR:PATH=/opt/ros/jazzy/share/rosidl_generator_py/cmake
 
+//The directory containing a CMake configuration file for rosidl_generator_rs.
+rosidl_generator_rs_DIR:PATH=/opt/ros/jazzy/share/rosidl_generator_rs/cmake
+
 //The directory containing a CMake configuration file for rosidl_generator_type_description.
 rosidl_generator_type_description_DIR:PATH=/opt/ros/jazzy/share/rosidl_generator_type_description/cmake
 
@@ -522,7 +525,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=3
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -568,7 +571,7 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Python3
-FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[/usr/bin/python3][/usr/include/python3.12][/usr/lib/x86_64-linux-gnu/libpython3.12.so][/usr/lib/python3/dist-packages/numpy/core/include][cfound components: Interpreter Development NumPy Development.Module Development.Embed ][v3.12.3()]
+FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[/usr/bin/python3][cfound components: Interpreter ][v3.12.3()]
 //Details about finding PythonExtra
 FIND_PACKAGE_MESSAGE_DETAILS_PythonExtra:INTERNAL=[/usr/bin/python3][/usr/bin/python3][v()]
 //The directory for Python library installation. This needs to
@@ -595,4 +598,6 @@ _Python3_LIBRARY_RELEASE:INTERNAL=/usr/lib/x86_64-linux-gnu/libpython3.12.so
 _Python3_NUMPY_SIGNATURE:INTERNAL=d5ddeb909deee809c18fdfbea68bafbe
 //Path to a file.
 _Python3_NumPy_INCLUDE_DIR:INTERNAL=/usr/lib/python3/dist-packages/numpy/core/include
+//NumPy reason failure
+_Python3_NumPy_REASON_FAILURE:INTERNAL=
 

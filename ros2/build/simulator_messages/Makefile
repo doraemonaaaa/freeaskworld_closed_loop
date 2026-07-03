@@ -418,6 +418,19 @@ simulator_messages__py/fast:
 	$(MAKE) $(MAKESILENT) -f /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py.dir/build.make /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/CMakeFiles/simulator_messages__py.dir/build
 .PHONY : simulator_messages__py/fast
 
+#=============================================================================
+# Target rules for targets named simulator_messages__rs
+
+# Build rule for target.
+simulator_messages__rs: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 simulator_messages__rs
+.PHONY : simulator_messages__rs
+
+# fast build rule for target.
+simulator_messages__rs/fast:
+	$(MAKE) $(MAKESILENT) -f /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__rs/CMakeFiles/simulator_messages__rs.dir/build.make /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__rs/CMakeFiles/simulator_messages__rs.dir/build
+.PHONY : simulator_messages__rs/fast
+
 rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.o: rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.c.o
 .PHONY : rosidl_generator_c/simulator_messages/msg/detail/simulator_command__description.o
 
@@ -749,6 +762,7 @@ help:
 	@echo "... simulator_messages__cpp"
 	@echo "... simulator_messages__py"
 	@echo "... simulator_messages__rosidl_generator_type_description"
+	@echo "... simulator_messages__rs"
 	@echo "... simulator_messages_uninstall"
 	@echo "... uninstall"
 	@echo "... simulator_messages__rosidl_generator_c"

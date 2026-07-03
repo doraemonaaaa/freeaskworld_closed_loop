@@ -52,6 +52,12 @@
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_introspection_c.so
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/python3.12/site-packages/simulator_messages/simulator_messages_s__rosidl_typesupport_c.so
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/lib/libsimulator_messages__rosidl_generator_py.so
+/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/ament_index/resource_index/rust_packages/simulator_messages
+/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/rust/Cargo.toml
+/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/rust/build.rs
+/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/rust/src/msg/rmw.rs
+/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/rust/src/lib.rs
+/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/rust/src/msg.rs
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/msg/SimulatorCommand.idl
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/msg/SimulatorCommand.msg
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/ament_index/resource_index/package_run_dependencies/simulator_messages
@@ -90,6 +96,7 @@
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/ament_cmake_export_targets-extras.cmake
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/rosidl_cmake_aggregate_target-extras.cmake
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messagesConfig.cmake
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/cmake/simulator_messagesConfig-version.cmake
 /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/simulator_messages/share/simulator_messages/package.xml

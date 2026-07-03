@@ -363,6 +363,14 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/rust_packages" TYPE FILE FILES "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/ament_cmake_index/share/ament_index/resource_index/rust_packages/simulator_messages")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simulator_messages" TYPE DIRECTORY FILES "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_generator_rs/simulator_messages/rust")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simulator_messages/msg" TYPE FILE FILES "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_adapter/simulator_messages/msg/SimulatorCommand.idl")
 endif()
 
@@ -651,6 +659,10 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simulator_messages/cmake" TYPE FILE FILES "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/rosidl_cmake/rosidl_cmake_aggregate_target-extras.cmake")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/simulator_messages/cmake" TYPE FILE FILES
     "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/ament_cmake_core/simulator_messagesConfig.cmake"
     "/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/ament_cmake_core/simulator_messagesConfig-version.cmake"
@@ -664,6 +676,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__py/cmake_install.cmake")
+  include("/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/simulator_messages/simulator_messages__rs/cmake_install.cmake")
 
 endif()
 

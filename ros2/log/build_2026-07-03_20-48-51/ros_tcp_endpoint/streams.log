@@ -1,0 +1,76 @@
+[0.761s] Invoking command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/ROS-TCP-Endpoint': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/ros_tcp_endpoint build --build-base /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build install --record /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/install.log --install-scripts $base/lib/ros_tcp_endpoint --single-version-externally-managed install_data
+[0.831s] /usr/lib/python3/dist-packages/setuptools/dist.py:744: SetuptoolsDeprecationWarning: Invalid dash-separated options
+[0.831s] !!
+[0.831s] 
+[0.832s]         ********************************************************************************
+[0.832s]         Usage of dash-separated 'script-dir' will not be supported in future
+[0.832s]         versions. Please use the underscore name 'script_dir' instead.
+[0.832s] 
+[0.832s]         This deprecation is overdue, please update your project and remove deprecated
+[0.832s]         calls to avoid build errors in the future.
+[0.832s] 
+[0.832s]         See https://setuptools.pypa.io/en/latest/userguide/declarative_config.html for details.
+[0.832s]         ********************************************************************************
+[0.832s] 
+[0.832s] !!
+[0.832s]   opt = self.warn_dash_deprecation(opt, section)
+[0.898s] running egg_info
+[0.908s] writing ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/PKG-INFO
+[0.908s] writing dependency_links to ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/dependency_links.txt
+[0.908s] writing entry points to ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/entry_points.txt
+[0.908s] writing requirements to ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/requires.txt
+[0.909s] writing top-level names to ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/top_level.txt
+[0.926s] reading manifest file '../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/SOURCES.txt'
+[0.927s] adding license file 'LICENSE'
+[0.927s] writing manifest file '../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info/SOURCES.txt'
+[0.927s] running build
+[0.927s] running build_py
+[0.927s] copying ros_tcp_endpoint/exceptions.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.928s] copying ros_tcp_endpoint/unity_service.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.928s] copying ros_tcp_endpoint/tcp_sender.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.928s] copying ros_tcp_endpoint/thread_pauser.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.929s] copying ros_tcp_endpoint/service.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.929s] copying ros_tcp_endpoint/publisher.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.929s] copying ros_tcp_endpoint/__init__.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.929s] copying ros_tcp_endpoint/communication.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.929s] copying ros_tcp_endpoint/server.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.929s] copying ros_tcp_endpoint/client.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.930s] copying ros_tcp_endpoint/subscriber.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.930s] copying ros_tcp_endpoint/default_server_endpoint.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint
+[0.930s] running install
+[0.933s] running install_lib
+[0.942s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/exceptions.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.942s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/unity_service.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.942s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/tcp_sender.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.942s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/thread_pauser.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.942s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/service.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.942s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/publisher.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.943s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/__init__.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.943s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/communication.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.943s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/server.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.943s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/client.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.943s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/subscriber.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.943s] copying /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build/lib/ros_tcp_endpoint/default_server_endpoint.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint
+[0.943s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/exceptions.py to exceptions.cpython-312.pyc
+[0.944s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/unity_service.py to unity_service.cpython-312.pyc
+[0.945s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/tcp_sender.py to tcp_sender.cpython-312.pyc
+[0.946s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/thread_pauser.py to thread_pauser.cpython-312.pyc
+[0.947s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/service.py to service.cpython-312.pyc
+[0.947s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/publisher.py to publisher.cpython-312.pyc
+[0.948s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/__init__.py to __init__.cpython-312.pyc
+[0.949s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/communication.py to communication.cpython-312.pyc
+[0.950s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/server.py to server.cpython-312.pyc
+[0.951s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/client.py to client.cpython-312.pyc
+[0.952s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/subscriber.py to subscriber.cpython-312.pyc
+[0.953s] byte-compiling /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint/default_server_endpoint.py to default_server_endpoint.cpython-312.pyc
+[0.953s] running install_data
+[0.953s] copying resource/ros_tcp_endpoint -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/share/ament_index/resource_index/packages
+[0.954s] copying package.xml -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/share/ros_tcp_endpoint
+[0.954s] copying launch/endpoint.py -> /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/share/ros_tcp_endpoint/launch
+[0.954s] running install_egg_info
+[0.964s] removing '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint-0.0.1-py3.12.egg-info' (and everything under it)
+[0.964s] Copying ../../build/ros_tcp_endpoint/ros_tcp_endpoint.egg-info to /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages/ros_tcp_endpoint-0.0.1-py3.12.egg-info
+[0.965s] running install_scripts
+[1.037s] Installing default_server_endpoint script to /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/ros_tcp_endpoint
+[1.037s] writing list of installed files to '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/install.log'
+[1.056s] Invoked command in '/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/src/ROS-TCP-Endpoint' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/install/ros_tcp_endpoint/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/ros_tcp_endpoint build --build-base /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/build install --record /home/pengyh/workspace/FreeAskAgent/closed_loop/ros2/build/ros_tcp_endpoint/install.log --install-scripts $base/lib/ros_tcp_endpoint --single-version-externally-managed install_data
